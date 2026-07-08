@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Guide — Institute of Atmospheric Light</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --night: #050d12;
+      --ice: #dfe9ec;
+      --green: #5dfc9f;
+      --mag: #e04fd0;
+      --muted: rgba(223,233,236,0.52);
+      --border: rgba(93,252,159,0.14);
+      --f-disp: 'Syne', sans-serif;
+      --f-body: 'Instrument Sans', sans-serif;
+      --f-code: 'Courier New', monospace;
+    }
+    body {
+      font-family: var(--f-body);
+      background: var(--night);
+      color: var(--ice);
+      line-height: 1.75;
+      padding: 0 0 6rem;
+    }
+    /* header */
+    .g-header {
+      border-bottom: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .g-wordmark {
+      font-family: var(--f-disp);
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--green);
+    }
+    .g-breadcrumb {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .g-breadcrumb a {
+      color: var(--green);
+      text-decoration: none;
+    }
+    .g-breadcrumb a:hover { text-decoration: underline; }
+    /* hero */
+    .g-hero {
+      padding: 5rem 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .g-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+    .g-title {
+      font-family: var(--f-disp);
+      font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      text-wrap: balance;
+    }
+    .g-lead {
+      font-size: 1.1rem;
+      line-height: 1.72;
+      color: rgba(223,233,236,0.78);
+      max-width: 60ch;
+    }
+    /* content */
+    .g-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    .g-section {
+      margin-bottom: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .g-section-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green);
+      opacity: 0.7;
+      margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-family: var(--f-disp);
+      font-weight: 700;
+      font-size: 1.7rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.25rem;
+    }
+    h3 {
+      font-family: var(--f-disp);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--green);
+      margin: 2rem 0 0.6rem;
+    }
+    p { margin-bottom: 1.1rem; color: rgba(223,233,236,0.82); }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 1.1rem; }
+    li { margin-bottom: 0.4rem; color: rgba(223,233,236,0.78); }
+    strong { color: var(--ice); font-weight: 600; }
+    em { color: var(--green); font-style: normal; font-weight: 500; }
+    /* code */
+    pre {
+      background: rgba(93,252,159,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      font-family: var(--f-code);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: rgba(223,233,236,0.88);
+    }
+    .kw { color: var(--mag); }      /* keywords */
+    .fn { color: #7eb3ff; }         /* function names */
+    .cm { color: rgba(223,233,236,0.38); } /* comments */
+    .num { color: #ffcb6b; }        /* numbers */
+    /* pass cards */
+    .pass-grid {
+      display: grid;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .pass-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      background: rgba(93,252,159,0.025);
+    }
+    .pass-card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .pass-num {
+      font-family: var(--f-disp);
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--green);
+      line-height: 1;
+    }
+    .pass-title {
+      font-family: var(--f-disp);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--ice);
+    }
+    .pass-upgrade {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mag);
+      border: 1px solid rgba(224,79,208,0.25);
+      border-radius: 4px;
+      padding: 0.25rem 0.6rem;
+    }
+    /* footer */
+    .g-footer {
+      max-width: 900px;
+      margin: 4rem auto 0;
+      padding: 2rem 2rem 0;
+      border-top: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    @media (max-width: 600px) {
+      .g-hero { padding: 3rem 1.25rem 2rem; }
+      .g-content { padding: 0 1.25rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="g-header">
+    <div class="g-wordmark">IAL</div>
+    <div class="g-breadcrumb">
+      <a href="../">Institute of Atmospheric Light</a>
+      &nbsp;/&nbsp; Build Guide
+    </div>
+  </header>
+
+  <div class="g-hero">
+    <p class="g-tag">Fable 25 · Site 01 · aurorae</p>
+    <h1 class="g-title">How the Aurora Was Built</h1>
+    <p class="g-lead">A WebGL fragment shader carries the entire visual weight of this site. Stars, curtains, and storm intensity are all computed per-pixel — no textures, no Three.js. This is the full account: brief, technique, and three critique passes.</p>
+  </div>
+
+  <div class="g-content">
+
+    <!-- The Brief -->
+    <section class="g-section">
+      <p class="g-section-label">The Brief</p>
+      <h2>Institute of Atmospheric Light</h2>
+      <p>A fictional research station that monitors the aurora borealis. Signature: full-viewport WebGL aurora — layered curtains of curl-noise-displaced ribbons in a fragment shader, drifting on real solar-wind-like parameters; scroll shifts geomagnetic latitude so the storm intensifies as you descend.</p>
+      <p><strong>Palette:</strong> night <em>#050d12</em>, ice text <em>#dfe9ec</em>, aurora green <em>#5dfc9f</em>, storm magenta <em>#e04fd0</em>. <strong>Type:</strong> Syne (display) + Instrument Sans. <strong>Prove:</strong> a shader can carry an entire narrative site.</p>
+      <p><strong>Upgrade ideas:</strong> Kp-index dial that changes the solar wind · star parallax · magnetometer strip chart.</p>
+    </section>
+
+    <!-- Signature Technique -->
+    <section class="g-section">
+      <p class="g-section-label">Signature Technique</p>
+      <h2>The Aurora Fragment Shader</h2>
+
+      <p>The entire aurora — curtain ribbons, star field, storm glow — lives in a single WebGL fragment shader. One full-screen triangle, three uniforms: <em>u_time</em>, <em>u_scroll</em> (0→1 as user descends), and <em>u_kp</em> (the Kp-index dial, 0→1). No geometry, no textures, no Three.js.</p>
+
+      <h3>How curtain fingers form</h3>
+      <p>The key insight: value noise sampled at high horizontal frequency (35 and 72 cycles) with a smooth low-frequency amplitude modulator, sharpened with <code>pow(..., 2.0)</code>, creates thin bright peaks separated by near-zero troughs — exactly the column structure of real aurora rays. Per-ray height varies with the modulator so adjacent fingers have different lengths.</p>
+
+<pre><span class="cm">/* high-freq ray pattern in X only — 35 and 72 cycles */</span>
+<span class="kw">float</span> r0 = <span class="fn">noise</span>(<span class="kw">vec2</span>(px*<span class="num">35.0</span>+t*<span class="num">0.11</span>*speed, t*<span class="num">0.018</span>)) * <span class="num">0.50</span>;
+<span class="kw">float</span> r1 = <span class="fn">noise</span>(<span class="kw">vec2</span>(px*<span class="num">72.0</span>-t*<span class="num">0.14</span>*speed, t*<span class="num">0.022</span>+<span class="num">1.5</span>)) * <span class="num">0.28</span>;
+
+<span class="cm">/* smooth amplitude modulator: gives each ray cluster a common envelope */</span>
+<span class="kw">float</span> rAmp = <span class="fn">fbm</span>(<span class="kw">vec2</span>(px*<span class="num">3.5</span>+t*<span class="num">0.04</span>*speed, t*<span class="num">0.010</span>+seed));
+<span class="kw">float</span> ray = (r0+r1+r2) * (<span class="num">0.4</span> + rAmp*<span class="num">0.8</span>);
+
+<span class="cm">/* pow 2.0: softer than 2.6 — feathered edges, still distinct fingers */</span>
+ray = <span class="fn">pow</span>(<span class="fn">clamp</span>(ray*<span class="num">1.6</span>, <span class="num">0.0</span>, <span class="num">1.0</span>), <span class="num">2.0</span>);
+
+<span class="cm">/* varying finger heights — the fringe of a real curtain */</span>
+<span class="kw">float</span> rayHt = ht * (<span class="num">0.35</span> + rAmp*<span class="num">0.75</span>);
+<span class="kw">float</span> bMask = <span class="fn">smoothstep</span>(-<span class="num">0.008</span>, <span class="num">0.015</span>, hh); <span class="cm">/* sharp curtain floor */</span>
+<span class="kw">float</span> tMask = <span class="fn">smoothstep</span>(rayHt, rayHt*<span class="num">0.60</span>, hh);  <span class="cm">/* tapered tips  */</span></pre>
+
+      <h3>Why no Reinhard tone mapping</h3>
+      <p>A standard Reinhard operator (<code>c / c+k</code>) compresses high channels more than low channels — at aurora green (0.988), it collapses the G channel to 0.64 while leaving R and B at 0.37 and 0.55, which visually desaturates the green toward grey. Since all aurora values are bounded below 1.0, the fix was to drop Reinhard entirely and use a saturation-preserving luminance mix followed by simple gamma:</p>
+
+<pre><span class="cm">/* boost saturation — additive mixing tends to wash out vivid hues */</span>
+<span class="kw">float</span> lum = <span class="fn">dot</span>(col, <span class="kw">vec3</span>(<span class="num">0.299</span>, <span class="num">0.587</span>, <span class="num">0.114</span>));
+col = <span class="fn">mix</span>(<span class="kw">vec3</span>(lum), col, <span class="num">1.25</span>);
+col = <span class="fn">clamp</span>(col, <span class="num">0.0</span>, <span class="num">1.0</span>);
+col = <span class="fn">pow</span>(col, <span class="kw">vec3</span>(<span class="num">0.88</span>));  <span class="cm">/* gamma only */</span></pre>
+
+      <h3>Storm intensification</h3>
+      <p>A single <em>intensity</em> scalar combines the Kp dial and scroll progress: <code>inten = clamp(kp * 0.65 + scroll * 0.42, 0, 1)</code>. This drives three shader behaviors simultaneously: the curtain base descends (lower geomagnetic latitude), the ray height grows, and the color mix shifts from green toward magenta (lower-altitude O emission → higher-altitude N₂ bands). The magenta upper glow is a separate diffuse FBM layer, not discrete pillars, so it reads as atmospheric emission rather than a solid object.</p>
+
+      <h3>Star parallax</h3>
+      <p>Stars are procedural point lights inside the fragment shader: a 130×130 grid where each cell's hash determines whether a star exists and its brightness. The x-coordinate receives a gentle offset proportional to scroll progress — stars at the top appear to shift as you descend, giving the impression of a moving vantage point. No second pass required.</p>
+    </section>
+
+    <!-- Three Passes -->
+    <section class="g-section">
+      <p class="g-section-label">Critique Log</p>
+      <h2>Three Passes</h2>
+
+      <div class="pass-grid">
+        <div class="pass-card">
+          <div class="pass-card-header">
+            <span class="pass-num">01</span>
+            <span class="pass-title">First render critique</span>
+          </div>
+          <p><strong>What the screenshots found:</strong> The aurora was a smooth horizontal glow blob — no vertical curtain structure at all. The FBM noise sampled at frequencies of 5, 9, and 16 created cells wide enough (170–300px) that the output looked like atmospheric haze. The mobile scroll cue ("DESCEND TO WITNESS THE STORM") collided with the Kp widget at the bottom of the hero because both were absolutely positioned and the content was taller than expected on narrow viewports. The CTA buttons were full-width slabs on mobile, and the curtain presence mask used a hard <code>smoothstep</code> that created rectangular aurora boundaries.</p>
+          <p><strong>Fixes applied:</strong> Raised horizontal noise frequencies to 35, 72, and 18; added <code>pow(..., 2.0)</code> sharpening; replaced the hard presence mask with a soft FBM-derived float. Fixed scroll cue to <code>position: fixed</code> with a media query that hides it on viewports narrower than 860px or shorter than 700px. Reduced CTA button padding, added <code>display: inline-block</code> with <code>white-space: nowrap</code>.</p>
+          <div class="pass-upgrade">Upgrade: star parallax in shader — stars shift horizontally with scroll progress</div>
+        </div>
+
+        <div class="pass-card">
+          <div class="pass-card-header">
+            <span class="pass-num">02</span>
+            <span class="pass-title">Ray structure critique</span>
+          </div>
+          <p><strong>What the screenshots found:</strong> The shader's second curtain layer (magenta) used <code>pow(r0 * r1 * 2.0, 2.0)</code> with a hard height mask, which at the particular time value captured produced a solid rectangular magenta block in the upper right — the shader equivalent of clipping. The magnetometer time-axis labels ("−3h", "NOW") were clipping at the canvas edges because the leftmost and rightmost labels were centered at x=0 and x=cw respectively. The FBM domain warp in the curtain function was set too aggressively (0.28 units), spreading the horizontal structure and blurring the vertical rays.</p>
+          <p><strong>Fixes applied:</strong> Replaced layer 2 with a <em>diffuseGlow</em> function — FBM-sampled presence mask with a Gaussian height profile centered above the green curtain, producing soft atmospheric blobs instead of discrete columns. Fixed magnetometer labels with explicit inset x-positions and per-label text alignment. Reduced warp amplitude to 0.10.</p>
+          <div class="pass-upgrade">Upgrade: animated live-scanning magnetometer — the trace scrolls left every 500 ms, simulating a real-time H-component feed with a magenta scan cursor at the right edge</div>
+        </div>
+
+        <div class="pass-card">
+          <div class="pass-card-header">
+            <span class="pass-num">03</span>
+            <span class="pass-title">Color saturation critique</span>
+          </div>
+          <p><strong>What the screenshots found:</strong> The aurora curtains were rendering as pale grey-green rather than the brief's vivid #5dfc9f. Root cause traced to Reinhard tone mapping: at peak aurora green (G=0.988), the operator compresses the green channel to 0.64 while only compressing red to 0.37 and blue to 0.43 — the resulting imbalance pushes the hue toward near-white. The magenta at full scroll escaped this because its R and B channels are roughly equal (0.878 / 0.816), so Reinhard compressed them proportionally and preserved the hue. The curtain `emask` variable still used a hard <code>smoothstep</code> from the previous pass, creating some blocky pillar edges.</p>
+          <p><strong>Fixes applied:</strong> Dropped Reinhard entirely; replaced with a luminance-aware saturation boost (<code>mix(lum, col, 1.25)</code>) followed by simple gamma (<code>pow(col, 0.88)</code>). This restored the full #5dfc9f green to the curtain tops. Replaced envelope <code>smoothstep</code> with a soft <code>clamp(fbm * 2.0 - 0.3, 0, 1)</code> producing organic presence falloff. Increased aurora brightness factor from 1.25 to 1.55.</p>
+          <div class="pass-upgrade">Upgrade: scroll-driven border glow — the CSS <code>--border</code> custom property interpolates from rgba(93,252,159,0.14) to rgba(224,79,208,0.32) as scroll progress increases, so section panel borders visually shift from green to magenta as the "storm deepens"</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Honest accounting -->
+    <section class="g-section">
+      <p class="g-section-label">Honest Accounting</p>
+      <h2>What Remains Imperfect</h2>
+      <p>The curtain pillars on desktop at certain time values can look slightly rectangular along their sides — the domain warp is gentle by design (to preserve vertical structure), so at particular noise states the pillars are more column-like than the flowing, wind-bent curtains of real aurora photography. A proper curl-noise implementation would eliminate this, but the tradeoff is computational cost vs. the current multi-frequency value noise approach which runs smoothly on mobile.</p>
+      <p>The "G1 · Minor Storm" Kp status label shows inconsistent dot spacing across browsers at 0.68rem — the middle dot (U+00B7) kerning depends on the Instrument Sans font metrics at small sizes.</p>
+      <p>The scroll-driven border shift (pass 3 upgrade) only takes effect during a live scroll, not in static screenshots — the CSS custom property is set by the scroll event handler. A static render shows the initial green border throughout.</p>
+    </section>
+
+  </div>
+
+  <footer class="g-footer">
+    <span>Institute of Atmospheric Light · Tromsø, Norway · Est. 1987</span>
+    <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+  </footer>
+
+</body>
+</html>

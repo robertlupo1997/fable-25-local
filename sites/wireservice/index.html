@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Norlund Wire Service — NWS Live Feed</title>
+  <meta name="description" content="Live dispatches from the Norlund metropolitan region. Wire service for a city that never was.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&family=Public+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#feed-area">Skip to wire feed</a>
+
+  <!-- ── Masthead ─────────────────────────────────────── -->
+  <header class="masthead" role="banner">
+
+    <a href="#" class="masthead-logo" aria-label="Norlund Wire Service — home">
+      <span class="logo-mark" aria-hidden="true"></span>
+      NWS
+    </a>
+
+    <div class="masthead-center" aria-hidden="true">
+      <span class="masthead-title">NORLUND WIRE SERVICE</span>
+      <span class="masthead-sub">ESTABLISHED 1946 &middot; METROPOLITAN REGION DESK &middot; OPEN LINE</span>
+    </div>
+
+    <div class="masthead-right">
+      <span class="status-badge" aria-label="Connection status: live">
+        <span class="status-dot" aria-hidden="true"></span>
+        LIVE
+      </span>
+      <time class="masthead-clock" id="clock" aria-label="Current time in UTC">--:--:-- UTC</time>
+    </div>
+
+  </header>
+
+  <!-- ── Page body ────────────────────────────────────── -->
+  <div class="page-body">
+
+    <!-- Teletype dispatch feed -->
+    <main class="feed-area" id="feed-area" role="main" tabindex="-1">
+      <div
+        id="dispatches"
+        role="log"
+        aria-live="polite"
+        aria-label="Wire dispatches — newest at bottom"
+        aria-atomic="false"
+      ></div>
+    </main>
+
+    <!-- Bulletin rail -->
+    <aside class="bulletin-rail" aria-label="Priority bulletins and operator controls">
+
+      <div class="rail-block">
+        <span class="rail-label">PRIORITY QUEUE</span>
+        <ul id="bulletins" role="list" aria-label="Priority bulletins"></ul>
+      </div>
+
+      <div class="rail-block shortcuts" aria-label="Operator keyboard shortcuts">
+        <span class="rail-label">OPERATOR KEYS</span>
+
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">H</span>
+          <span class="sk-desc">TOP OF FEED</span>
+        </div>
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">B</span>
+          <span class="sk-desc">BULLETINS</span>
+        </div>
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">P</span>
+          <span class="sk-desc" id="paper-label">PAPER FEED</span>
+        </div>
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">M</span>
+          <span class="sk-desc" id="mute-label">MUTE AUDIO</span>
+        </div>
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">F</span>
+          <span class="sk-desc">FLASH ALERT</span>
+        </div>
+
+      </div>
+
+    </aside>
+
+  </div><!-- /.page-body -->
+
+  <!-- ── Footer ───────────────────────────────────────── -->
+  <footer role="contentinfo">
+    <span class="ft-credit">Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</span>
+    <span class="ft-status" id="footer-status">NORLUND WIRE SERVICE &middot; INITIALISING</span>
+  </footer>
+
+  <!-- Priority screen overlay (decorative) -->
+  <div id="priority-overlay" aria-hidden="true"></div>
+
+  <script src="main.js"></script>
+
+</body>
+</html>

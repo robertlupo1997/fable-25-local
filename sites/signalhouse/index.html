@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGNALHOUSE — Numbers Station Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#receiver" class="skip-link">Skip to receiver</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-tape">
+      <span>CLASSIFICATION: SECRET // OMEGA CLEARANCE REQUIRED // UNAUTHORIZED ACCESS PROSECUTED</span>
+    </div>
+    <div class="header-inner">
+      <div class="header-left">
+        <p class="facility-id">FACILITY 7 // SECTOR KILO // EST. 1958</p>
+        <h1>SIGNALHOUSE</h1>
+        <p class="header-sub">Shortwave Intelligence Monitoring Archive<br>
+        <span class="mono">Listening since 14 NOV 1958 · Still active · 3–18 MHz</span></p>
+      </div>
+      <div class="header-right" aria-hidden="true">
+        <div class="signal-badge">
+          <span class="badge-label">LIVE</span>
+          <span class="badge-dot"></span>
+        </div>
+        <p class="mono small">UTC <span id="utc-clock">00:00:00</span></p>
+        <p class="mono small">Session <span id="session-id">--</span></p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- RECEIVER UNIT -->
+    <section id="receiver" class="receiver-unit" role="region" aria-label="Shortwave receiver">
+      <div class="unit-label-bar">
+        <span class="unit-label mono">RECEIVER · MODEL SH-7 · CONTINUOUS COVERAGE 3–18 MHz</span>
+        <span class="unit-label mono power-status" id="power-status">POWER OFF</span>
+      </div>
+
+      <!-- WATERFALL DISPLAY -->
+      <div class="display-bay" aria-label="Spectrum waterfall display">
+        <div class="display-bezel">
+          <canvas id="waterfall" width="900" height="200" aria-hidden="true"></canvas>
+          <div class="waterfall-cursor" id="waterfall-cursor" aria-hidden="true"></div>
+          <div class="display-overlay" aria-hidden="true"></div>
+          <div class="display-off-msg" id="display-off-msg" aria-hidden="true">
+            POWER OFF — TURN POWER KNOB TO ACTIVATE
+          </div>
+        </div>
+        <div class="waterfall-overlay-labels" aria-hidden="true" id="wf-labels"></div>
+      </div>
+
+      <!-- FREQUENCY + TUNING BAND -->
+      <div class="tuning-section">
+        <div class="freq-readout-row">
+          <div class="freq-readout" aria-live="polite" aria-atomic="true">
+            <span class="freq-value" id="freq-value">7000.0</span>
+            <span class="freq-unit">kHz</span>
+          </div>
+          <div class="band-label mono" id="band-label">40m</div>
+        </div>
+
+        <div class="tuning-band-wrap">
+          <div class="tuning-band"
+               id="tuning-band"
+               role="slider"
+               aria-label="Frequency tuning dial"
+               aria-valuemin="3000"
+               aria-valuemax="18000"
+               aria-valuenow="7000"
+               aria-valuetext="7000 kilohertz"
+               tabindex="0">
+            <canvas id="band-canvas" height="60" aria-hidden="true"></canvas>
+          </div>
+          <div class="tuning-hint mono" aria-label="Keyboard shortcuts">
+            ← → tune · Shift+← → ×10 · PgUp/Dn ×1MHz · SPACE power
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTROLS ROW -->
+      <div class="controls-row">
+        <!-- Power knob -->
+        <div class="control-group">
+          <button class="power-knob"
+                  id="power-knob"
+                  aria-pressed="false"
+                  aria-label="Power switch — click or press Space to toggle">
+            <div class="knob-body">
+              <div class="knob-indicator"></div>
+            </div>
+            <span class="knob-ring" aria-hidden="true">OFF ON</span>
+          </button>
+          <span class="control-label mono">POWER</span>
+        </div>
+
+        <!-- Volume -->
+        <div class="control-group">
+          <div class="rotary-wrap">
+            <input type="range"
+                   id="volume-knob"
+                   class="rotary-slider"
+                   min="0" max="100" value="70"
+                   aria-label="Volume">
+            <div class="rotary-visual" aria-hidden="true" id="vol-visual">
+              <div class="rotary-dot"></div>
+            </div>
+          </div>
+          <span class="control-label mono">VOL</span>
+        </div>
+
+        <!-- Filter/BFO -->
+        <div class="control-group">
+          <div class="rotary-wrap">
+            <input type="range"
+                   id="filter-knob"
+                   class="rotary-slider"
+                   min="0" max="100" value="50"
+                   aria-label="Bandpass filter width">
+            <div class="rotary-visual" aria-hidden="true" id="filter-visual">
+              <div class="rotary-dot"></div>
+            </div>
+          </div>
+          <span class="control-label mono">FILTER</span>
+        </div>
+
+        <!-- Signal strength meter -->
+        <div class="control-group meter-group">
+          <div class="meter-bay">
+            <canvas id="meter-canvas" width="240" height="110"
+                    role="img"
+                    aria-label="Signal strength meter"
+                    aria-live="polite"></canvas>
+          </div>
+          <span class="control-label mono">S-METER</span>
+        </div>
+      </div>
+
+      <!-- TRANSMISSION PANEL -->
+      <div class="transmission-panel" aria-live="polite" aria-atomic="false">
+        <div class="tx-header-bar">
+          <span class="tx-label mono">SIGNAL INTERCEPT</span>
+          <span class="tx-station-badge" id="tx-station-badge" aria-live="polite">--- NO SIGNAL ---</span>
+          <span class="tx-country" id="tx-country"></span>
+        </div>
+        <div class="tx-body">
+          <div class="tx-content" id="tx-content">
+            <span class="tx-placeholder mono">
+              SQUELCH ACTIVE · NO SIGNAL DETECTED<br>
+              TUNE TO: 4625 · 6840 · 9045 · 11180 · 14650 kHz
+            </span>
+          </div>
+          <div class="tx-meta">
+            <span class="mono small" id="tx-type-label"></span>
+            <span class="mono small" id="tx-strength-label"></span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- STATION INDEX -->
+    <section class="station-index" aria-label="Known station frequencies">
+      <h2 class="section-title mono">STATION FREQUENCY INDEX — UNCLASSIFIED EXTRACT</h2>
+      <div class="station-table-wrap">
+        <table class="station-table" aria-label="Known numbers station frequencies">
+          <thead>
+            <tr>
+              <th scope="col">CALLSIGN</th>
+              <th scope="col">FREQ (kHz)</th>
+              <th scope="col">TYPE</th>
+              <th scope="col">ORIGIN</th>
+              <th scope="col">STATUS</th>
+              <th scope="col">NOTES</th>
+            </tr>
+          </thead>
+          <tbody id="station-table-body">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+      <p class="mono small table-note">Source: internal intercept log, compiled from monitoring sessions 1961–present. Frequencies subject to change without notice.</p>
+    </section>
+
+    <!-- LOGBOOK -->
+    <section class="logbook-section" aria-label="Signal logbook">
+      <h2 class="section-title mono">OPERATOR LOGBOOK</h2>
+      <div class="logbook-header mono small">
+        <span>DATE/TIME (UTC)</span>
+        <span>FREQ</span>
+        <span>CALLSIGN</span>
+        <span>TYPE</span>
+        <span>S</span>
+        <span>NOTES</span>
+      </div>
+      <div class="logbook-entries" id="logbook-entries">
+        <div class="logbook-empty mono">
+          No entries. Intercept a signal and hold for 3 seconds to log it automatically.
+        </div>
+      </div>
+      <div class="logbook-actions">
+        <button class="btn-clear" id="clear-log" aria-label="Clear all log entries">CLEAR LOG</button>
+        <span class="mono small" id="log-count">0 entries</span>
+      </div>
+    </section>
+
+    <!-- ARCHIVE NOTE -->
+    <section class="archive-note" aria-label="Background information on numbers stations">
+      <h2 class="section-title mono">WHAT ARE NUMBERS STATIONS?</h2>
+      <div class="archive-text">
+        <p>Numbers stations are shortwave radio transmissions of unknown origin that broadcast
+        sequences of numbers, letters, phonetic alphabets, or coded tones. First documented
+        during World War I, they proliferated during the Cold War as a secure method for
+        intelligence agencies to communicate with field operatives.</p>
+        <p>The one-time pad system means that without the matching key, these transmissions
+        are theoretically unbreakable. The agent receives the broadcast, decodes it with their
+        personal pad, and destroys the page. No record. No intercept. No proof.</p>
+        <p>This archive monitors the shortwave bands for active transmissions. Many stations
+        documented here have broadcast continuously for decades with no official
+        acknowledgment of their existence.</p>
+        <p class="mono small source-note">This receiver is a simulation. All transmissions are procedurally synthesized
+        from authentic formats. Station callsigns and characteristics are based on documented
+        records compiled by the Conet Project and shortwave monitoring community since 1992.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-tape">
+      <span>END OF DOCUMENT // DESTROY AFTER READING // FACILITY 7 // SECTOR KILO</span>
+    </div>
+    <div class="footer-inner">
+      <span class="mono small">Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+      <a href="guide/" class="mono small footer-link">→ Signal Guide</a>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

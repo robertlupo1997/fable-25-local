@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundry — Fraunces Typeface</title>
+  <meta name="description" content="A specimen site for Fraunces — a variable typeface with four axes: weight, optical size, softness, and wonkiness.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Marginalia tape: decorative typographic gutter -->
+  <div class="marginalia" aria-hidden="true">
+    <span class="marginalia-tape">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz·0123456789·ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz·0123456789·ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz·0123456789·ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz·0123456789·</span>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Main navigation">
+    <a href="#" class="nav-wordmark" aria-label="Foundry home">Foundry</a>
+    <div class="nav-controls">
+      <button class="wonk-toggle" aria-pressed="false" title="Toggle WONK axis globally">WONK</button>
+      <a href="guide/" class="nav-link" aria-label="Design guide">Guide</a>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-track">
+        <h1 class="hero-title" id="hero-title" aria-label="Fraunces">Fraunces</h1>
+        <p class="hero-tagline">A face with&nbsp;four voices.</p>
+      </div>
+      <div class="hero-footer">
+        <span class="hero-instruction" aria-hidden="true">— move your cursor —</span>
+        <div class="hero-axis-readout" aria-hidden="true">
+          <span class="ax-chip" id="ax-wght">wght <em>500</em></span>
+          <span class="ax-chip" id="ax-opsz">opsz <em>144</em></span>
+          <span class="ax-chip" id="ax-soft">SOFT <em>20</em></span>
+          <span class="ax-chip" id="ax-wonk">WONK <em>0</em></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRO -->
+    <section class="intro" aria-label="About Fraunces">
+      <div class="intro-rule"></div>
+      <div class="intro-inner">
+        <div class="intro-quote-col">
+          <blockquote class="intro-quote">
+            <p>Variable from whim<br>to authority.</p>
+          </blockquote>
+        </div>
+        <div class="intro-body-col">
+          <p class="intro-lead">Fraunces is a display typeface with a singular character: deeply optical, richly variable, unafraid of personality.</p>
+          <p>Four axes span the full spectrum of intent — from ultralight captions to assertive black headlines, from soft rounded glyphs to angular precision, from sober geometry to deliberate eccentricity. One face; every register.</p>
+          <p>At small optical sizes the letterforms open: wider apertures, adjusted stroke contrast, subtly shifted proportions — each change in service of readability. At display scale, the serifs sharpen, proportions tighten, and the face becomes unmistakably itself.</p>
+          <p class="intro-spec">wght 100→900 · opsz 9→144<br>SOFT 0→100 · WONK 0→1</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WATERFALL -->
+    <section class="waterfall" aria-labelledby="waterfall-title">
+      <div class="section-header">
+        <h2 id="waterfall-title" class="section-title">The&nbsp;Waterfall</h2>
+        <span class="section-label" aria-hidden="true">Optical spectrum · 144 → 9</span>
+      </div>
+      <!-- opsz anatomy strip: complexity upgrade -->
+      <div class="opsz-strip" aria-label="Optical size comparison: the letter a at five sizes" role="img">
+        <div class="opsz-item">
+          <span class="opsz-glyph" style="font-size:clamp(0.625rem,1.2vw,1.1rem);font-variation-settings:'wght' 400,'opsz' 9,'SOFT' 0,'WONK' 0;">a</span>
+          <span class="opsz-val">opsz 9</span>
+        </div>
+        <div class="opsz-item">
+          <span class="opsz-glyph" style="font-size:clamp(1rem,1.8vw,1.75rem);font-variation-settings:'wght' 400,'opsz' 18,'SOFT' 0,'WONK' 0;">a</span>
+          <span class="opsz-val">opsz 18</span>
+        </div>
+        <div class="opsz-item">
+          <span class="opsz-glyph" style="font-size:clamp(1.75rem,3vw,3rem);font-variation-settings:'wght' 400,'opsz' 36,'SOFT' 0,'WONK' 0;">a</span>
+          <span class="opsz-val">opsz 36</span>
+        </div>
+        <div class="opsz-item">
+          <span class="opsz-glyph" style="font-size:clamp(3rem,5.5vw,5.5rem);font-variation-settings:'wght' 400,'opsz' 72,'SOFT' 0,'WONK' 0;">a</span>
+          <span class="opsz-val">opsz 72</span>
+        </div>
+        <div class="opsz-item">
+          <span class="opsz-glyph" style="font-size:clamp(5rem,9.5vw,9.5rem);font-variation-settings:'wght' 400,'opsz' 144,'SOFT' 0,'WONK' 0;">a</span>
+          <span class="opsz-val">opsz 144</span>
+        </div>
+      </div>
+
+      <div class="waterfall-lines" aria-label="Type specimen at descending optical sizes">
+        <div class="wfall-line" data-opsz="144" data-base-wght="200">
+          <span class="wfall-text">Fraunces</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 144</span>
+        </div>
+        <div class="wfall-line" data-opsz="72" data-base-wght="300">
+          <span class="wfall-text">A face with soul.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 72</span>
+        </div>
+        <div class="wfall-line" data-opsz="48" data-base-wght="400">
+          <span class="wfall-text">Variable across every axis.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 48</span>
+        </div>
+        <div class="wfall-line" data-opsz="36" data-base-wght="500">
+          <span class="wfall-text">From captions to billboards, one typeface holds.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 36</span>
+        </div>
+        <div class="wfall-line" data-opsz="24" data-base-wght="500">
+          <span class="wfall-text">Twenty-six letters. Four axes. The voice is yours to set.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 24</span>
+        </div>
+        <div class="wfall-line" data-opsz="18" data-base-wght="400">
+          <span class="wfall-text">Good typography is the invisible architecture of meaning — the difference between words on a page and language in the mind.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 18</span>
+        </div>
+        <div class="wfall-line" data-opsz="12" data-base-wght="300">
+          <span class="wfall-text">Fraunces was shaped to hold its own at every scale, every weight, every optical context. The detail is in the decision — not to simplify, but to adapt.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 12</span>
+        </div>
+        <div class="wfall-line" data-opsz="9" data-base-wght="300">
+          <span class="wfall-text">At the smallest optical size the letterforms open up: wider apertures, adjusted stroke contrast, subtly different proportions — every change in service of readability, none at the expense of character. This is optical sizing done with conviction.</span>
+          <span class="wfall-meta" aria-hidden="true">opsz 9</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WEIGHT SPECTRUM -->
+    <section class="weights" aria-labelledby="weights-title">
+      <div class="section-header">
+        <h2 id="weights-title" class="section-title">The&nbsp;Weights</h2>
+        <span class="section-label" aria-hidden="true">100 Thin → 900 Black</span>
+      </div>
+      <div class="weights-list" id="weights-list" aria-label="Font weight specimens">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- AXES PLAYGROUND -->
+    <section class="axes" aria-labelledby="axes-title">
+      <div class="section-header">
+        <h2 id="axes-title" class="section-title">The&nbsp;Axes</h2>
+        <span class="section-label" aria-hidden="true">Drag to explore variation</span>
+      </div>
+      <div class="axes-inner">
+        <div class="axes-specimen-wrap">
+          <div class="axes-specimen" aria-live="polite" aria-label="Variable font preview">
+            <span class="axes-preview">Fraunces</span>
+          </div>
+          <div class="axes-specimen-meta" aria-hidden="true">
+            <span id="spec-fvs">wght 400 · opsz 72 · SOFT 0 · WONK 0</span>
+          </div>
+        </div>
+        <div class="axes-controls" role="group" aria-label="Font variation controls">
+
+          <div class="axis-ctrl">
+            <div class="axis-top">
+              <div class="axis-names">
+                <span class="axis-label">Weight</span>
+                <code class="axis-tag">wght</code>
+              </div>
+              <output class="axis-out" id="out-wght" for="sl-wght">400</output>
+            </div>
+            <input type="range" class="axis-slider" id="sl-wght"
+                   min="100" max="900" value="400" step="1"
+                   aria-label="Font weight: 100 to 900">
+            <div class="axis-ends"><span>100 Thin</span><span>900 Black</span></div>
+          </div>
+
+          <div class="axis-ctrl">
+            <div class="axis-top">
+              <div class="axis-names">
+                <span class="axis-label">Optical Size</span>
+                <code class="axis-tag">opsz</code>
+              </div>
+              <output class="axis-out" id="out-opsz" for="sl-opsz">72</output>
+            </div>
+            <input type="range" class="axis-slider" id="sl-opsz"
+                   min="9" max="144" value="72" step="1"
+                   aria-label="Optical size: 9 caption to 144 display">
+            <div class="axis-ends"><span>9 Caption</span><span>144 Display</span></div>
+          </div>
+
+          <div class="axis-ctrl">
+            <div class="axis-top">
+              <div class="axis-names">
+                <span class="axis-label">Softness</span>
+                <code class="axis-tag">SOFT</code>
+              </div>
+              <output class="axis-out" id="out-soft" for="sl-soft">0</output>
+            </div>
+            <input type="range" class="axis-slider" id="sl-soft"
+                   min="0" max="100" value="0" step="1"
+                   aria-label="Softness: 0 sharp to 100 soft">
+            <div class="axis-ends"><span>0 Sharp</span><span>100 Soft</span></div>
+          </div>
+
+          <div class="axis-ctrl">
+            <div class="axis-top">
+              <div class="axis-names">
+                <span class="axis-label">Wonkiness</span>
+                <code class="axis-tag">WONK</code>
+              </div>
+              <output class="axis-out" id="out-wonk" for="sl-wonk">0</output>
+            </div>
+            <input type="range" class="axis-slider" id="sl-wonk"
+                   min="0" max="1" value="0" step="0.01"
+                   aria-label="Wonkiness: 0 sober to 1 wonky">
+            <div class="axis-ends"><span>0 Sober</span><span>1 Wonky</span></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ITALIC SPECIMEN -->
+    <section class="italic-sec" aria-label="Italic specimen">
+      <div class="italic-inner">
+        <p class="italic-display" lang="en">The italic bows<br>without kneeling.</p>
+        <div class="italic-desc">
+          <span class="italic-spec" aria-hidden="true">Italic · opsz 72 · wght 300</span>
+          <p>The italic of Fraunces brings its own personality — cursive connections, angled terminals, a gentle forward lean that suggests momentum without urgency. Paired with the roman, it forms a natural hierarchy.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GLYPH SHELF -->
+    <section class="glyphs" aria-labelledby="glyphs-title">
+      <div class="section-header">
+        <h2 id="glyphs-title" class="section-title">The&nbsp;Shelf</h2>
+        <span class="section-label" aria-hidden="true">Hover to WONK · click to press</span>
+      </div>
+      <div class="glyphs-grid" id="glyphs-grid" aria-hidden="true">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- NUMERALS -->
+    <section class="numerals" aria-label="Numeral specimen">
+      <div class="numerals-inner">
+        <div class="numerals-display" aria-hidden="true">0123456789</div>
+        <p class="numerals-caption">Oldstyle figures · proportional · contextual alternates</p>
+      </div>
+    </section>
+
+    <!-- PUNCTUATION & SYMBOLS -->
+    <section class="punctuation" aria-label="Punctuation specimen">
+      <div class="punct-inner">
+        <div class="punct-display" aria-hidden="true">.,;:!?&amp;"'«»()*—…@#%</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-monogram" aria-hidden="true">F</div>
+      <div class="footer-right">
+        <p class="footer-name">Fraunces</p>
+        <p class="footer-sub">Variable Typeface Specimen</p>
+        <p class="footer-credit">Designed &amp; built by Claude Fable&nbsp;5 · local build · 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

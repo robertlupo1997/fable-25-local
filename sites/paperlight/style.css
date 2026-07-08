@@ -1,0 +1,337 @@
+/* PAPERLIGHT — Shadow-puppet theatre · style.css
+   Pure SVG + CSS. No canvas, no WebGL.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+/* Progressive-enhancement gate: opacity fade, with animation-play-state
+   so IO-triggered .revealed starts it; 2 s JS timeout is the headless fallback */
+html.js .act-scene-wrapper {
+  opacity: 0;
+  animation: scene-reveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-play-state: paused;
+}
+html.js .act-scene-wrapper.revealed {
+  animation-play-state: running;
+}
+@keyframes scene-reveal { to { opacity: 1; } }
+
+/* ── Tokens ─────────────────────────────────────────────────── */
+:root {
+  --stage:  #1a1412;
+  --cream:  #f5e9d4;
+  --amber:  #ffb347;
+  --plum:   #3d2c3f;
+  --deep:   #0d0a09;
+  /* Cursor lantern & parallax — updated by JS each rAF tick */
+  --lx: 50%;  --ly: 50%;
+  --mx: 0;    --my: 0;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+body {
+  background: var(--stage);
+  color: var(--cream);
+  font-family: 'Libre Caslon Text', Georgia, serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::selection { background: rgba(255,179,71,0.25); }
+
+/* ── Skip link ──────────────────────────────────────────────── */
+.skip-link {
+  position: absolute; top: -120%; left: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--amber); color: var(--stage);
+  font-family: 'Karla', sans-serif; font-weight: 600; font-size: 0.875rem;
+  text-decoration: none; border-radius: 2px; z-index: 9999;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0.5rem; outline: 3px solid var(--cream); outline-offset: 2px; }
+
+/* ── Lantern glow overlay ───────────────────────────────────── */
+/* z-index 30: above scenes (≤20) but below text panels (≥40) */
+.lantern-glow {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 30;
+  background: radial-gradient(
+    ellipse 540px 540px at var(--lx) var(--ly),
+    rgba(255,179,71,.11) 0%,
+    rgba(255,130,40,.045) 42%,
+    transparent 72%
+  );
+}
+
+/* ── Fireflies (pure CSS animation) ────────────────────────── */
+.fireflies { position: fixed; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; }
+.firefly {
+  position: absolute;
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 4px 2px rgba(255,179,71,.65), 0 0 12px 5px rgba(255,179,71,.18);
+  animation:
+    ff-drift var(--dur, 5.5s) var(--delay, 0s) ease-in-out infinite,
+    ff-pulse calc(var(--dur, 5.5s) * .55) var(--delay, 0s) ease-in-out infinite;
+  opacity: 0;
+}
+@keyframes ff-drift {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  12%  { opacity: 1; }
+  45%  { transform: translate(var(--dx, 20px), var(--dy, -18px)); opacity: .75; }
+  82%  { opacity: .35; }
+  100% { transform: translate(var(--dx2, -12px), var(--dy2, 22px)); opacity: 0; }
+}
+@keyframes ff-pulse {
+  0%, 100% { box-shadow: 0 0 4px 2px rgba(255,179,71,.6), 0 0 10px 4px rgba(255,179,71,.18); }
+  50%       { box-shadow: 0 0 7px 3px rgba(255,215,100,.9), 0 0 18px 7px rgba(255,179,71,.35); }
+}
+
+/* ── Theatre header ─────────────────────────────────────────── */
+.theatre-header {
+  position: relative; height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+}
+.header-scene { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+.curtain {
+  position: absolute; top: 0; width: 50.5%; height: 100%; z-index: 5;
+  background: repeating-linear-gradient(to bottom, #321912 0, #1e0f09 55px, #321912 110px);
+  transition: transform 2.2s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.curtain::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(0,0,0,.45), transparent 35%, transparent 65%, rgba(0,0,0,.45));
+}
+.curtain-left  { left: 0;  border-right: 3px solid rgba(255,179,71,.2); }
+.curtain-right { right: 0; border-left:  3px solid rgba(255,179,71,.2); }
+.curtain-left.open  { transform: translateX(-106%); }
+.curtain-right.open { transform: translateX(106%); }
+
+.theatre-marquee { position: relative; z-index: 10; }
+.theatre-label {
+  font-family: 'Karla', sans-serif;
+  font-size: clamp(.65rem, 1.2vw, .82rem); font-weight: 500;
+  letter-spacing: .38em; text-transform: uppercase;
+  color: var(--amber); opacity: .88; margin-bottom: .9rem;
+  text-shadow: 0 1px 4px rgba(0,0,0,.9), 0 0 20px rgba(0,0,0,.7);
+}
+h1.theatre-title {
+  font-size: clamp(4.5rem, 11vw, 9rem);
+  font-style: italic; font-weight: 400;
+  letter-spacing: -.025em; line-height: .88;
+  color: var(--cream);
+  text-shadow:
+    0 2px 4px rgba(0,0,0,.95),
+    0 8px 32px rgba(0,0,0,.85),
+    0 0 120px rgba(255,179,71,.2);
+}
+.theatre-subtitle {
+  font-family: 'Karla', sans-serif;
+  font-size: clamp(.72rem, 1.3vw, .9rem);
+  letter-spacing: .28em; text-transform: uppercase;
+  color: var(--cream); opacity: .72; margin-top: 1.4rem;
+  text-shadow: 0 1px 8px rgba(0,0,0,.95), 0 0 28px rgba(0,0,0,.8);
+}
+.scroll-hint {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Karla', sans-serif;
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--amber); opacity: .55; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: .4rem;
+  animation: hint-bob 2.6s cubic-bezier(.45,0,.55,1) infinite;
+}
+.scroll-hint::after {
+  content: ''; display: block;
+  width: 1px; height: 2.5rem;
+  background: linear-gradient(to bottom, rgba(255,179,71,.6), transparent);
+}
+@keyframes hint-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0);    opacity: .55; }
+  50%       { transform: translateX(-50%) translateY(-7px); opacity: .82; }
+}
+
+/* ── Act rubrication separators (complexity upgrade: theatre-programme marginalia) ── */
+.act-sep {
+  position: relative;
+  display: flex; align-items: center; gap: 1.2rem;
+  padding: 0 clamp(1.5rem, 6vw, 5rem);
+  height: 2.5rem;
+  z-index: 40;
+}
+.act-sep::before,
+.act-sep::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,179,71,.22), transparent);
+}
+.act-sep-label {
+  font-family: 'Karla', sans-serif;
+  font-size: .6rem; font-weight: 600;
+  letter-spacing: .35em; text-transform: uppercase;
+  color: var(--amber); opacity: .45;
+  white-space: nowrap;
+}
+
+/* ── Act sections ───────────────────────────────────────────── */
+.act {
+  position: relative; min-height: 100vh;
+  display: grid; grid-template-rows: 1fr auto; overflow: hidden;
+}
+.act-scene-wrapper { position: relative; min-height: 62vh; overflow: hidden; }
+.act-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.act-content {
+  position: relative; z-index: 40;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 6vw, 5rem);
+  background: linear-gradient(to top, var(--stage) 52%, rgba(26,20,18,.9) 76%, transparent);
+  max-width: 820px;
+}
+/* Paper-grain texture overlay on act text panels (complexity upgrade) */
+.act-content::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: -1;
+  background-image:
+    radial-gradient(ellipse 1px 1px at 12% 18%, rgba(245,233,212,.04) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 34% 52%, rgba(245,233,212,.03) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 67% 28%, rgba(245,233,212,.04) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 88% 76%, rgba(245,233,212,.03) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 22% 88%, rgba(245,233,212,.04) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 56% 64%, rgba(245,233,212,.03) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 78% 44%, rgba(245,233,212,.04) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 44% 8%,  rgba(245,233,212,.03) 0%, transparent 100%);
+  background-size: 40px 40px;
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+.act-badge {
+  display: inline-block;
+  font-family: 'Karla', sans-serif;
+  font-size: .7rem; font-weight: 600;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: .55rem;
+}
+.act h2.act-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+  font-style: italic; font-weight: 400;
+  line-height: 1.12; color: var(--cream); margin-bottom: 1rem;
+}
+.act-prose {
+  font-size: clamp(.9rem, 1.35vw, 1.04rem);
+  line-height: 1.82; color: var(--cream); opacity: .88; max-width: 60ch;
+}
+.act-prose p + p { margin-top: .85em; }
+.act-prose em { font-style: italic; }
+
+/* ── SVG layer parallax (no CSS transition — JS lerp is the easing) ── */
+.layer-far        { transform: translate(calc(var(--mx)*-10px), calc(var(--my)*-5px)); will-change: transform; }
+.layer-mid        { transform: translate(calc(var(--mx)*-22px), calc(var(--my)*-10px)); will-change: transform; }
+.layer-near       { transform: translate(calc(var(--mx)*-36px), calc(var(--my)*-16px)); will-change: transform; }
+.layer-characters { transform: translate(calc(var(--mx)*-50px), calc(var(--my)*-22px)); will-change: transform; }
+
+/* ── Colophon ───────────────────────────────────────────────── */
+.colophon {
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+  text-align: center; position: relative; z-index: 40;
+}
+.colophon-rule {
+  width: 1px; height: 5rem;
+  background: linear-gradient(to bottom, transparent, rgba(255,179,71,.5), transparent);
+  margin: 0 auto 3.5rem;
+}
+.colophon-text {
+  font-size: clamp(1.05rem, 2.1vw, 1.3rem);
+  font-style: italic; line-height: 1.72;
+  color: var(--cream); opacity: .72;
+  max-width: 50ch; margin: 0 auto 1.5rem;
+}
+.colophon-end {
+  font-size: clamp(.88rem, 1.3vw, 1rem);
+  line-height: 1.75; color: var(--cream); opacity: .56;
+  max-width: 48ch; margin: 0 auto;
+}
+.act-trigger {
+  background: none; border: none;
+  color: var(--amber); font-size: 1.1em;
+  cursor: pointer; padding: .15em .3em;
+  opacity: .5; border-radius: 2px;
+  transition: opacity .3s, text-shadow .3s;
+  vertical-align: middle;
+  font-family: 'Libre Caslon Text', serif;
+}
+.act-trigger:hover, .act-trigger:focus {
+  opacity: 1; text-shadow: 0 0 18px var(--amber);
+  outline: 2px solid var(--amber); outline-offset: 3px;
+}
+
+/* ── Hidden Act VI ──────────────────────────────────────────── */
+.act-6 { max-height: 0; overflow: hidden; transition: max-height 2.2s cubic-bezier(.23,1,.32,1); }
+.act-6.revealed { max-height: 160vh; }
+.act-6-inner {
+  padding: clamp(2rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem);
+  text-align: center; border-top: 1px solid rgba(255,179,71,.1);
+}
+.act-6 .act-badge { opacity: .55; font-size: .65rem; letter-spacing: .3em; }
+.act-6 .act-title {
+  font-size: clamp(1.2rem, 2.5vw, 1.75rem);
+  font-style: italic; font-weight: 400;
+  color: var(--cream); opacity: .85; margin-bottom: 1.5rem;
+}
+.act-6-prose {
+  font-size: clamp(.9rem, 1.35vw, 1.04rem);
+  font-style: italic; line-height: 1.88;
+  color: var(--cream); opacity: .7;
+  max-width: 48ch; margin: 0 auto;
+}
+.act-6-prose p + p { margin-top: 1em; }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+footer.site-footer {
+  padding: 1.75rem clamp(1.5rem, 5vw, 4rem);
+  border-top: 1px solid rgba(255,179,71,.1);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .75rem; position: relative; z-index: 40;
+}
+.footer-credit {
+  font-family: 'Karla', sans-serif;
+  font-size: .72rem; letter-spacing: .07em;
+  color: var(--cream); opacity: .55;
+}
+.footer-nav a {
+  font-family: 'Karla', sans-serif;
+  font-size: .72rem; letter-spacing: .1em;
+  color: var(--cream); opacity: .55; text-decoration: none;
+  transition: opacity .2s;
+}
+.footer-nav a:hover, .footer-nav a:focus { opacity: .72; outline: 1px solid var(--amber); outline-offset: 3px; }
+
+/* ── Mobile ─────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .act-scene-wrapper { min-height: 52vh; }
+  .curtain { display: none; }
+  .layer-far        { transform: translate(calc(var(--mx)*-5px),  calc(var(--my)*-2px)); }
+  .layer-mid        { transform: translate(calc(var(--mx)*-10px), calc(var(--my)*-4px)); }
+  .layer-near       { transform: translate(calc(var(--mx)*-16px), calc(var(--my)*-6px)); }
+  .layer-characters { transform: translate(calc(var(--mx)*-22px), calc(var(--my)*-9px)); }
+  footer.site-footer { flex-direction: column; align-items: flex-start; }
+}
+
+/* ── Reduced motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* Ensure scenes are visible in reduced-motion mode */
+  html.js .act-scene-wrapper {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .layer-far, .layer-mid, .layer-near, .layer-characters {
+    transform: none !important; will-change: auto;
+  }
+  .firefly { display: none; }
+  .scroll-hint { animation: none !important; }
+  .curtain { transition: none !important; }
+  .act-6 { transition: none !important; }
+}

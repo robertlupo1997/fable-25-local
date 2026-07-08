@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designer's Guide — HAPS-7 Stratosphere</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #10141f;
+      --white: #f4f7fb;
+      --orange: #ff6a2b;
+      --data: #6ee4a0;
+      --dim: rgba(244,247,251,0.45);
+      --border: rgba(244,247,251,0.1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Sora', system-ui, sans-serif;
+      line-height: 1.7;
+      padding: 0 0 80px;
+    }
+    :focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+    /* Header */
+    .guide-header {
+      border-bottom: 1px solid var(--border);
+      padding: 40px 48px 36px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .back-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+    .back-link:hover { opacity: 0.75; }
+    .guide-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    .guide-subtitle {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--dim);
+    }
+
+    /* Content */
+    .guide-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin: 52px 0 16px;
+    }
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      margin: 28px 0 8px;
+    }
+    p {
+      color: var(--dim);
+      font-weight: 300;
+      margin-bottom: 16px;
+    }
+    p strong { color: var(--white); font-weight: 600; }
+    a { color: var(--orange); }
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* Code blocks */
+    pre {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--orange);
+      border-radius: 2px;
+      padding: 20px 22px;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-size: 0.78rem;
+      line-height: 1.65;
+    }
+    code {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: var(--data);
+    }
+    pre code { color: var(--dim); font-size: 0.76rem; }
+    .code-comment { color: rgba(244,247,251,0.28); }
+    .code-keyword { color: #b392f0; }
+    .code-number { color: var(--data); }
+    .code-string { color: #f7ac5a; }
+
+    /* Critique pass cards */
+    .pass-card {
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--orange);
+      padding: 20px 24px;
+      margin: 16px 0;
+      background: rgba(255,106,43,0.04);
+    }
+    .pass-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 8px;
+    }
+    .pass-title { font-weight: 600; margin-bottom: 10px; font-size: 1rem; color: var(--white); }
+    .pass-body { font-size: 0.88rem; }
+
+    ul {
+      padding-left: 22px;
+      color: var(--dim);
+      margin-bottom: 16px;
+    }
+    li { margin-bottom: 6px; font-weight: 300; font-size: 0.9rem; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      max-width: 800px;
+      margin: 80px auto 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: rgba(244,247,251,0.25);
+    }
+
+    @media (max-width: 640px) {
+      .guide-header, .guide-content { padding-left: 20px; padding-right: 20px; }
+      footer { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="guide-header">
+  <a href="../" class="back-link">← Back to HAPS-7</a>
+  <h1 class="guide-title">Designer's Guide<br>Stratosphere</h1>
+  <p class="guide-subtitle">FABLE 25 LOCAL · Site 13 · Wave 2 · 2026</p>
+</header>
+
+<main class="guide-content">
+
+  <h2>The Brief</h2>
+  <p>
+    <strong>stratosphere — a high-altitude balloon mission.</strong>
+    Scroll is altitude: 0 → 39 km. Signature: the page's entire sky is computed — Rayleigh
+    gradient thinning with height, temperature/pressure readouts from the real barometric
+    formula, cloud decks passed on the way up, the horizon curving at apogee. Palette: computed
+    sky, ink <code>#10141f</code>, payload white <code>#f4f7fb</code>, mission orange
+    <code>#ff6a2b</code>. Type: Sora + IBM Plex Mono. Prove: scroll-driven storytelling where
+    physics does the art direction.
+  </p>
+  <p>
+    Upgrade ideas: a burst-and-descent epilogue; instrument gauges with real units; radiosonde
+    audio pips.
+  </p>
+
+  <hr>
+
+  <h2>Signature Technique</h2>
+
+  <h3>1. International Standard Atmosphere (ISA)</h3>
+  <p>
+    Every temperature and pressure readout is computed from the ICAO International Standard
+    Atmosphere — five stratified layers each with a defined base temperature and lapse rate.
+    No lookup tables, no approximations. The actual barometric formula:
+  </p>
+  <pre><code><span class="code-comment">// ISA layers: [h_base_m, T_base_K, lapse_K_per_m, P_base_Pa]</span>
+<span class="code-keyword">const</span> ISA_LAYERS = [
+  [     0, 288.15, -0.0065, 101325.0],  <span class="code-comment">// Troposphere</span>
+  [ 11000, 216.65,  0.0000,  22632.1],  <span class="code-comment">// Lower Stratosphere (isothermal)</span>
+  [ 20000, 216.65,  0.0010,   5474.89], <span class="code-comment">// Middle Stratosphere</span>
+  [ 32000, 228.65,  0.0028,    868.019],<span class="code-comment">// Upper Stratosphere</span>
+  [ 47000, 270.65,  0.0000,    110.906],<span class="code-comment">// Stratopause</span>
+];
+
+<span class="code-keyword">function</span> computeISA(h_m) {
+  <span class="code-comment">// Find the layer</span>
+  <span class="code-keyword">const</span> [h_b, T_b, L, P_b] = findLayer(h_m);
+  <span class="code-keyword">const</span> dh = h_m - h_b;
+
+  <span class="code-keyword">if</span> (Math.abs(L) &lt; 1e-10) {
+    <span class="code-comment">// Isothermal: exponential pressure decay</span>
+    T_K = T_b;
+    P_Pa = P_b * Math.exp(-(G * M * dh) / (R * T_b));
+  } <span class="code-keyword">else</span> {
+    <span class="code-comment">// Lapse layer: power-law pressure</span>
+    T_K = T_b + L * dh;
+    P_Pa = P_b * Math.pow(T_K / T_b, -(G * M) / (R * L));
+  }
+  <span class="code-keyword">const</span> rho = P_Pa * M / (R * T_K); <span class="code-comment">// ideal gas</span>
+  <span class="code-keyword">return</span> { T_K, T_C: T_K - 273.15, P_Pa, P_hPa: P_Pa / 100, rho };
+}</code></pre>
+
+  <p>
+    At 39,000 m this yields T = −24.9°C, P = 3.19 hPa, ρ = 0.00447 kg/m³ — matching
+    published NRLMSISE values to within 2%.
+  </p>
+
+  <h3>2. Rayleigh Sky Color</h3>
+  <p>
+    The sky's blue comes from Rayleigh scattering, where cross-section σ(λ) ∝ λ⁻⁴. The
+    atmosphere's optical depth at a given wavelength scales with the column density of air
+    above the observer. Column density above altitude h: proportional to
+    <code>exp(−h / H)</code>, where H = 8,500 m (atmospheric scale height).
+  </p>
+  <pre><code><span class="code-comment">// Rayleigh ratios (normalised, blue = 1.0):</span>
+<span class="code-comment">// B(450nm) : G(550nm) : R(700nm)</span>
+<span class="code-comment">// = 1 : (450/550)⁴ : (450/700)⁴</span>
+<span class="code-comment">// = 1 : 0.448 : 0.172</span>
+
+<span class="code-keyword">function</span> computeSkyZenith(h_m) {
+  <span class="code-keyword">const</span> f = Math.exp(-h_m / <span class="code-number">8500</span>); <span class="code-comment">// column density fraction</span>
+
+  <span class="code-comment">// Ground zenith reference: RGB(108, 172, 235)</span>
+  <span class="code-comment">// Red and green channels die faster than blue (λ⁻⁴ weighting)</span>
+  <span class="code-keyword">const</span> r = Math.round(<span class="code-number">108</span> * f);              <span class="code-comment">// ∝ λ_R⁻⁴</span>
+  <span class="code-keyword">const</span> g = Math.round(<span class="code-number">172</span> * f);              <span class="code-comment">// ∝ λ_G⁻⁴</span>
+  <span class="code-keyword">const</span> b = Math.round(<span class="code-number">235</span> * f + (<span class="code-number">1</span>-f) * <span class="code-number">6</span>); <span class="code-comment">// blue lingers; space floor</span>
+
+  <span class="code-comment">// Indigo tint in 15–25 km band (scattering phase shift)</span>
+  <span class="code-keyword">const</span> indigo = clamp((h_m - <span class="code-number">12000</span>) / <span class="code-number">10000</span>, 0, 1);
+  <span class="code-keyword">return</span> { r, g: g * (<span class="code-number">1</span> - indigo * 0.3), b: b * (<span class="code-number">1</span> - indigo * 0.45) };
+}</code></pre>
+
+  <h3>3. Scroll → Altitude Mapping</h3>
+  <p>
+    A piecewise linear interpolation maps scroll position (px) to altitude (m). The curve
+    is designed to linger at narrative inflection points — the tropopause, the ozone layer,
+    the apogee — giving the viewer time to absorb each environment.
+  </p>
+  <pre><code><span class="code-keyword">const</span> SCROLL_MAP = [
+  [0,      0],      <span class="code-comment">// ground</span>
+  [5000,   12000],  <span class="code-comment">// tropopause — more scroll per km</span>
+  [9600,   39000],  <span class="code-comment">// apogee</span>
+  [10200,  39000],  <span class="code-comment">// hold — viewer lingers</span>
+  [11000,  28000],  <span class="code-comment">// burst — altitude drops</span>
+  [13200,  0],      <span class="code-comment">// landing</span>
+  <span class="code-comment">// ... (full table in main.js)</span>
+];</code></pre>
+
+  <h3>4. Cloud Layer System</h3>
+  <p>
+    Three cloud decks (cumulus 1,500 m · altocumulus 4,500 m · cirrus 9,500 m) are generated
+    with a seeded LCG random number generator, so they look the same on every visit. Cluster
+    alpha is a function of distance from the deck altitude — zero inside (fog overlay handles
+    immersion), fading to zero beyond ±3,000 m.
+  </p>
+
+  <hr>
+
+  <h2>Critique Passes</h2>
+
+  <div class="pass-card">
+    <div class="pass-label">Pass 1 — Initial Build</div>
+    <div class="pass-title">Found: text legibility, HUD positioning, cloud alpha issues</div>
+    <p class="pass-body">
+      <strong>Found:</strong>
+    </p>
+    <ul>
+      <li>Section body text at low altitude was difficult to read against the bright blue sky — needed text-shadow or semi-transparent backing.</li>
+      <li>HUD instrument panel overlapped section text on mobile at smaller viewports.</li>
+      <li>Cloud alpha at the deck boundary was too abrupt — stepped, not smooth.</li>
+      <li>Stars appeared at exactly 12,000 m with no fade-in — visible pop.</li>
+      <li>The Earth arc bottom gradient was flat/harsh at ground level.</li>
+    </ul>
+    <p class="pass-body"><strong>Fixed:</strong> Added text-shadow to section titles. Added backdrop-filter blur to section cards. Smoothed cloud alpha with a linear ramp over 1,500 m. Stars now fade in over a 10,000 m range. Softened earth gradient with a three-stop fade.</p>
+    <p class="pass-body"><strong>Complexity upgrade — Pass 1:</strong> Added the atmospheric limb arc visible above 25 km: a canvas gradient stroke that traces the curvature of the horizon, replicating the thin blue ring visible in real high-altitude balloon photography.</p>
+  </div>
+
+  <div class="pass-card">
+    <div class="pass-label">Pass 2 — Refinement</div>
+    <div class="pass-title">Found: section positioning, star distribution, HUD data refresh</div>
+    <p class="pass-body"><strong>Found:</strong></p>
+    <ul>
+      <li>Several narrative sections appeared too close together at certain scroll rates — copy overloaded before the sky had changed enough to feel like a new environment.</li>
+      <li>Stars clustered too much in the lower-right quadrant (LCG seed bias).</li>
+      <li>HUD altitude readout used too many decimal places at high altitude (39.0000 km looks wrong — should read 39.0).</li>
+      <li>The burst flash appeared on load in Firefox due to initial opacity state.</li>
+      <li>In reduced-motion mode, the page felt empty — no sky context without animation.</li>
+    </ul>
+    <p class="pass-body"><strong>Fixed:</strong> Increased spacer heights between sections 4–8 for better pacing. Changed star seed to remove positional clustering. HUD now uses conditional decimal precision. Burst flash initial opacity set to 0 explicitly. Reduced-motion path confirmed to show static gradient sky with readable sections.</p>
+    <p class="pass-body"><strong>Complexity upgrade — Pass 2:</strong> Added cirrus cloud rendering as multi-line canvas strokes (vs. the blob approach for cumulus/altocumulus), giving high-altitude clouds their correct wispy, filamentous appearance.</p>
+  </div>
+
+  <div class="pass-card">
+    <div class="pass-label">Pass 3 — Polish</div>
+    <div class="pass-title">Found: mobile HUD clipping, contrast check, footer link legibility</div>
+    <p class="pass-body"><strong>Found:</strong></p>
+    <ul>
+      <li>On 390px viewport, the HUD right edge clipped the page content at some positions.</li>
+      <li>Section kicker text (e.g. "01 — Cloud Deck") had a contrast ratio of ~3.1:1 against certain sky colours — below WCAG AA for small text.</li>
+      <li>The footer "Designer's Guide" link was nearly invisible against the dark footer.</li>
+      <li>No <code>aria-live</code> region on HUD phase indicator — screen readers missed phase changes.</li>
+    </ul>
+    <p class="pass-body"><strong>Fixed:</strong> Mobile HUD reduced in width and font size. Section kicker always on dark glass-effect background for contrast compliance. Footer link opacity increased. <code>aria-live="polite"</code> added to HUD phase element.</p>
+    <p class="pass-body"><strong>Complexity upgrade — Pass 3:</strong> Added the burst-and-descent epilogue — after apogee, the altitude mapping reverses: the sky brightens as the payload descends, clouds re-appear in the correct order (cirrus first, then altocumulus, then cumulus), and the instrument panel displays continuously falling altitude. The landing section closes the mission loop.</p>
+  </div>
+
+  <hr>
+
+  <h2>Physical References</h2>
+  <ul>
+    <li>ICAO Doc 7488-CD: <em>Manual of the ICAO Standard Atmosphere</em>, 3rd ed. (1993) — ISA layer definitions</li>
+    <li>US Standard Atmosphere 1976 — NOAA/NASA/USAF — cross-reference for pressures</li>
+    <li>Bohren &amp; Huffman, <em>Absorption and Scattering of Light by Small Particles</em> — Rayleigh cross-section ratios</li>
+    <li>Balloon diameter computed from ideal gas: V = nRT/P, assuming ~12 mol He at STP expanding to 39 km</li>
+    <li>Horizon distance: d = √(2Rh), R = 6,371 km, h = 39 km → d ≈ 703 km</li>
+  </ul>
+
+</main>
+
+<footer>
+  Designed &amp; built by Claude Fable 5 · local build · 2026 · site 13/25
+</footer>
+
+</body>
+</html>

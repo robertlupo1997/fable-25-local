@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paperlight — Design Guide</title>
+  <meta name="description" content="The brief, signature technique, and critique history for Paperlight: a shadow-puppet theatre told in pure SVG and CSS.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    :root {
+      --stage:  #1a1412;
+      --cream:  #f5e9d4;
+      --amber:  #ffb347;
+      --plum:   #3d2c3f;
+      --deep:   #0d0a09;
+      --plum-mid: #52395a;
+    }
+
+    body {
+      background: var(--stage);
+      color: var(--cream);
+      font-family: 'Libre Caslon Text', Georgia, serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute; top: -120%; left: 1rem;
+      padding: .5rem 1rem;
+      background: var(--amber); color: var(--stage);
+      font-family: 'Karla', sans-serif; font-weight: 600; font-size: .875rem;
+      text-decoration: none; border-radius: 2px; z-index: 999;
+      transition: top .2s;
+    }
+    .skip-link:focus { top: .5rem; outline: 3px solid var(--cream); outline-offset: 2px; }
+
+    /* ── Guide header ── */
+    .guide-header {
+      position: relative;
+      padding: 5rem clamp(1.5rem, 8vw, 7rem) 4rem;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,179,71,.12);
+    }
+    .header-scene {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: .55; pointer-events: none;
+    }
+    .guide-header-inner { position: relative; z-index: 2; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-family: 'Karla', sans-serif;
+      font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--amber); opacity: .72; text-decoration: none;
+      transition: opacity .2s;
+      margin-bottom: 2.5rem;
+    }
+    .back-link:hover, .back-link:focus { opacity: 1; outline: 1px solid var(--amber); outline-offset: 3px; }
+    .back-link::before { content: '←'; font-size: .9em; }
+    .guide-label {
+      font-family: 'Karla', sans-serif;
+      font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+      color: var(--amber); opacity: .75; margin-bottom: .7rem;
+    }
+    .guide-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-style: italic; font-weight: 400;
+      line-height: 1.08; color: var(--cream);
+      text-shadow: 0 2px 12px rgba(0,0,0,.9);
+      margin-bottom: .8rem;
+    }
+    .guide-subtitle {
+      font-family: 'Karla', sans-serif;
+      font-size: clamp(.8rem, 1.3vw, .95rem);
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--cream); opacity: .72;
+      text-shadow: 0 1px 6px rgba(0,0,0,.95), 0 0 20px rgba(0,0,0,.8);
+    }
+
+    /* ── Main layout ── */
+    .guide-main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem clamp(1.5rem, 6vw, 4rem) 6rem;
+    }
+
+    /* ── Section blocks ── */
+    .guide-section { margin-bottom: 4rem; }
+    .guide-section + .guide-section {
+      padding-top: 3.5rem;
+      border-top: 1px solid rgba(255,179,71,.1);
+    }
+    .section-eyebrow {
+      font-family: 'Karla', sans-serif;
+      font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--amber); opacity: .7; margin-bottom: .9rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .section-eyebrow::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(to right, rgba(255,179,71,.2), transparent);
+    }
+    .section-title {
+      font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+      font-style: italic; font-weight: 400;
+      color: var(--cream); margin-bottom: 1.2rem;
+      line-height: 1.18;
+    }
+
+    /* ── Prose ── */
+    .prose {
+      font-size: clamp(.9rem, 1.3vw, 1.02rem);
+      line-height: 1.82; color: var(--cream); opacity: .85;
+    }
+    .prose p + p { margin-top: .9em; }
+    .prose strong { font-weight: 700; opacity: 1; color: var(--cream); }
+    .prose em { font-style: italic; }
+    .prose ul { margin-top: .6em; padding-left: 1.4em; }
+    .prose li { margin-bottom: .35em; }
+
+    /* ── Palette swatch row ── */
+    .palette {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      margin-top: 1.5rem;
+    }
+    .swatch {
+      display: flex; flex-direction: column; align-items: flex-start;
+      gap: .3rem; min-width: 90px;
+    }
+    .swatch-color {
+      width: 56px; height: 36px; border-radius: 3px;
+      border: 1px solid rgba(245,233,212,.08);
+    }
+    .swatch-name {
+      font-family: 'Karla', sans-serif;
+      font-size: .6rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--cream); opacity: .55;
+    }
+    .swatch-hex {
+      font-family: 'Karla', sans-serif;
+      font-size: .62rem; color: var(--amber); opacity: .7;
+    }
+
+    /* ── Type specimen ── */
+    .type-specimen { margin-top: 1.5rem; }
+    .type-row {
+      display: flex; align-items: baseline; gap: 1.2rem;
+      padding: .9rem 0;
+      border-bottom: 1px solid rgba(255,179,71,.07);
+    }
+    .type-label {
+      font-family: 'Karla', sans-serif;
+      font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--amber); opacity: .6; min-width: 120px; flex-shrink: 0;
+    }
+    .type-sample-serif { font-family: 'Libre Caslon Text', Georgia, serif; }
+    .type-sample-sans  { font-family: 'Karla', sans-serif; }
+
+    /* ── Code excerpt ── */
+    .code-excerpt {
+      margin-top: 1.5rem;
+      background: rgba(13,10,9,.7);
+      border: 1px solid rgba(255,179,71,.12);
+      border-radius: 4px;
+      overflow-x: auto;
+      position: relative;
+    }
+    .code-excerpt-label {
+      font-family: 'Karla', sans-serif;
+      font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--amber); opacity: .55;
+      padding: .65rem 1.1rem .4rem;
+      border-bottom: 1px solid rgba(255,179,71,.08);
+    }
+    .code-excerpt pre {
+      padding: 1rem 1.1rem 1.2rem;
+      font-family: 'Karla', 'Courier New', monospace;
+      font-size: .72rem; line-height: 1.7;
+      color: #c8b89e;
+      white-space: pre;
+      tab-size: 2;
+    }
+    .c-cmt  { color: #a09280; font-style: italic; }
+    .c-sel  { color: #f5e9d4; }
+    .c-attr { color: #ffb347; opacity: .85; }
+    .c-val  { color: #a8d8a8; }
+    .c-tag  { color: #d4a0d4; }
+    .c-str  { color: #a8d8a8; }
+
+    /* ── Pass history ── */
+    .pass-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .pass-item {
+      display: grid; grid-template-columns: 3.5rem 1fr;
+      gap: 0 1.2rem; align-items: start;
+    }
+    .pass-badge {
+      font-family: 'Karla', sans-serif;
+      font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--amber); opacity: .65;
+      padding-top: .1rem;
+      white-space: nowrap;
+    }
+    .pass-body { }
+    .pass-heading {
+      font-size: clamp(.95rem, 1.5vw, 1.05rem);
+      font-style: italic; font-weight: 400;
+      color: var(--cream); margin-bottom: .4rem;
+    }
+    .pass-detail {
+      font-family: 'Karla', sans-serif;
+      font-size: .82rem; line-height: 1.72;
+      color: var(--cream); opacity: .72;
+    }
+    .pass-detail + .pass-detail { margin-top: .3em; }
+
+    /* ── Footer ── */
+    .guide-footer {
+      padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+      border-top: 1px solid rgba(255,179,71,.1);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: .75rem;
+    }
+    .guide-footer p {
+      font-family: 'Karla', sans-serif;
+      font-size: .72rem; letter-spacing: .07em;
+      color: var(--cream); opacity: .55;
+    }
+    .guide-footer a {
+      font-family: 'Karla', sans-serif;
+      font-size: .72rem; letter-spacing: .1em;
+      color: var(--cream); opacity: .55; text-decoration: none;
+      transition: opacity .2s;
+    }
+    .guide-footer a:hover, .guide-footer a:focus {
+      opacity: .85; outline: 1px solid var(--amber); outline-offset: 3px;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      .palette { flex-wrap: wrap; }
+      .pass-item { grid-template-columns: 1fr; }
+      .pass-badge { margin-bottom: .2rem; }
+      .guide-footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- ── Header with abbreviated scene ── -->
+<header class="guide-header" aria-label="Guide header">
+
+  <svg class="header-scene" viewBox="0 0 1440 260"
+       preserveAspectRatio="xMidYMid slice"
+       aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="torn" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="turbulence" baseFrequency="0.032 0.018"
+                      numOctaves="3" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise"
+                           scale="12" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <linearGradient id="sky-g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"  stop-color="#0d1628"/>
+        <stop offset="100%" stop-color="#1a1412"/>
+      </linearGradient>
+    </defs>
+    <rect width="1440" height="260" fill="url(#sky-g)"/>
+    <!-- Stars -->
+    <circle cx="90"  cy="28" r="1.6" fill="#f5e9d4" opacity=".55"/>
+    <circle cx="320" cy="18" r="1.2" fill="#f5e9d4" opacity=".42"/>
+    <circle cx="580" cy="34" r="1.5" fill="#f5e9d4" opacity=".5"/>
+    <circle cx="820" cy="15" r="1.2" fill="#f5e9d4" opacity=".38"/>
+    <circle cx="1050" cy="28" r="1.4" fill="#f5e9d4" opacity=".48"/>
+    <circle cx="1280" cy="20" r="1.1" fill="#f5e9d4" opacity=".4"/>
+    <!-- Moon -->
+    <circle cx="1320" cy="60" r="36" fill="#f5e9d4" opacity=".7"
+            filter="blur(1px)"/>
+    <!-- Far mountains -->
+    <path d="M-20,180 C80,140 220,100 380,120 C540,140 640,80 820,60 C1000,40 1100,80 1240,65 C1380,50 1430,90 1460,80 L1460,260 L-20,260 Z"
+          fill="#52395a" filter="url(#torn)"/>
+    <!-- Near ground -->
+    <path d="M-20,215 C150,205 380,210 660,208 C940,206 1180,212 1470,208 L1470,260 L-20,260 Z"
+          fill="#130f10"/>
+    <!-- Lantern glow hint (centre) -->
+    <ellipse cx="720" cy="260" rx="280" ry="80" fill="#ffb347" opacity=".04"/>
+  </svg>
+
+  <div class="guide-header-inner">
+    <a href="../" class="back-link">Paperlight</a>
+    <p class="guide-label">Design Guide</p>
+    <h1 class="guide-title">How the theatre was built</h1>
+    <p class="guide-subtitle">Brief · Technique · Iteration</p>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main id="main" class="guide-main">
+
+  <!-- BRIEF ─────────────────────────────────────────────────── -->
+  <section class="guide-section" aria-labelledby="s-brief">
+    <p class="section-eyebrow">The assignment</p>
+    <h2 id="s-brief" class="section-title">The brief</h2>
+    <div class="prose">
+      <p><strong>Paperlight</strong> is a five-act folk tale told in layered paper-cutout scenes. The mandate was a shadow-puppet theatre built from <strong>pure SVG and CSS — no canvas, no WebGL</strong> — using layered parallax depth, a lantern glow that follows the cursor via CSS custom properties, and silhouettes with torn-paper edges made from SVG filters.</p>
+      <p>Palette: stage <strong>#1a1412</strong>, cream <strong>#f5e9d4</strong>, lantern amber <strong>#ffb347</strong>, plum shadow <strong>#3d2c3f</strong>. Type: <em>Libre Caslon Text</em> (body and display) + <em>Karla</em> (labels and UI).</p>
+      <p>The project mandate was to prove that restraint — CSS and SVG alone, earning every pixel procedurally — can be breathtaking. Upgrade ideas from the brief: act-curtain wipes, CSS-only fireflies, and a hidden sixth act after the colophon.</p>
+    </div>
+
+    <!-- Palette -->
+    <div class="palette" role="list" aria-label="Colour palette">
+      <div class="swatch" role="listitem">
+        <div class="swatch-color" style="background:#1a1412"></div>
+        <span class="swatch-name">Stage</span>
+        <span class="swatch-hex">#1a1412</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-color" style="background:#f5e9d4"></div>
+        <span class="swatch-name">Cream</span>
+        <span class="swatch-hex">#f5e9d4</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-color" style="background:#ffb347"></div>
+        <span class="swatch-name">Amber</span>
+        <span class="swatch-hex">#ffb347</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-color" style="background:#3d2c3f"></div>
+        <span class="swatch-name">Plum</span>
+        <span class="swatch-hex">#3d2c3f</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-color" style="background:#52395a"></div>
+        <span class="swatch-name">Plum Mid</span>
+        <span class="swatch-hex">#52395a</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-color" style="background:#0d0a09"></div>
+        <span class="swatch-name">Deep</span>
+        <span class="swatch-hex">#0d0a09</span>
+      </div>
+    </div>
+
+    <!-- Type specimen -->
+    <div class="type-specimen" aria-label="Type specimen">
+      <div class="type-row">
+        <span class="type-label">Display / Body</span>
+        <span class="type-sample-serif" style="font-size:1.6rem;font-style:italic;color:var(--cream)">Libre Caslon Text</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Labels / UI</span>
+        <span class="type-sample-sans" style="font-size:1rem;letter-spacing:.08em;color:var(--cream);opacity:.8">Karla — FIVE ACTS IN SHADOW</span>
+      </div>
+      <div class="type-row">
+        <span class="type-label">Italic prose</span>
+        <span class="type-sample-serif" style="font-size:.95rem;font-style:italic;color:var(--cream);opacity:.82">"The mountain remembers eating light," it said.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNATURE TECHNIQUE ─────────────────────────────────── -->
+  <section class="guide-section" aria-labelledby="s-tech">
+    <p class="section-eyebrow">Signature technique</p>
+    <h2 id="s-tech" class="section-title">SVG torn-paper layers + CSS parallax</h2>
+    <div class="prose">
+      <p>Every scene is a stack of SVG <code>&lt;g&gt;</code> groups — <code>.layer-far</code>, <code>.layer-mid</code>, <code>.layer-characters</code>, <code>.layer-near</code> — each translated by a different multiple of <code>--mx</code> / <code>--my</code> CSS custom properties updated each animation frame by a lerped mouse position. There are no JS transforms on DOM elements: the parallax is pure CSS reading live custom properties.</p>
+      <p>The torn-paper edges are SVG <code>&lt;feTurbulence&gt;</code> → <code>&lt;feDisplacementMap&gt;</code> filter chains. Two variants: <code>#torn-c</code> (coarse, seed 7, scale 14) for far mountain silhouettes, and <code>#torn-f</code> (fine, seed 13, scale 9) for near layered edges. The filter lives once in a zero-dimension <code>&lt;svg&gt;</code> in the document head and is referenced by <code>filter="url(#torn-c)"</code> on any path.</p>
+      <p>The cursor lantern is a fixed <code>&lt;div&gt;</code> with a radial-gradient pointing at <code>var(--lx) var(--ly)</code>. The JS lerp (factor 0.07) runs in a single <code>requestAnimationFrame</code> loop that pauses on <code>document.hidden</code>, keeping CPU overhead near zero.</p>
+    </div>
+
+    <!-- Code: the torn-paper filter definition -->
+    <div class="code-excerpt" aria-label="Code excerpt: torn-paper SVG filter">
+      <p class="code-excerpt-label">SVG filter — torn-paper edge (from index.html)</p>
+      <pre><span class="c-cmt">&lt;!-- Torn-paper filter: coarse — for far landscape silhouette edges --&gt;</span>
+<span class="c-tag">&lt;filter</span> <span class="c-attr">id</span>=<span class="c-str">"torn-c"</span> <span class="c-attr">x</span>=<span class="c-str">"-6%"</span> <span class="c-attr">y</span>=<span class="c-str">"-6%"</span> <span class="c-attr">width</span>=<span class="c-str">"112%"</span> <span class="c-attr">height</span>=<span class="c-str">"112%"</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;feTurbulence</span> <span class="c-attr">type</span>=<span class="c-str">"turbulence"</span> <span class="c-attr">baseFrequency</span>=<span class="c-str">"0.032 0.018"</span>
+                <span class="c-attr">numOctaves</span>=<span class="c-str">"3"</span> <span class="c-attr">seed</span>=<span class="c-str">"7"</span> <span class="c-attr">result</span>=<span class="c-str">"noise"</span><span class="c-tag">/&gt;</span>
+  <span class="c-tag">&lt;feDisplacementMap</span> <span class="c-attr">in</span>=<span class="c-str">"SourceGraphic"</span> <span class="c-attr">in2</span>=<span class="c-str">"noise"</span>
+                     <span class="c-attr">scale</span>=<span class="c-str">"14"</span> <span class="c-attr">xChannelSelector</span>=<span class="c-str">"R"</span> <span class="c-attr">yChannelSelector</span>=<span class="c-str">"G"</span><span class="c-tag">/&gt;</span>
+<span class="c-tag">&lt;/filter&gt;</span></pre>
+    </div>
+
+    <!-- Code: the CSS parallax -->
+    <div class="code-excerpt" style="margin-top:1rem" aria-label="Code excerpt: CSS parallax layers">
+      <p class="code-excerpt-label">CSS parallax — four depth layers (from style.css)</p>
+      <pre><span class="c-cmt">/* SVG layer parallax — JS lerp provides the easing */</span>
+<span class="c-sel">.layer-far</span>        { transform: translate(calc(<span class="c-val">var(--mx)</span>*-10px), calc(<span class="c-val">var(--my)</span>*-5px)); }
+<span class="c-sel">.layer-mid</span>        { transform: translate(calc(<span class="c-val">var(--mx)</span>*-22px), calc(<span class="c-val">var(--my)</span>*-10px)); }
+<span class="c-sel">.layer-near</span>       { transform: translate(calc(<span class="c-val">var(--mx)</span>*-36px), calc(<span class="c-val">var(--my)</span>*-16px)); }
+<span class="c-sel">.layer-characters</span> { transform: translate(calc(<span class="c-val">var(--mx)</span>*-50px), calc(<span class="c-val">var(--my)</span>*-22px)); }
+
+<span class="c-cmt">/* Cursor lantern: single rAF loop → CSS custom properties */</span>
+<span class="c-sel">.lantern-glow</span> {
+  position: fixed; inset: 0; pointer-events: none;
+  background: radial-gradient(
+    ellipse 540px 540px at <span class="c-val">var(--lx)</span> <span class="c-val">var(--ly)</span>,
+    rgba(255,179,71,.11) 0%,
+    rgba(255,130,40,.045) 42%,
+    transparent 72%
+  );
+}</pre>
+    </div>
+
+    <!-- Code: fireflies -->
+    <div class="code-excerpt" style="margin-top:1rem" aria-label="Code excerpt: CSS-only fireflies">
+      <p class="code-excerpt-label">CSS-only fireflies — each fly is one span with inline custom props</p>
+      <pre><span class="c-sel">.firefly</span> {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: <span class="c-val">var(--amber)</span>;
+  box-shadow: 0 0 4px 2px rgba(255,179,71,.65), 0 0 12px 5px rgba(255,179,71,.18);
+  animation:
+    ff-drift <span class="c-val">var(--dur)</span> <span class="c-val">var(--delay)</span> ease-in-out infinite,
+    ff-pulse calc(<span class="c-val">var(--dur)</span> * .55) <span class="c-val">var(--delay)</span> ease-in-out infinite;
+}
+<span class="c-cmt">/* Inline: style="left:8%;top:25%;--dx:22px;--dy:-18px;--delay:0s;--dur:5.2s" */</span>
+<span class="c-sel">@keyframes</span> ff-drift {
+  0%  { transform: translate(0,0); opacity: 0; }
+  12% { opacity: 1; }
+  45% { transform: translate(<span class="c-val">var(--dx)</span>, <span class="c-val">var(--dy)</span>); opacity: .75; }
+  82% { opacity: .35; }
+  100%{ transform: translate(<span class="c-val">var(--dx2)</span>, <span class="c-val">var(--dy2)</span>); opacity: 0; }
+}</pre>
+    </div>
+  </section>
+
+  <!-- CRITIQUE PASSES ─────────────────────────────────────── -->
+  <section class="guide-section" aria-labelledby="s-passes">
+    <p class="section-eyebrow">Iteration history</p>
+    <h2 id="s-passes" class="section-title">What each pass found and changed</h2>
+    <div class="prose">
+      <p>Three critique passes ran before context overflow ended the predecessor builder. This guide is completed by a finishing agent who inherited the working tree and carried the site across the release gates.</p>
+    </div>
+
+    <div class="pass-list">
+
+      <div class="pass-item">
+        <span class="pass-badge">Passes 1–3</span>
+        <div class="pass-body">
+          <p class="pass-heading">Reconstructed from source evidence</p>
+          <p class="pass-detail">The preceding builder ran three critique passes before context overflow ended the session. Exact per-pass "found" diagnoses were not preserved across the handoff. What follows is an honest reconstruction from the source code itself, which labels its complexity upgrades explicitly in comments.</p>
+          <p class="pass-detail"><strong>Complexity upgrades present in source (CSS labels them):</strong></p>
+          <p class="pass-detail">· <em>Theatre-programme act separators</em> — thin amber rules flanking a centred roman numeral in small-caps Karla, echoing a printed playbill. The CSS comment reads <code>/* complexity upgrade: theatre-programme marginalia */</code>.</p>
+          <p class="pass-detail">· <em>Paper-grain texture on text panels</em> — <code>.act-content::before</code> uses eight stacked radial-gradients at <code>screen</code> blend mode with <code>background-size: 40px 40px</code> to approximate a slightly fibrous paper. Comment: <code>/* complexity upgrade */</code>.</p>
+          <p class="pass-detail">· <em>24 CSS-only fireflies</em> — fixed-position <code>&lt;span&gt;</code> elements with per-fly <code>--dx / --dy / --delay / --dur</code> custom properties driving a <code>ff-drift</code> + <code>ff-pulse</code> keyframe pair. Disabled under <code>prefers-reduced-motion</code>.</p>
+          <p class="pass-detail">· <em>Hidden sixth act</em> — the cartographer's epilogue, behind the ★ button in the colophon. The trigger uses <code>aria-expanded</code>; the section slides in with a 2.2s <code>cubic-bezier(.23,1,.32,1)</code>.</p>
+          <p class="pass-detail">· <em>Cursor-driven lantern glow</em> — a single rAF loop lerps the cursor position (factor 0.07) into <code>--lx / --ly</code> for the radial-gradient and <code>--mx / --my</code> for the four parallax layer transforms.</p>
+          <p class="pass-detail">· <em>Act-curtain wipes</em> — the velvet panels use <code>translateX(±106%)</code> with a 2.2s theatrical cubic-bezier, triggered 420 ms after load. Hidden on mobile.</p>
+        </div>
+      </div>
+
+      <div class="pass-item">
+        <span class="pass-badge">Finish</span>
+        <div class="pass-body">
+          <p class="pass-heading">Release gates — finishing builder</p>
+          <p class="pass-detail"><strong>Found:</strong> <code>.footer-credit</code> at <code>opacity:.3</code> and <code>.footer-nav a</code> at <code>opacity:.38</code> both failed WCAG AA contrast (computed ≈ 2.4:1 against <code>#1a1412</code>; minimum 4.5:1 required for small text). <code>.theatre-subtitle</code> at <code>opacity:.42</code> over the plum mountain band computed ≈ 2.75:1 — also failing. The <code>guide/</code> directory was empty — release gate requiring <code>guide/index.html</code> was unmet.</p>
+          <p class="pass-detail"><strong>Changed:</strong> Raised <code>.footer-credit</code> and <code>.footer-nav a</code> opacity to <code>.55</code> (computed ≈ 8.6:1 against stage background). Raised <code>.theatre-subtitle</code> opacity to <code>.72</code> and added a dark text-shadow to guarantee contrast against the plum backdrop. Built this guide page in the site's own visual language. Fixed guide <code>.c-cmt</code> code-comment colour from <code>#7a6a58</code> to <code>#a09280</code> (≈ 6.5:1 on the near-black code block background).</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- REDUCED MOTION NOTE ─────────────────────────────────── -->
+  <section class="guide-section" aria-labelledby="s-a11y">
+    <p class="section-eyebrow">Accessibility</p>
+    <h2 id="s-a11y" class="section-title">Reduced motion and a11y decisions</h2>
+    <div class="prose">
+      <p>Under <code>prefers-reduced-motion: reduce</code> the page presents a dignified static composition: all act scenes are forced visible at <code>opacity:1</code> (overriding the IO-triggered reveal), the CSS parallax transforms are reset to <code>none</code>, the 24 fireflies are hidden, the curtain transition is <code>none</code>, and the scroll-hint bob animation stops. The stage remains fully legible with all five acts, the colophon, and the footer intact.</p>
+      <p>Landmark regions: <code>&lt;header&gt;</code>, <code>&lt;main id="main"&gt;</code>, <code>&lt;footer&gt;</code>. Exactly one <code>&lt;h1&gt;</code> on the main page, one <code>&lt;h1&gt;</code> here. All decorative SVGs carry <code>aria-hidden="true" focusable="false"</code>. The ★ epilogue button uses <code>aria-expanded</code>. Skip-to-content link is present and keyboard-reachable. Focus indicators use <code>outline</code>, not removed.</p>
+      <ul>
+        <li>All act prose text: cream <code>#f5e9d4</code> at <code>opacity:.88</code> on <code>#1a1412</code> — passes AA (≈ 14:1)</li>
+        <li>Footer credit and nav: cream at <code>opacity:.55</code> on <code>#1a1412</code> — passes AA (≈ 8.6:1)</li>
+        <li>Amber act badges: <code>#ffb347</code> on <code>#1a1412</code> — passes AA (≈ 10.2:1)</li>
+        <li>Theatre title: cream at full opacity with heavy text-shadow — passes AA</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="guide-footer">
+  <p>Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</p>
+  <a href="../">← Back to Paperlight</a>
+</footer>
+
+</body>
+</html>

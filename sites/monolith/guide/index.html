@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MONOLITH — Build Guide</title>
+  <meta name="description" content="Behind the build: brief, technique, and critique history for the Monolith civic poster annual.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter+Tight:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Tokens ── */
+    :root {
+      --ink:           #1c1a17;
+      --concrete:      #b9b5ad;
+      --concrete-dark: #8a8680;
+      --orange:        #e8551a;
+      --cream:         #f0ece4;
+      --font-display:  'Archivo Black', sans-serif;
+      --font-body:     'Inter Tight', sans-serif;
+      --edge: clamp(1.25rem, 6vw, 5rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--ink);
+      color: var(--concrete);
+      line-height: 1.65;
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: fixed; top: 1rem; left: 1rem; z-index: 999;
+      background: var(--orange); color: var(--cream);
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; padding: 0.4rem 0.9rem;
+      text-decoration: none; transform: translateY(-150%);
+      transition: transform 0.2s;
+    }
+    .skip-link:focus { transform: translateY(0); outline: 3px solid var(--cream); }
+
+    /* ── Back link ── */
+    .back-bar {
+      border-bottom: 1px solid rgba(185,181,173,0.12);
+      padding: 1rem var(--edge);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .back-bar a {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--concrete-dark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-bar a:hover { color: var(--orange); }
+    .back-bar a:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+    .back-bar__sep { color: rgba(185,181,173,0.3); font-size: 0.75rem; }
+
+    /* ── Hero band ── */
+    .guide-hero {
+      border-bottom: 4px solid var(--orange);
+      padding: clamp(2.5rem, 7vh, 6rem) var(--edge) clamp(2rem, 5vh, 4rem);
+    }
+
+    .guide-hero__kicker {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--orange);
+      margin-bottom: 1.25rem;
+    }
+
+    .guide-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 9rem);
+      line-height: 0.88;
+      color: var(--concrete);
+      letter-spacing: -0.02em;
+      margin-bottom: clamp(1.5rem, 3vh, 3rem);
+    }
+
+    .guide-hero__sub {
+      font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+      color: var(--concrete-dark);
+      max-width: 60ch;
+      line-height: 1.6;
+    }
+
+    /* ── Main content grid ── */
+    .guide-body {
+      display: grid;
+      grid-template-columns: 1fr;
+      max-width: 900px;
+      padding: clamp(2.5rem, 6vh, 5rem) var(--edge);
+      gap: clamp(3rem, 7vh, 6rem);
+    }
+
+    /* ── Section ── */
+    .section__label {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--orange);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section__label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(185,181,173,0.15);
+      max-width: 4rem;
+    }
+
+    .section__heading {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: var(--concrete);
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      margin-bottom: 1.5rem;
+    }
+
+    .section__body {
+      font-size: clamp(0.875rem, 1.6vw, 1rem);
+      color: var(--concrete-dark);
+      line-height: 1.7;
+    }
+    .section__body p + p { margin-top: 1em; }
+    .section__body strong { color: var(--concrete); font-weight: 700; }
+
+    /* ── Brief card ── */
+    .brief-card {
+      border: 1px solid rgba(185,181,173,0.12);
+      border-left: 3px solid var(--orange);
+      padding: 1.5rem 1.75rem;
+      background: rgba(185,181,173,0.03);
+    }
+    .brief-card p { font-size: 0.9rem; line-height: 1.7; color: var(--concrete-dark); }
+    .brief-card p + p { margin-top: 0.8em; }
+    .brief-card em { color: var(--concrete); font-style: normal; font-weight: 500; }
+
+    /* ── Code block ── */
+    .code-block {
+      position: relative;
+      margin-top: 1.5rem;
+    }
+    .code-block__label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--orange);
+      margin-bottom: 0.5rem;
+    }
+    pre {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(185,181,173,0.1);
+      border-left: 3px solid rgba(232,85,26,0.4);
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.78rem;
+      line-height: 1.65;
+      color: var(--concrete);
+      -webkit-overflow-scrolling: touch;
+    }
+    pre .c { color: var(--concrete-dark); }
+    pre .k { color: var(--orange); }
+    pre .s { color: #b0c8a8; }
+    pre .n { color: var(--concrete); }
+
+    /* ── Pass log ── */
+    .pass-log {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .pass {
+      display: grid;
+      grid-template-columns: 3.5rem 1fr;
+      gap: 0 1.5rem;
+      border-top: 1px solid rgba(185,181,173,0.12);
+      padding: 1.5rem 0;
+    }
+    .pass:last-child { border-bottom: 1px solid rgba(185,181,173,0.12); }
+
+    .pass__num {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      color: rgba(185,181,173,0.2);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      padding-top: 0.15rem;
+    }
+
+    .pass__content {}
+
+    .pass__title {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      color: var(--concrete);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.75rem;
+    }
+
+    .pass__findings {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .pass__findings li {
+      font-size: 0.875rem;
+      color: var(--concrete-dark);
+      line-height: 1.55;
+      padding-left: 1.1em;
+      position: relative;
+    }
+    .pass__findings li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+      font-size: 0.75rem;
+      top: 0.1em;
+    }
+
+    .pass__upgrade {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(232,85,26,0.07);
+      border-left: 2px solid var(--orange);
+      font-size: 0.8rem;
+      color: var(--concrete-dark);
+      line-height: 1.55;
+    }
+    .pass__upgrade strong { color: var(--orange); font-weight: 700; }
+
+    /* ── Poster index ── */
+    .poster-index {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1px;
+      border: 1px solid rgba(185,181,173,0.12);
+      overflow: hidden;
+    }
+
+    .poster-tile {
+      padding: 1.25rem 1.1rem;
+      border-right: 1px solid rgba(185,181,173,0.12);
+      border-bottom: 1px solid rgba(185,181,173,0.12);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: background 0.2s;
+    }
+    .poster-tile:hover { background: rgba(232,85,26,0.07); }
+    .poster-tile:focus-visible { outline: 2px solid var(--orange); outline-offset: -2px; }
+
+    .poster-tile__num {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--orange);
+      text-transform: uppercase;
+    }
+
+    .poster-tile__name {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--concrete);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+
+    .poster-tile__desc {
+      font-size: 0.72rem;
+      color: var(--concrete-dark);
+      line-height: 1.45;
+    }
+
+    /* ── Footer ── */
+    .guide-footer {
+      border-top: 1px solid rgba(185,181,173,0.12);
+      padding: 1.25rem var(--edge);
+      font-size: 0.72rem;
+      color: var(--concrete-dark);
+      opacity: 0.6;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .pass { grid-template-columns: 2.5rem 1fr; gap: 0 1rem; }
+      .pass__num { font-size: 1.75rem; }
+      .poster-index { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#guide-main">Skip to content</a>
+
+  <div class="back-bar">
+    <a href="../">← MONOLITH</a>
+    <span class="back-bar__sep">/</span>
+    <a href="#">Build Guide</a>
+  </div>
+
+  <header class="guide-hero">
+    <p class="guide-hero__kicker">Build Guide — Fable 25 Local</p>
+    <h1 class="guide-hero__title">MONOLITH</h1>
+    <p class="guide-hero__sub">A brutalist poster annual for fictional civic events. Six posters. One grid. Disciplined excess.</p>
+  </header>
+
+  <main id="guide-main">
+    <div class="guide-body">
+
+      <!-- BRIEF -->
+      <section aria-labelledby="s-brief">
+        <p class="section__label">01</p>
+        <h2 class="section__heading" id="s-brief">The Brief</h2>
+        <div class="brief-card">
+          <p><em>Monolith — a brutalist poster compilation.</em> An annual of oversized typographic posters for fictional civic events.</p>
+          <p>Signature: <em>disciplined excess</em> — massive Archivo Black headlines cut by a hard grid, scroll-snap poster pages, hover reveals the grid skeleton. Chaos gridded underneath.</p>
+          <p>Palette: raw concrete <em>#b9b5ad</em>, ink <em>#1c1a17</em>, warning orange <em>#e8551a</em>. Type: <em>Archivo Black</em> + <em>Inter Tight</em>. Prove: loud can be rigorous.</p>
+          <p>Upgrade ideas mentioned in the brief: print-registration marks; a poster that rebuilds itself letter by letter; concrete texture via CSS gradients only.</p>
+        </div>
+      </section>
+
+      <!-- SIGNATURE TECHNIQUE -->
+      <section aria-labelledby="s-tech">
+        <p class="section__label">02</p>
+        <h2 class="section__heading" id="s-tech">Signature Technique</h2>
+        <div class="section__body">
+          <p>Three techniques define this build: <strong>scroll-snapped full-viewport poster pages</strong>, a <strong>CSS-only concrete texture</strong> applied to flat color backgrounds, and a <strong>hover-revealed 12-column grid overlay</strong> that makes the skeleton visible.</p>
+
+          <p>The concrete texture is the most important detail — it distinguishes these posters from flat-color brutalism by adding the material imperfection of actual cast concrete, using only layered <code>repeating-linear-gradient</code> declarations at three angles. No images, no canvas.</p>
+        </div>
+
+        <div class="code-block">
+          <p class="code-block__label">Concrete texture — CSS gradients only (style.css)</p>
+          <pre><span class="c">/* Three diagonal passes at different angles and periods */</span>
+<span class="n">.poster--renewal</span> {
+  <span class="k">background-color</span>: <span class="s">var(--concrete)</span>;
+  <span class="k">background-image</span>:
+    <span class="s">repeating-linear-gradient</span>(
+      <span class="n">-55deg</span>,
+      <span class="s">transparent</span> 0, <span class="s">transparent</span> 4px,
+      <span class="s">rgba(28,26,23,0.018)</span> 4px, <span class="s">rgba(28,26,23,0.018)</span> 5px
+    ),
+    <span class="s">repeating-linear-gradient</span>(
+      <span class="n">35deg</span>,
+      <span class="s">transparent</span> 0, <span class="s">transparent</span> 7px,
+      <span class="s">rgba(255,255,255,0.01)</span> 7px, <span class="s">rgba(255,255,255,0.01)</span> 8px
+    ),
+    <span class="s">repeating-linear-gradient</span>(
+      <span class="n">82deg</span>,
+      <span class="s">transparent</span> 0, <span class="s">transparent</span> 11px,
+      <span class="s">rgba(28,26,23,0.01)</span> 11px, <span class="s">rgba(28,26,23,0.01)</span> 12px
+    ),
+    <span class="s">linear-gradient</span>(<span class="n">168deg</span>, <span class="s">#c0bcb4</span> 0%, <span class="s">var(--concrete)</span> 45%, <span class="s">#b2aea7</span> 100%);
+}</pre>
+        </div>
+
+        <div class="code-block" style="margin-top: 2rem;">
+          <p class="code-block__label">Hover grid skeleton — opacity transition (style.css)</p>
+          <pre><span class="n">.grid-overlay</span> {
+  <span class="k">position</span>: absolute;
+  <span class="k">inset</span>: 0;
+  <span class="k">opacity</span>: 0;
+  <span class="k">background-image</span>:
+    <span class="s">repeating-linear-gradient</span>(
+      <span class="n">to right</span>,
+      <span class="s">var(--grid-col)</span> 0, <span class="s">var(--grid-col)</span> 1px,
+      <span class="s">transparent</span> 1px, <span class="s">transparent calc(100% / 12)</span>
+    ),
+    <span class="s">repeating-linear-gradient</span>(
+      <span class="n">to bottom</span>,
+      <span class="s">var(--grid-row)</span> 0, <span class="s">var(--grid-row)</span> 1px,
+      <span class="s">transparent</span> 1px, <span class="s">transparent calc(100% / 8)</span>
+    );
+  <span class="k">transition</span>: <span class="s">opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1)</span>;
+}
+
+<span class="n">.poster:hover .grid-overlay</span>,
+<span class="n">.poster:focus-within .grid-overlay</span> {
+  <span class="k">opacity</span>: 1;
+}</pre>
+        </div>
+
+        <div class="code-block" style="margin-top: 2rem;">
+          <p class="code-block__label">Letter scramble — MONOLITH cover title (main.js)</p>
+          <pre><span class="c">/* Each letter cycles through random uppercase chars
+   before resolving — staggered 85 ms per character */</span>
+<span class="k">function</span> <span class="n">frame</span>(now) {
+  letters.<span class="n">forEach</span>((span, i) => {
+    <span class="k">const</span> tStart  = startTime + i * <span class="s">STAGGER</span>;  <span class="c">// 85 ms stagger</span>
+    <span class="k">const</span> tSettle = tStart + <span class="s">SETTLE</span>;          <span class="c">// 420 ms scramble window</span>
+
+    <span class="k">if</span> (now &lt; tStart)  <span class="k">return</span>;            <span class="c">// not started</span>
+    <span class="k">if</span> (now &lt; tSettle) {
+      span.textContent = CHARS[Math.<span class="n">floor</span>(Math.<span class="n">random</span>() * CHARS.length)];
+      <span class="k">return</span>;
+    }
+    span.textContent = span.dataset.ch;    <span class="c">// resolved</span>
+  });
+  <span class="k">if</span> (anyPending &amp;&amp; !document.hidden) requestAnimationFrame(frame);
+}</pre>
+        </div>
+
+      </section>
+
+      <!-- POSTERS INDEX -->
+      <section aria-labelledby="s-posters">
+        <p class="section__label">03</p>
+        <h2 class="section__heading" id="s-posters">The Six Posters</h2>
+        <nav aria-label="Poster index">
+          <div class="poster-index">
+            <a class="poster-tile" href="../#poster-1">
+              <span class="poster-tile__num">01</span>
+              <span class="poster-tile__name">MONOLITH<br>Cover</span>
+              <span class="poster-tile__desc">Ink field, letter scramble, orange rule frame</span>
+            </a>
+            <a class="poster-tile" href="../#poster-2">
+              <span class="poster-tile__num">02</span>
+              <span class="poster-tile__name">Urban Renewal<br>Forum</span>
+              <span class="poster-tile__desc">Concrete texture, staggered type, fine-print marginalia</span>
+            </a>
+            <a class="poster-tile" href="../#poster-3">
+              <span class="poster-tile__num">03</span>
+              <span class="poster-tile__name">Transit<br>Corridor 7</span>
+              <span class="poster-tile__desc">Massive orange field, oversized numeral, hard-ruled panel</span>
+            </a>
+            <a class="poster-tile" href="../#poster-4">
+              <span class="poster-tile__num">04</span>
+              <span class="poster-tile__name">Noise<br>Ordinance 81</span>
+              <span class="poster-tile__desc">65 dB hero type, deterministic waveform, penalty schedule</span>
+            </a>
+            <a class="poster-tile" href="../#poster-5">
+              <span class="poster-tile__num">05</span>
+              <span class="poster-tile__name">Public<br>Works 2026</span>
+              <span class="poster-tile__desc">Split grid, live-status dots, hover orange stripe</span>
+            </a>
+            <a class="poster-tile" href="../#poster-6">
+              <span class="poster-tile__num">06</span>
+              <span class="poster-tile__name">River District<br>Festival</span>
+              <span class="poster-tile__desc">Two-color headline, floating orange block, footer</span>
+            </a>
+          </div>
+        </nav>
+      </section>
+
+      <!-- CRITIQUE HISTORY -->
+      <section aria-labelledby="s-passes">
+        <p class="section__label">04</p>
+        <h2 class="section__heading" id="s-passes">Critique History</h2>
+
+        <div class="pass-log" role="list">
+
+          <article class="pass" role="listitem">
+            <div class="pass__num" aria-hidden="true">01</div>
+            <div class="pass__content">
+              <h3 class="pass__title">First pass — structure &amp; grid</h3>
+              <ul class="pass__findings">
+                <li>Established scroll-snap full-viewport poster pages; confirmed zero console errors at all poster scroll positions.</li>
+                <li>Cover title too large — escaped viewport width at narrow breakpoints; clamped with <code>clamp(4.5rem, 15vw, 18rem)</code> and added mobile override.</li>
+                <li>Noise poster lacked the waveform element entirely; added deterministic bar heights via JS to fill the dead zone between body copy and penalty list.</li>
+                <li>Transit poster: right-panel content had no bottom anchor — added <code>justify-content: space-between</code> to distribute tag, title, route, stats, date, and authority across full panel height.</li>
+                <li>Grid overlay missing on dark-background posters (Ink posters used orange grid lines that were invisible on concrete posters); added per-poster <code>--grid-col</code> and <code>--grid-row</code> custom properties.</li>
+              </ul>
+              <div class="pass__upgrade">
+                <strong>Complexity upgrade:</strong> Print registration marks in all four corners — each a real crosshair with a circle punch, drawn purely in CSS using pseudo-elements and <code>radial-gradient</code>. They change colour per poster (dark on light, light on dark).
+              </div>
+            </div>
+          </article>
+
+          <article class="pass" role="listitem">
+            <div class="pass__num" aria-hidden="true">02</div>
+            <div class="pass__content">
+              <h3 class="pass__title">Second pass — type &amp; contrast</h3>
+              <ul class="pass__findings">
+                <li>Urban Renewal poster: "RENEWAL" word shift (<code>padding-left</code>) was colliding with the fine-print marginalia column at 1280 px — reduced marginalia width to <code>clamp(150px, 18%, 220px)</code> and added <code>pointer-events: none</code>.</li>
+                <li>River District poster on mobile: orange text on ink background and concrete text on ink background both passed contrast, but the orange block behind the title was showing through on small screens making "DISTRICT" unreadable. Fixed by switching the entire mobile poster to a full-orange background (<code>background-color: var(--orange)</code>) and inverting all text to ink.</li>
+                <li>Works poster: list items had inconsistent vertical rhythm — switched from <code>gap</code> to <code>justify-content: space-between</code> on <code>.works__list</code> so items always fill the full right column height regardless of viewport.</li>
+                <li>Side nav link contrast on orange (Transit) poster: added <code>text-shadow: 0 1px 5px rgba(0,0,0,0.7)</code> so the concrete-toned numbers read against the orange field.</li>
+              </ul>
+              <div class="pass__upgrade">
+                <strong>Complexity upgrade:</strong> Live-status pulsing dot on all "Active" work items — a 5 px circle appended via <code>::after</code>, animated with a cubic-bezier scale+opacity loop. Respects <code>prefers-reduced-motion</code> (dot stays fully visible, static).
+              </div>
+            </div>
+          </article>
+
+          <article class="pass" role="listitem">
+            <div class="pass__num" aria-hidden="true">03</div>
+            <div class="pass__content">
+              <h3 class="pass__title">Third pass — polish &amp; mobile</h3>
+              <ul class="pass__findings">
+                <li>Transit mobile: the giant "7" numeral was overflowing its absolute container on 390 px — switched to a static top anchor with <code>transform: translateX(-50%)</code> and moved the content panel to <code>margin-top: auto</code> with a semi-transparent orange background strip.</li>
+                <li>Cover mobile: padding-right retained the desktop nav-clear extra padding, leaving the right margin unbalanced — removed the extra <code>3.5rem</code> on mobile.</li>
+                <li>Works mobile: left "PUBLIC" wordmark column was empty at 390 px after column collapse — constrained to <code>height: clamp(5rem, 15vh, 12rem)</code> and set <code>overflow: hidden</code> so the massive type clips cleanly at the divider.</li>
+                <li>Noise penalty values on mobile were wrapping; fixed with <code>flex-wrap: wrap</code> and reduced gap.</li>
+                <li>Extra-small breakpoint (≤ 390 px) added: <code>--edge: 1rem</code>, <code>--edge-v: 1.25rem</code>.</li>
+              </ul>
+              <div class="pass__upgrade">
+                <strong>Complexity upgrade:</strong> Keyboard navigation between posters via Arrow and Page keys — JS intercepts <code>ArrowDown</code>/<code>PageDown</code>/<code>ArrowUp</code>/<code>PageUp</code> and calls <code>scrollIntoView({ behavior: 'smooth' })</code>, degrading to <code>'auto'</code> in reduced-motion contexts.
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="guide-footer">
+    <p>Designed &amp; built by Claude Fable&nbsp;5 · local build · 2026</p>
+  </footer>
+</body>
+</html>

@@ -46,6 +46,9 @@ A pass is not "look at the code." A pass is:
    converging on bland safety.
 
 **Three passes minimum.** A pass without PNGs on disk in `qa/<slug>/` did not happen.
+**Context economy (hard rule):** shoot as many angles as you like, but vision-Read at most
+THREE screenshots per pass — pick the most informative. Reading screenshots is your scarcest
+resource; wave 1 lost four builders to context overflow from undisciplined reading.
 Do not start your own server (one is running on :4179). Do not touch any folder that is
 not yours. Final hero shots: `qa/<slug>/final-desktop.png`, `qa/<slug>/final-mobile.png`.
 

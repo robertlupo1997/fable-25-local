@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tremor — Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Martian+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper:    #faf6ee;
+      --ink:      #26221c;
+      --ink-mid:  #5a5349;
+      --ink-faint:#a09890;
+      --red:      #c8102e;
+      --blue:     #274b8f;
+      --border:   rgba(38,34,28,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Spectral', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      padding: 5rem 2rem 4rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+      line-height: 1;
+    }
+
+    h1 em { font-style: italic; color: var(--red); }
+
+    .sub {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--ink-mid);
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 1rem; color: var(--ink-mid); }
+    p:last-of-type { margin-bottom: 0; }
+
+    strong { color: var(--ink); font-weight: 600; }
+    em { font-style: italic; }
+
+    /* Code excerpt */
+    pre {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.7;
+      background: rgba(38,34,28,0.04);
+      border-left: 2px solid var(--red);
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      color: var(--ink);
+    }
+
+    code {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.78em;
+      background: rgba(38,34,28,0.06);
+      padding: 0.1em 0.35em;
+      border-radius: 2px;
+    }
+
+    /* Pass log table */
+    .pass-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.88rem;
+    }
+
+    .pass-table th {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      text-align: left;
+      padding: 0.5rem 0.8rem 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pass-table td {
+      padding: 0.65rem 0.8rem 0.65rem 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--ink-mid);
+    }
+
+    .pass-table td:first-child {
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--red);
+      white-space: nowrap;
+      padding-right: 1.2rem;
+    }
+
+    .pass-table .upgrade-cell {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* Link */
+    a {
+      color: var(--blue);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(39,75,143,0.3);
+    }
+    a:hover { color: var(--red); }
+
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Martian Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+<body>
+  <p class="eyebrow">Fable 25 · Studio Guide · tremor</p>
+  <h1>Tre<em>mor</em></h1>
+  <p class="sub">A century of earthquakes — builder's notes</p>
+
+  <h2>The brief</h2>
+  <p>Build a scroll-driven data essay on 100 years of major seismic events using real USGS catalog data. Signature aesthetic: seismograph — needle-drawn canvas traces, each decade a chapter, magnitude rendered as physical amplitude you feel in the layout. Palette: seismogram paper <code>#faf6ee</code>, ink <code>#26221c</code>, event red <code>#c8102e</code>, depth blue <code>#274b8f</code>. Type: Spectral + Martian Mono. Prove: honest data storytelling with real cited data.</p>
+
+  <h2>Data</h2>
+  <p>All 413 events are M7.5+ earthquakes from the <strong>USGS FDSN Event Service</strong>, fetched on 2026-07-08 and baked into <code>data.js</code> as a static <code>const QUAKES = [...]</code>. No runtime network call. The query was: <code>minmagnitude=7.5, starttime=1926-01-01, endtime=2026-01-01</code>. Each event stores only: <code>mag, place, time, depth, lon, lat</code> — 47 KB total.</p>
+  <p>Pre-1960 coverage is instrumentally sparse; this is acknowledged in a completeness note on affected decade sections, and discussed in the intro text. The honest acknowledgment is the editorial stance, not a workaround.</p>
+
+  <h2>Signature technique — the seismograph trace</h2>
+  <p>Every trace is computed from scratch on a <code>&lt;canvas&gt;</code> using a damped sine wave per event, overlaid into a single continuous Float32Array of y-offsets. The amplitude formula uses a 1.5-power law to preserve the physical intuition that magnitude is logarithmic, while keeping M9.5 spikes visually dramatic without crowding out M7.5 events:</p>
+
+<pre>// Amplitude: (mag − 7.0)^1.5 × scale
+// M7.5 → ~11 px  M8.0 → ~30 px  M9.0 → ~85 px  M9.5 → ~119 px
+function magAmp(mag, scale) {
+  return Math.pow(Math.max(mag - 7.0, 0.01), 1.5) * scale;
+}
+
+// Per-event spike: damped oscillation (seismometer physics)
+const decayPx = 0.038;   // e-fold decay per pixel
+const freq    = 0.24;    // radians per pixel
+
+for (let dx = 0; dx <= spikeLen; dx++) {
+  const env = Math.exp(-decayPx * dx);
+  const osc = Math.sin(freq * dx + Math.PI * 0.5);
+  trace[ix] -= amp * env * osc;  // upward deflection
+}</pre>
+
+  <p>The amplitude scale is computed per-decade so the biggest event in each decade always uses ~85% of the canvas height above the baseline. This means a quiet 1980s trace looks appropriately modest, while the 1960s section — M9.5 + M9.2 — towers over everything else. The M9.5 Valdivia spike clips the canvas top intentionally: the needle went off the chart.</p>
+
+  <h2>Critique-pass log</h2>
+  <table class="pass-table">
+    <thead>
+      <tr>
+        <th>Pass</th>
+        <th>Found</th>
+        <th>Changed</th>
+        <th>Upgrade added</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pass 1</td>
+        <td>Mobile hero stats stacked into 4 single rows; depth canvas "0 km" label DPR-doubled; 2020s year-axis labels wrong (showed 2025 at far right, decade runs to 2030); no mag labels on canvas.</td>
+        <td>Stats converted to 2×2 CSS grid on mobile; depth label font corrected to logical pixels; year labels fixed to actual 0%/50%/100% positions; hero canvas mag-line option added (<code>showMagLines: false</code> for hero).</td>
+        <td class="upgrade-cell">M8 / M9 magnitude reference lines drawn directly on each decade trace canvas — dashed horizontals with left-edge labels, auto-hidden when decade's max is too small to need them.</td>
+      </tr>
+      <tr>
+        <td>Pass 2</td>
+        <td>Eyebrow text wrapped on mobile; depth labels still faint; decade header stat block floated awkwardly at baseline; no direct annotation connecting trace spikes to named events.</td>
+        <td>Eyebrow text reordered to shorter form; depth label opacity raised; decade header aligned to <code>flex-end</code> with a bottom rule; <code>showMagLines</code> plumbed through all call sites.</td>
+        <td class="upgrade-cell">Peak event callouts: for M8.8+ events, a floating year label and tick-leader are drawn above the spike peak at trace-draw completion. "1960" and "1964" appear above the Valdivia and Good Friday spikes in the 1960s panel.</td>
+      </tr>
+      <tr>
+        <td>Pass 3</td>
+        <td>Epilogue had ~480 px dead zone — narrow text column left most of the right half empty. No visual close for the data essay. Chart-note formula wrapped across 3 lines.</td>
+        <td>Epilogue restructured to two-column grid (text + chart); chart-note simplified; chart heading shortened to fit one line.</td>
+        <td class="upgrade-cell">Energy-by-decade horizontal bar chart in the epilogue right column: bar width = log₁₀(Σ 10^(1.5·M)) per decade, computed from the live QUAKES data. The 1960s bar dominates — visually proves in one glance what the closing paragraphs say in words.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Other design decisions</h2>
+  <p><strong>Scroll velocity → needle jitter.</strong> The scroll event feeds a velocity estimate into a decay loop; any currently-visible decade trace redraws with a subtle high-frequency perturbation applied to the y-values. The effect is small — max ±8 px at high velocity — but makes the page feel alive when scrolling fast. Gated off in reduced-motion mode.</p>
+  <p><strong>IntersectionObserver animation.</strong> Traces draw left-to-right with a custom quadratic ease when each decade section enters the viewport. Duration is 1600 ms plus 4 ms per event, so dense decades draw slightly slower. The needle-tip glows red while in flight.</p>
+  <p><strong>Depth cross-section.</strong> A 54 px canvas below each trace plots events by focal depth (0–700 km). Three background bands distinguish shallow / intermediate / deep; dot size scales with magnitude; opacity deepens with depth. One event in the 1970s Peru section reaches 644 km — it appears as the sole dark dot near the 700 km line.</p>
+  <p><strong>Reduced motion.</strong> All canvas traces draw statically at full progress; no IntersectionObserver timing, no jitter, no needle-tip glow. The page is a dignified static composition, not a blank or broken one.</p>
+
+  <footer>
+    Designed &amp; built by Claude Fable 5 · local build · 2026 · tremor/guide/index.html
+  </footer>
+</body>
+</html>

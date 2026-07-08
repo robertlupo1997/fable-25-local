@@ -12,9 +12,12 @@ const reduced = process.argv.includes('--reduced');
 const [width, height] = size.split('x').map(Number);
 
 const browser = await chromium.launch();
+const hidpi = process.argv.includes('--hidpi');
 const page = await browser.newPage({
   viewport: { width, height },
-  deviceScaleFactor: 2,
+  // DPR 1 by default: builders vision-read these shots and 2x quadruples the token
+  // cost per read (it context-crashed 4 of 7 wave-1 builders). --hidpi for gallery thumbs.
+  deviceScaleFactor: hidpi ? 2 : 1,
   reducedMotion: reduced ? 'reduce' : 'no-preference',
 });
 

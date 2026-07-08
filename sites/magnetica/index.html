@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Magnetica — Ferrofluid Laboratory</title>
+  <meta name="description" content="Live ferrofluid simulation demonstrating the Rosensweig instability. Drag the magnet to observe how magnetic field overcomes surface tension.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Chivo+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- ── Navigation ─────────────────────────────────── -->
+  <header>
+    <nav class="nav" aria-label="Site navigation">
+      <a href="/" class="nav-wordmark" aria-label="Magnetica home">
+        MAGNET<span class="cu">I</span>CA
+      </a>
+      <span class="nav-sub" aria-hidden="true">Ferrofluid Laboratory · EMG-905</span>
+      <a href="guide/" class="nav-link">Guide →</a>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- ── Hero / Canvas ──────────────────────────────── -->
+    <section class="hero" aria-label="Interactive ferrofluid simulation. Drag the copper magnet to move it.">
+      <canvas id="ferroCanvas" aria-hidden="true"></canvas>
+
+      <!-- Specimen label card -->
+      <div class="specimen-label" aria-hidden="true">
+        <span class="lbl-cat">Specimen</span>
+        <span class="lbl-num">No. 001 — EMG-905</span>
+        <span class="lbl-name">Ferrofluid</span>
+        <span class="lbl-formula">Fe₃O₄ · kerosene suspension</span>
+      </div>
+
+      <!-- Instruction hint (fades on first drag) -->
+      <p class="drag-hint" id="dragHint" aria-hidden="true">
+        Drag the magnet
+      </p>
+
+      <!-- Field strength rheostat -->
+      <div class="field-control" role="group" aria-label="Magnetic field strength control">
+        <label class="field-label-text" for="fieldStrength">Field strength</label>
+        <div class="rheostat-wrap">
+          <span class="rheostat-mark" aria-hidden="true">0</span>
+          <input
+            type="range"
+            id="fieldStrength"
+            class="rheostat"
+            min="0"
+            max="100"
+            value="60"
+            aria-label="Magnetic field strength"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="60"
+          >
+          <span class="rheostat-mark" aria-hidden="true">MAX</span>
+        </div>
+        <output class="field-value" for="fieldStrength" id="fieldOutput">0.72 T</output>
+      </div>
+    </section>
+
+    <!-- ── Scrollable content ────────────────────────── -->
+    <div class="content-wrap">
+
+      <div class="intro-block">
+        <!-- Intro text -->
+        <div class="intro-text">
+          <p class="eyebrow">The Rosensweig Instability</p>
+          <h1 class="hero-title">When magnetism&nbsp;overcomes surface&nbsp;tension</h1>
+          <p class="lead-text">
+            Apply a vertical magnetic field to a pool of ferrofluid and the surface
+            transforms. Below a critical field strength, surface tension holds
+            everything flat. Above it, the surface spontaneously buckles into a
+            regular hexagonal array of pointed peaks — an instability first described
+            by Ronald Rosensweig in 1965 and still used to study pattern formation
+            in driven soft matter.
+          </p>
+        </div>
+
+        <!-- Properties table -->
+        <div class="info-col">
+          <p class="eyebrow">Physical Properties</p>
+          <h2>EMG-905 Specification</h2>
+          <div class="props-wrap">
+            <table class="props" aria-label="Physical properties of EMG-905 ferrofluid">
+              <thead>
+                <tr>
+                  <th scope="col">Property</th>
+                  <th scope="col">Value</th>
+                  <th scope="col">Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Saturation magnetization</td>
+                  <td class="num">400</td>
+                  <td>G</td>
+                </tr>
+                <tr>
+                  <td>Initial susceptibility</td>
+                  <td class="num">3.1</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td>Density (25 °C)</td>
+                  <td class="num">1.44</td>
+                  <td>g cm⁻³</td>
+                </tr>
+                <tr>
+                  <td>Viscosity (25 °C)</td>
+                  <td class="num">6</td>
+                  <td>cP</td>
+                </tr>
+                <tr>
+                  <td>Particle diameter</td>
+                  <td class="num">10</td>
+                  <td>nm</td>
+                </tr>
+                <tr>
+                  <td>Carrier fluid</td>
+                  <td colspan="2">Kerosene</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Equation / peak wavelength -->
+        <div class="info-col">
+          <p class="eyebrow">Critical Wavelength</p>
+          <h2>Peak spacing at onset</h2>
+          <p class="body-text" style="margin-bottom: 1rem;">
+            At the onset of instability, the dominant wavelength λ is set by the
+            balance of surface tension σ, density ρ, and gravity g — independent
+            of the applied field strength:
+          </p>
+          <div class="eq-block">
+            <div class="eq-formula">λ = 2π · √(σ / ρg)</div>
+            <div class="eq-key">
+              σ = surface tension (N m⁻¹)<br>
+              ρ = fluid density (kg m⁻³)<br>
+              g = gravitational acceleration
+            </div>
+          </div>
+          <p class="body-text">
+            For EMG-905 in kerosene, this predicts a peak spacing of approximately
+            12 mm — consistent with the hexagonal lattice observed in experiment.
+          </p>
+        </div>
+      </div>
+
+      <!-- Lower content -->
+      <div class="lower-grid">
+        <div class="info-col">
+          <p class="eyebrow">Mechanism</p>
+          <h2>Why spikes, not waves</h2>
+          <p class="body-text">
+            Any flat ferrofluid surface already concentrates magnetic flux at its
+            boundary. A small perturbation creates a local peak that further
+            concentrates flux — reducing magnetic energy while raising gravitational
+            potential and surface area. Below the critical field, surface and gravity
+            win; the perturbation damps. Above it, the magnetic term wins; the peak
+            grows. The system reaches a new equilibrium where all three forces
+            balance at a finite peak height, spontaneously organizing into a
+            hexagonal array through the same symmetry-breaking mechanism as
+            Bénard convection cells — but driven by field instead of heat.
+          </p>
+        </div>
+
+        <div class="info-col">
+          <p class="eyebrow">Applications</p>
+          <h2>A liquid that holds its shape</h2>
+          <p class="body-text">
+            Ferrofluid particles are coated in a surfactant monolayer that prevents
+            agglomeration, yielding a colloidal suspension stable indefinitely
+            without settling. This opens engineering applications inaccessible to
+            solid magnets: dynamic shaft sealing in hard drives and turbochargers,
+            convective heat transfer enhancement in voice-coil speakers,
+            inertial damping in precision instruments, and — experimentally —
+            cancer hyperthermia via nanoparticle heating under an alternating field.
+            The Rosensweig instability itself is used as a precise probe of
+            interfacial properties.
+          </p>
+        </div>
+      </div>
+
+    </div><!-- /content-wrap -->
+
+    <footer class="site-footer">
+      <span>Magnetica Laboratory · EMG-905 Series</span>
+      <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+      <a href="guide/">Design guide →</a>
+    </footer>
+
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

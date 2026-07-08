@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundry — Design Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper: #f4f1ea;
+      --ink: #141414;
+      --orange: #ff4d00;
+      --ink-10: rgba(20,20,20,0.10);
+      --ink-60: rgba(20,20,20,0.60);
+      --ff: 'Fraunces', serif;
+      --pad: clamp(1.25rem, 5vw, 4rem);
+    }
+
+    body {
+      font-family: var(--ff);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem var(--pad);
+      border-bottom: 1px solid var(--ink-10);
+      position: sticky;
+      top: 0;
+      background: var(--paper);
+      z-index: 10;
+    }
+    .nav-mark {
+      font-variation-settings: 'wght' 500, 'opsz' 18, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.875rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .nav-back {
+      font-variation-settings: 'wght' 300, 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.8125rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink-60);
+    }
+    .nav-back:hover { color: var(--orange); }
+
+    /* HEADER */
+    .guide-header {
+      padding: clamp(4rem, 8vw, 7rem) var(--pad) clamp(2rem, 4vw, 3rem);
+      border-bottom: 3px solid var(--orange);
+    }
+    .guide-label {
+      font-variation-settings: 'wght' 300, 'opsz' 12, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+    .guide-title {
+      font-variation-settings: 'wght' 700, 'opsz' 72, 'SOFT' 0, 'WONK' 0;
+      font-size: clamp(2.5rem, 6vw, 6rem);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .guide-sub {
+      font-variation-settings: 'wght' 300, 'opsz' 24, 'SOFT' 20, 'WONK' 0;
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 2rem);
+      opacity: 0.6;
+    }
+
+    /* SECTIONS */
+    .guide-section {
+      padding: clamp(3rem, 6vw, 5rem) var(--pad);
+      border-bottom: 1px solid var(--ink-10);
+    }
+    .section-eyebrow {
+      font-variation-settings: 'wght' 400, 'opsz' 12, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .section-heading {
+      font-variation-settings: 'wght' 600, 'opsz' 36, 'SOFT' 0, 'WONK' 0;
+      font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .guide-body {
+      font-variation-settings: 'wght' 300, 'opsz' 18, 'SOFT' 0, 'WONK' 0;
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      max-width: 64ch;
+      line-height: 1.65;
+      opacity: 0.8;
+    }
+    .guide-body + .guide-body {
+      margin-top: 1.25em;
+    }
+
+    /* CODE BLOCK */
+    .code-block {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 2rem;
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      font-family: var(--ff);
+      font-variation-settings: 'wght' 300, 'opsz' 12, 'SOFT' 0, 'WONK' 0;
+      font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+      line-height: 1.7;
+      white-space: pre;
+    }
+    .code-comment {
+      opacity: 0.4;
+    }
+    .code-key { color: var(--orange); }
+    .code-val { color: #a5c2d4; }
+
+    /* PASS TABLE */
+    .pass-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+    .pass-table th {
+      font-variation-settings: 'wght' 600, 'opsz' 12, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 2px solid var(--ink);
+    }
+    .pass-table td {
+      font-variation-settings: 'wght' 300, 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+      font-size: clamp(0.875rem, 1.2vw, 1rem);
+      padding: 1rem;
+      border-bottom: 1px solid var(--ink-10);
+      vertical-align: top;
+    }
+    .pass-table td:first-child {
+      font-variation-settings: 'wght' 600, 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+      white-space: nowrap;
+      color: var(--orange);
+      width: 5rem;
+    }
+    .pass-table td:nth-child(2) {
+      font-variation-settings: 'wght' 500, 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+    }
+
+    /* PALETTE */
+    .palette {
+      display: flex;
+      gap: 1rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .swatch-block {
+      width: 5rem;
+      height: 5rem;
+      border: 1px solid var(--ink-10);
+    }
+    .swatch-name {
+      font-variation-settings: 'wght' 400, 'opsz' 12, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+    .swatch-hex {
+      font-variation-settings: 'wght' 300, 'opsz' 9, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.625rem;
+      opacity: 0.4;
+    }
+
+    /* AXIS TABLE */
+    .axis-table {
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      gap: 0;
+      margin: 2rem 0;
+      border-top: 1px solid var(--ink-10);
+    }
+    .axis-row {
+      display: contents;
+    }
+    .axis-tag-cell {
+      font-variation-settings: 'wght' 500, 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.8125rem;
+      color: var(--orange);
+      padding: 0.875rem 1.5rem 0.875rem 0;
+      border-bottom: 1px solid var(--ink-10);
+      letter-spacing: 0.05em;
+    }
+    .axis-range-cell {
+      font-variation-settings: 'wght' 300, 'opsz' 12, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.75rem;
+      padding: 0.875rem 1.5rem;
+      border-bottom: 1px solid var(--ink-10);
+      opacity: 0.5;
+    }
+    .axis-desc-cell {
+      font-variation-settings: 'wght' 300, 'opsz' 14, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.875rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--ink-10);
+      opacity: 0.75;
+    }
+
+    /* SPECIMENS inline */
+    .inline-specimen {
+      font-variation-settings: 'wght' 700, 'opsz' 72, 'SOFT' 0, 'WONK' 0;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1;
+      margin: 1.5rem 0;
+      letter-spacing: -0.02em;
+    }
+    .inline-italic {
+      font-style: italic;
+      font-variation-settings: 'wght' 300, 'opsz' 48, 'SOFT' 30, 'WONK' 0;
+      font-size: clamp(1.5rem, 3.5vw, 3rem);
+      margin: 1rem 0;
+      letter-spacing: -0.01em;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 3rem var(--pad);
+    }
+    .footer-credit {
+      font-variation-settings: 'wght' 300, 'opsz' 9, 'SOFT' 0, 'WONK' 0;
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.35;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../" class="nav-mark">Foundry</a>
+  <a href="../" class="nav-back">← Back to specimen</a>
+</nav>
+
+<header class="guide-header">
+  <span class="guide-label">Design Guide · Fable 25 · foundry</span>
+  <h1 class="guide-title">How this<br>site was built.</h1>
+  <p class="guide-sub">Fraunces, four axes, and the belief that typography is the interface.</p>
+</header>
+
+<!-- THE BRIEF -->
+<section class="guide-section">
+  <span class="section-eyebrow">The Brief</span>
+  <h2 class="section-heading">One face. No imagery.</h2>
+  <p class="guide-body">The brief called for a specimen site for Fraunces — treated like a flagship release. Signature technique: kinetic type driven by cursor and scroll, a waterfall that breathes, a drag-the-axes playground. Palette: paper <code>#f4f1ea</code>, ink <code>#141414</code>, foundry orange <code>#ff4d00</code>. Type: Fraunces only, every optical size.</p>
+  <p class="guide-body">The constraint was the proof: typography IS the interface — no imagery at all. Every section had to do meaningful design work through type, spacing, and the variable font's axes alone.</p>
+  <div class="inline-specimen">Variable.</div>
+  <div class="inline-italic">From caption to billboard, one voice.</div>
+</section>
+
+<!-- PALETTE & TYPE -->
+<section class="guide-section">
+  <span class="section-eyebrow">Palette &amp; Axes</span>
+  <h2 class="section-heading">Three colors.<br>Four axes.</h2>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-block" style="background:#f4f1ea;"></div>
+      <span class="swatch-name">Paper</span>
+      <span class="swatch-hex">#f4f1ea</span>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#141414;"></div>
+      <span class="swatch-name">Ink</span>
+      <span class="swatch-hex">#141414</span>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#ff4d00;"></div>
+      <span class="swatch-name">Orange</span>
+      <span class="swatch-hex">#ff4d00</span>
+    </div>
+  </div>
+
+  <div class="axis-table">
+    <div class="axis-row">
+      <div class="axis-tag-cell">wght</div>
+      <div class="axis-range-cell">100 – 900</div>
+      <div class="axis-desc-cell">Weight. Thin to Black. The most expressive axis — spans from ghost to slab.</div>
+    </div>
+    <div class="axis-row">
+      <div class="axis-tag-cell">opsz</div>
+      <div class="axis-range-cell">9 – 144</div>
+      <div class="axis-desc-cell">Optical size. The apertures, contrast, and proportions all shift to optimise for scale.</div>
+    </div>
+    <div class="axis-row">
+      <div class="axis-tag-cell">SOFT</div>
+      <div class="axis-range-cell">0 – 100</div>
+      <div class="axis-desc-cell">Softness. Rounds the terminals and joins — from sharp precision to gentle warmth.</div>
+    </div>
+    <div class="axis-row">
+      <div class="axis-tag-cell">WONK</div>
+      <div class="axis-range-cell">0 – 1</div>
+      <div class="axis-desc-cell">Wonkiness. Introduces deliberate eccentricity — the axis that gives the face personality.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNATURE TECHNIQUE -->
+<section class="guide-section">
+  <span class="section-eyebrow">Signature Technique</span>
+  <h2 class="section-heading">Cursor-driven<br>variable axes.</h2>
+  <p class="guide-body">The hero title responds to cursor position in real time. Cursor X maps to weight and softness; cursor Y maps to optical size. The result is a single word that morphs continuously — heavy and rounded in one corner, ultralight and precise in the other.</p>
+  <p class="guide-body">The core technique: CSS custom properties on the hero element, updated each animation frame via a lerp loop. This avoids calling <code>style.fontVariationSettings</code> every mousemove event and instead lets the rAF loop drive smooth interpolation toward the mouse target.</p>
+
+  <div class="code-block">
+    <pre><span class="code-comment">/* CSS: axes exposed as custom properties */</span>
+<span class="code-key">.hero-title</span> {
+  <span class="code-key">font-variation-settings</span>:
+    <span class="code-val">'wght'</span> var(--h-wght),
+    <span class="code-val">'opsz'</span> var(--h-opsz),
+    <span class="code-val">'SOFT'</span> var(--h-soft),
+    <span class="code-val">'WONK'</span> var(--h-wonk);
+}
+
+<span class="code-comment">/* JS: lerp loop — smoother than direct mousemove writes */</span>
+<span class="code-key">function</span> tick() {
+  <span class="code-comment">// smooth follow</span>
+  heroCurrent.wght = lerp(heroCurrent.wght, heroTarget.wght, <span class="code-val">0.12</span>);
+  heroCurrent.opsz = lerp(heroCurrent.opsz, heroTarget.opsz, <span class="code-val">0.12</span>);
+  heroCurrent.soft = lerp(heroCurrent.soft, heroTarget.soft, <span class="code-val">0.12</span>);
+
+  heroTitle.style.setProperty(<span class="code-val">'--h-wght'</span>, round1(heroCurrent.wght));
+  heroTitle.style.setProperty(<span class="code-val">'--h-opsz'</span>, round1(heroCurrent.opsz));
+  heroTitle.style.setProperty(<span class="code-val">'--h-soft'</span>, round1(heroCurrent.soft));
+
+  <span class="code-comment">// cursor X → weight + softness</span>
+  heroTarget.wght = lerp(<span class="code-val">100</span>, <span class="code-val">900</span>, x);
+  heroTarget.soft = lerp(<span class="code-val">0</span>,   <span class="code-val">80</span>,  x);
+  <span class="code-comment">// cursor Y → optical size</span>
+  heroTarget.opsz = lerp(<span class="code-val">144</span>, <span class="code-val">9</span>, y);
+
+  requestAnimationFrame(tick);
+}</pre>
+  </div>
+
+  <p class="guide-body">The waterfall uses the same rAF loop. Each row has a phase offset — <code>Math.sin(phase + i * 0.75)</code> — which creates a breathing wave where each line pulses independently at a different phase. Scroll velocity is tracked and briefly amplifies the oscillation amplitude, so fast scrolling makes the waterfall "gasp."</p>
+
+  <div class="code-block">
+    <pre><span class="code-comment">/* Waterfall breathing — inside the same rAF loop */</span>
+breathPhase += <span class="code-val">0.008</span>;
+const velDamp = Math.min(Math.abs(scrollVel) * <span class="code-val">0.3</span>, <span class="code-val">1.5</span>);
+scrollVel *= <span class="code-val">0.9</span>; <span class="code-comment">// velocity decay</span>
+
+waterLines.forEach((line, i) => {
+  const baseW = parseFloat(line.dataset.baseWght);
+  const opsz  = parseFloat(line.dataset.opsz);
+  const phase = breathPhase + i * <span class="code-val">0.75</span>;
+  const amp   = <span class="code-val">120</span> + velDamp * <span class="code-val">80</span>;
+  const w     = clamp(baseW + Math.sin(phase) * amp, <span class="code-val">100</span>, <span class="code-val">900</span>);
+  setFvs(span, w, opsz, <span class="code-val">0</span>, wonkMode ? <span class="code-val">1</span> : <span class="code-val">0</span>);
+});</pre>
+  </div>
+</section>
+
+<!-- CRITIQUE PASSES -->
+<section class="guide-section">
+  <span class="section-eyebrow">Critique Passes</span>
+  <h2 class="section-heading">What each pass<br>actually found.</h2>
+
+  <table class="pass-table">
+    <thead>
+      <tr>
+        <th>Pass</th>
+        <th>Finding</th>
+        <th>Fix &amp; Upgrade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Pass 1</td>
+        <td>Mobile hero: title too small (52px at 390px viewport) and visually below-center. Dead zone consumed ~45% of the viewport above the title.</td>
+        <td>Changed <code>font-size</code> from <code>clamp(3.5rem,13.5vw,15rem)</code> to <code>clamp(3.25rem,18vw,15rem)</code>. Removed <code>flex:1</code> from hero-track; made hero-footer <code>position:absolute; bottom:2rem</code> to take it out of the flex flow.</td>
+      </tr>
+      <tr>
+        <td>Pass 1</td>
+        <td>Intro spec orphan: "WGHT 100 → 900 · OPSZ 9 → 144 · SOFT 0 → 100 · WONK 0 → 1" broke to "→ 1" alone on line two.</td>
+        <td>Split into two intentional lines: "wght 100→900 · opsz 9→144 / SOFT 0→100 · WONK 0→1".</td>
+      </tr>
+      <tr>
+        <td>Pass 1</td>
+        <td>Axes section bottom: ~35% of the dark section was empty black after the final slider.</td>
+        <td>Changed axes padding from <code>var(--section-gap)</code> (~160px) to <code>clamp(3rem,6vw,5rem)</code>. Reduced axes-controls gap and padding.</td>
+      </tr>
+      <tr>
+        <td>Pass 1</td>
+        <td><strong>Upgrade:</strong> opsz anatomy strip — a horizontal shelf of the letter "a" at 5 optical sizes (9, 18, 36, 72, 144) proves what optical sizing actually does to letterform design. No generic site would include this.</td>
+        <td>Added before the waterfall lines. Each "a" is scaled proportionally; all are at the same weight. Labels in foundry orange below.</td>
+      </tr>
+      <tr>
+        <td>Pass 2</td>
+        <td>Hero axis-readout chips clipped below viewport on desktop. Hero <code>min-height:100svh</code> started below the sticky nav, pushing absolute-bottom content off-screen.</td>
+        <td>Changed to <code>min-height:calc(100svh - 3.5rem)</code>. Hero now fits the remaining viewport below the nav.</td>
+      </tr>
+      <tr>
+        <td>Pass 2</td>
+        <td>Default wght 300 made the hero feel wispy and small even at the larger font size. Missed the chance to show the face's strength on first impression.</td>
+        <td>Raised default to wght 500 in both CSS and JS. The title now presents at medium weight — strong enough to read as display, still well within the variable range so moving the cursor left shows dramatic thinning.</td>
+      </tr>
+      <tr>
+        <td>Pass 2</td>
+        <td>Intro-to-waterfall gap: 320px of empty paper between the intro body end and the waterfall header. Two section-gap paddings stacking.</td>
+        <td>Changed intro bottom padding and waterfall top padding from <code>var(--section-gap)</code> to <code>clamp(3rem,6vw,5rem)</code> — reduces to ~80px each, total ~160px between sections.</td>
+      </tr>
+      <tr>
+        <td>Pass 2</td>
+        <td><strong>Upgrade:</strong> Vertical marginalia tape — a fixed left-gutter strip with the full alphabet + digits scrolling slowly upward in tiny (opsz 9, wght 200) Fraunces. Visible only on desktop; hidden in reduced motion. Adds typographic texture without any non-typographic element.</td>
+        <td>Implemented as a <code>position:fixed</code> element with <code>writing-mode:vertical-rl</code>. Animated via a 30-second CSS keyframe. The loop is seamless — the tape content is 4× the alphabet to avoid a gap at the wrap point.</td>
+      </tr>
+      <tr>
+        <td>Pass 3</td>
+        <td>Chip HTML defaults showed stale values (wght 300, SOFT 50) instead of the updated defaults (wght 500, SOFT 20).</td>
+        <td>Updated the initial <code>&lt;em&gt;</code> values in the HTML to match the JS/CSS defaults. Now accurate on first render before any mouse event.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- WHAT WAS PROVED -->
+<section class="guide-section">
+  <span class="section-eyebrow">Proof</span>
+  <h2 class="section-heading">Typography as interface.</h2>
+  <p class="guide-body">Every interactive element on this site is a letterform. The hero responds to the cursor not with a JavaScript widget but by morphing its own letterforms. The glyph shelf's hover state doesn't show a tooltip — it changes the letter's optical character, shifting WONK from 0 to 1 so the forms become eccentric. The WONK toggle in the nav applies a global axis transformation that changes the personality of every piece of type on the page simultaneously.</p>
+  <p class="guide-body">No canvas. No WebGL. No SVG animations. One font, four axes, three colors, and the discipline to let those constraints do the work.</p>
+  <div class="inline-specimen" style="font-variation-settings:'wght' 900,'opsz' 144,'SOFT' 0,'WONK' 1;">Aa</div>
+  <p class="guide-body" style="margin-top:0.5rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.4;">wght 900 · opsz 144 · SOFT 0 · WONK 1</p>
+</section>
+
+<footer>
+  <p class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026 · foundry</p>
+</footer>
+
+</body>
+</html>

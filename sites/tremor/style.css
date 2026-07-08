@@ -1,0 +1,609 @@
+/* tremor — a century of earthquakes */
+/* Spectral + Martian Mono · seismogram paper palette */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Martian+Mono:wght@300;400;600&display=swap');
+
+/* ─── Tokens ─── */
+:root {
+  --paper:      #faf6ee;
+  --paper-mid:  #f0ebe0;
+  --ink:        #26221c;
+  --ink-mid:    #5a5349;
+  --ink-faint:  #a09890;
+  --red:        #c8102e;
+  --blue:       #274b8f;
+  --border:     rgba(38, 34, 28, 0.12);
+  --border-mid: rgba(38, 34, 28, 0.22);
+
+  --font-serif: 'Spectral', 'Georgia', serif;
+  --font-mono:  'Martian Mono', 'Courier New', monospace;
+
+  /* type scale */
+  --text-xs:   0.68rem;
+  --text-sm:   0.8rem;
+  --text-base: 1rem;
+  --text-md:   1.15rem;
+  --text-lg:   1.35rem;
+  --text-xl:   1.75rem;
+  --text-2xl:  2.5rem;
+  --text-3xl:  3.8rem;
+  --text-hero: clamp(3.5rem, 10vw, 7.5rem);
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Skip link ─── */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  z-index: 100;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ─── Hero ─── */
+.hero {
+  position: relative;
+  padding: 6rem 0 0;
+  overflow: hidden;
+}
+
+.hero-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: 1.2rem;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-hero);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 1.8rem;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--red);
+}
+
+.hero-sub {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 300;
+  color: var(--ink-mid);
+  max-width: 520px;
+  text-wrap: balance;
+  margin-bottom: 3rem;
+}
+
+/* Hero stats bar */
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--border-mid);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.hero-stat-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-stat-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Hero canvas */
+.hero-canvas-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+#hero-trace {
+  display: block;
+  width: 100%;
+  height: 160px;
+}
+
+/* ─── Main content ─── */
+.content-wrap {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ─── Intro ─── */
+.intro {
+  padding: 4rem 0 3rem;
+  max-width: 660px;
+}
+
+.intro p {
+  font-size: var(--text-md);
+  color: var(--ink-mid);
+  margin-bottom: 1.2rem;
+}
+
+.intro p:last-child { margin-bottom: 0; }
+
+.intro strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.citation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(39, 75, 143, 0.35);
+  padding-bottom: 1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.citation:hover { color: var(--red); border-color: rgba(200,16,46,0.35); }
+.citation:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* ─── Section separator ─── */
+.section-rule {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ─── Decade sections ─── */
+.decade {
+  padding: 4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.decade:last-of-type { border-bottom: none; }
+
+.decade-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.decade-name {
+  font-family: var(--font-serif);
+  font-size: var(--text-2xl);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.decade-stats {
+  display: flex;
+  gap: 2rem;
+  flex-shrink: 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Decade body: trace + marginalia */
+.decade-body {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 0 3rem;
+  align-items: start;
+}
+
+.trace-column {
+  position: relative;
+}
+
+/* Year axis */
+.year-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.year-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+/* Decade canvas — height proportional to max event magnitude */
+.decade-trace {
+  display: block;
+  width: 100%;
+  background: var(--paper);
+}
+
+/* Per-decade heights — M9.5 decade gets the most room */
+.decade-trace[data-decade="1920"] { height: 120px; }
+.decade-trace[data-decade="1930"] { height: 148px; }
+.decade-trace[data-decade="1940"] { height: 148px; }
+.decade-trace[data-decade="1950"] { height: 170px; }
+.decade-trace[data-decade="1960"] { height: 208px; }
+.decade-trace[data-decade="1970"] { height: 148px; }
+.decade-trace[data-decade="1980"] { height: 126px; }
+.decade-trace[data-decade="1990"] { height: 148px; }
+.decade-trace[data-decade="2000"] { height: 184px; }
+.decade-trace[data-decade="2010"] { height: 184px; }
+.decade-trace[data-decade="2020"] { height: 160px; }
+
+/* Time scale bar below canvas */
+.time-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+}
+
+.time-tick {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+/* Completeness note */
+.completeness-note {
+  margin-top: 0.8rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--red);
+  letter-spacing: 0.04em;
+}
+
+/* ─── Felt Report ─── */
+.felt-report {
+  padding-top: 0.5rem;
+}
+
+.felt-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.event-list {
+  list-style: none;
+}
+
+.event-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.event-item:last-child { border-bottom: none; }
+
+.event-mag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--red);
+  font-variant-numeric: tabular-nums;
+}
+
+.event-item--great .event-mag {
+  font-size: var(--text-md);
+}
+
+.event-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  margin-bottom: 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.event-name {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.event-depth {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--blue);
+  margin-bottom: 0.2rem;
+}
+
+.event-note {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: var(--text-xs);
+  color: var(--ink-mid);
+  line-height: 1.5;
+}
+
+/* ─── Epilogue / Data note ─── */
+.epilogue {
+  padding: 4rem 0 3rem;
+}
+
+.epilogue-cols {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 4rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+
+.epilogue-text {}
+
+.epilogue-heading {
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.epilogue p {
+  font-size: var(--text-base);
+  color: var(--ink-mid);
+  margin-bottom: 1rem;
+}
+
+/* Energy chart */
+.epilogue-chart-wrap {
+  padding-top: 0.2rem;
+}
+
+.chart-heading {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 0.8rem;
+}
+
+#energy-chart {
+  display: block;
+  width: 100%;
+  height: 242px;
+}
+
+.chart-note {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  margin-top: 0.6rem;
+  line-height: 1.4;
+}
+
+.data-citation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 2rem;
+  padding: 1.2rem 1.4rem;
+  background: var(--paper-mid);
+  border-left: 2px solid var(--border-mid);
+}
+
+.data-citation-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.data-citation-text {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-mid);
+  line-height: 1.6;
+}
+
+.data-citation-text a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(39,75,143,0.3);
+}
+
+.data-citation-text a:hover { color: var(--red); }
+.data-citation-text a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* ─── Footer ─── */
+footer {
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.footer-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.footer-credit {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+}
+
+.footer-source {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+.footer-source a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(39,75,143,0.25);
+}
+.footer-source a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* ─── Depth cross-section (added in pass 2) ─── */
+.depth-section {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
+.depth-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.depth-canvas {
+  display: block;
+  width: 100%;
+  height: 54px;
+}
+
+/* ─── Responsive ─── */
+
+@media (max-width: 900px) {
+  .decade-body {
+    grid-template-columns: 1fr;
+  }
+
+  .felt-report {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+
+  .epilogue-cols {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+
+  .hero { padding: 3.5rem 0 0; }
+
+  /* Hero stats: 2×2 grid on narrow screens */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem 2rem;
+    flex-wrap: unset;
+  }
+
+  .hero-stat-value { font-size: var(--text-base); }
+
+  .decade-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .decade-stats {
+    flex-direction: row;
+  }
+
+  .stat-item { align-items: flex-start; }
+
+  #hero-trace { height: 100px; }
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}

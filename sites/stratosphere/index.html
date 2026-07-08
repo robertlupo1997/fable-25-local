@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAPS-7 — High Altitude Balloon Mission · Stratosphere</title>
+  <meta name="description" content="Scroll to 39 km. A physics-driven journey through the atmosphere.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Fixed sky canvas — aria-hidden, it's decoration -->
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+
+  <!-- Burst flash (apogee) -->
+  <div class="burst-flash" aria-hidden="true"></div>
+
+  <!-- ── Instrument HUD ────────────────────────────────── -->
+  <aside class="hud" aria-label="Mission instrument readings">
+    <div class="hud-title">HAPS-7 · Instrumentation</div>
+    <div class="hud-row">
+      <span class="hud-label">ALT</span>
+      <span class="hud-value" id="hud-alt">0.00</span>
+      <span class="hud-unit">km</span>
+    </div>
+    <div class="hud-row">
+      <span class="hud-label">TEMP</span>
+      <span class="hud-value" id="hud-temp">+15.0</span>
+      <span class="hud-unit">°C</span>
+    </div>
+    <div class="hud-row">
+      <span class="hud-label">PRES</span>
+      <span class="hud-value" id="hud-pres">1013.2</span>
+      <span class="hud-unit">hPa</span>
+    </div>
+    <div class="hud-row">
+      <span class="hud-label">ρ</span>
+      <span class="hud-value" id="hud-rho">1.2250</span>
+      <span class="hud-unit">kg/m³</span>
+    </div>
+    <div class="hud-sep" aria-hidden="true"></div>
+    <div class="hud-phase" id="hud-phase" aria-live="polite">GROUND</div>
+  </aside>
+
+  <!-- ── Altitude Scale ──────────────────────────────────── -->
+  <div class="alt-scale" aria-label="Altitude scale: 0 to 39 km" role="img">
+    <div class="alt-scale-bar">
+      <!-- Tick marks at key altitudes -->
+      <span class="alt-scale-marker" style="top:100%" aria-label="0 km">0 km</span>
+      <span class="alt-scale-marker" style="top:69.2%" aria-label="12 km">12 km</span>
+      <span class="alt-scale-marker" style="top:48.7%" aria-label="20 km">20 km</span>
+      <span class="alt-scale-marker" style="top:18%" aria-label="32 km">32 km</span>
+      <span class="alt-scale-marker" style="top:0%" aria-label="39 km">39 km</span>
+      <div class="alt-scale-cursor" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- ── Main scrolling content ─────────────────────────── -->
+  <main id="main">
+
+    <!-- Hero / Launch -->
+    <header class="hero" role="banner">
+      <div class="hero-mission-id">Mission HAPS-7 · Kiruna, Sweden · 67°N 21°E · 0600 UTC</div>
+      <h1 class="hero-title">Scroll to<br>39 kilometres.</h1>
+      <p class="hero-subtitle">
+        High Altitude Platform Station · Radiosonde Package · 4.8 kg · 2000g latex envelope
+      </p>
+      <p class="hero-body">
+        A 2,000-gram balloon, inflated with 1.8&nbsp;m³ of hydrogen, strains against its tether
+        in the pre-dawn dark. At 0600&nbsp;UTC, release. The atmosphere — all 39&nbsp;km of it —
+        waits above. The physics will do the art direction.
+      </p>
+      <div class="scroll-hint" aria-label="Scroll down to ascend">
+        <span>Scroll to ascend</span>
+        <div class="scroll-hint-arrow" aria-hidden="true"></div>
+      </div>
+    </header>
+
+    <!-- Spacer: ground to cloud deck -->
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Cloud Deck -->
+    <section
+      class="mission-section"
+      data-scroll-in="900"
+      data-scroll-out="1900"
+      aria-label="Entering cloud deck"
+    >
+      <p class="section-kicker">01 — Cloud Deck</p>
+      <p class="section-alt">1,500 m · T = +2.3°C · P = 845.6 hPa</p>
+      <h2 class="section-title">The sky closes.</h2>
+      <p class="section-body">
+        The cumulus deck — base at 900&nbsp;m, tops at 2,200&nbsp;m — forms a solid ceiling as
+        seen from below. Rising through it takes 4&nbsp;minutes. Grey-white diffusion. Then,
+        abruptly, a different world.
+      </p>
+      <div class="section-data">
+        <strong>Ascent rate:</strong> ~5.2 m/s<br>
+        <strong>Visibility:</strong> &lt;100 m (inside deck)<br>
+        <strong>Lapse rate:</strong> −6.5 K/km (moist adiabatic)
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Above Clouds -->
+    <section
+      class="mission-section"
+      data-scroll-in="2100"
+      data-scroll-out="3100"
+      aria-label="Above clouds"
+    >
+      <p class="section-kicker">02 — Cloudtops</p>
+      <p class="section-alt">5,500 m · T = −21.0°C · P = 505.0 hPa</p>
+      <h2 class="section-title">The top of the weather.</h2>
+      <p class="section-body">
+        The cloud layer extends to the horizon in every direction — a white continent 100&nbsp;km
+        across. Below it: rain, low pressure, three European countries. Above: absolute clarity.
+        Half the mass of Earth's atmosphere now lies beneath the payload.
+      </p>
+      <div class="section-data">
+        <strong>Cloud tops:</strong> 2,800 m average<br>
+        <strong>Altocumulus:</strong> visible at 4,500 m<br>
+        <strong>Solar flux:</strong> unattenuated at this altitude
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Upper Troposphere -->
+    <section
+      class="mission-section"
+      data-scroll-in="3400"
+      data-scroll-out="4400"
+      aria-label="Upper troposphere"
+    >
+      <p class="section-kicker">03 — Upper Troposphere</p>
+      <p class="section-alt">10,000 m · T = −49.9°C · P = 264.4 hPa</p>
+      <h2 class="section-title">Where aircraft cruise.</h2>
+      <p class="section-body">
+        The jet stream tears past at 65&nbsp;m/s — invisible, but real, shaking the payload
+        string. At this altitude, commercial airliners fly within 300&nbsp;m of us. Cirrus wisps
+        trail overhead. Temperature: −49.9°C, computed exactly by the ISA lapse rate of
+        6.5&nbsp;K per kilometre.
+      </p>
+      <div class="section-data">
+        <strong>Jet stream:</strong> 60–70 m/s, 200–300 hPa layer<br>
+        <strong>Cirrus ceiling:</strong> 11,000 m above MSL<br>
+        <strong>Balloon diameter:</strong> ~2.8 m (expanding)
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Tropopause -->
+    <section
+      class="mission-section"
+      data-scroll-in="4700"
+      data-scroll-out="5700"
+      aria-label="Tropopause"
+    >
+      <p class="section-kicker">04 — Tropopause</p>
+      <p class="section-alt">12,000 m · T = −56.5°C · P = 193.3 hPa</p>
+      <h2 class="section-title">The lapse rate zeros.</h2>
+      <p class="section-body">
+        At 11,000&nbsp;m, the atmosphere stops cooling. Temperature stabilises at −56.5°C —
+        the coldest point of the journey. Above this boundary, the stratosphere begins. Weather
+        systems cannot cross it; convection terminates here. The sky is visibly darker.
+      </p>
+      <div class="section-data">
+        <strong>Temperature:</strong> −56.5°C (isothermal layer begins)<br>
+        <strong>Pressure:</strong> 193.3 hPa (19% of sea level)<br>
+        <strong>All weather:</strong> below this line
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Lower Stratosphere -->
+    <section
+      class="mission-section"
+      data-scroll-in="5900"
+      data-scroll-out="6900"
+      aria-label="Lower stratosphere"
+    >
+      <p class="section-kicker">05 — Lower Stratosphere</p>
+      <p class="section-alt">18,000 m · T = −56.5°C · P = 75.9 hPa</p>
+      <h2 class="section-title">The sky turns ink.</h2>
+      <p class="section-body">
+        The Rayleigh scattering column is thinning fast — exponentially, with scale height
+        8,500&nbsp;m. Only 18% of the atmosphere remains above. Blue photons scattered to
+        your eyes grow scarce. The zenith is deep indigo. Stars are minutes away.
+      </p>
+      <div class="section-data">
+        <strong>Column density above:</strong> ~18% of sea level<br>
+        <strong>Rayleigh scale height:</strong> 8,500 m<br>
+        <strong>Balloon diameter:</strong> ~5.1 m (still expanding)
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Ozone Layer -->
+    <section
+      class="mission-section"
+      data-scroll-in="7200"
+      data-scroll-out="8200"
+      aria-label="Ozone layer"
+    >
+      <p class="section-kicker">06 — Ozone Layer</p>
+      <p class="section-alt">23,000 m · T = −52.4°C · P = 40.5 hPa</p>
+      <h2 class="section-title">Ten parts per million.</h2>
+      <p class="section-body">
+        The ozone layer spans roughly 20–35&nbsp;km, peaking near 25&nbsp;km with concentrations
+        of 10&nbsp;ppmv. Invisible, odourless. It absorbs 97–99% of the sun's UV-B radiation.
+        Without it, surface DNA mutates on exposure measured in seconds. We are inside it now.
+      </p>
+      <div class="section-data">
+        <strong>O₃ concentration:</strong> ~8–10 ppmv peak<br>
+        <strong>Absorption:</strong> 97–99% of UV-B (280–315 nm)<br>
+        <strong>Column depth:</strong> ~300 Dobson units
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Near Space -->
+    <section
+      class="mission-section"
+      data-scroll-in="8200"
+      data-scroll-out="9200"
+      aria-label="Near space"
+    >
+      <p class="section-kicker">07 — Near Space</p>
+      <p class="section-alt">32,000 m · T = −46.5°C · P = 8.7 hPa</p>
+      <h2 class="section-title">Stars at noon.</h2>
+      <p class="section-body">
+        Pressure: 8.7&nbsp;hPa — less than 1% of sea level. The sky has surrendered its blue.
+        Stars are visible in daylight. The horizon has curved. The atmosphere, in its entirety,
+        is a thin blue film draped across the belly of the visible world below.
+      </p>
+      <div class="section-data">
+        <strong>Pressure:</strong> 8.7 hPa (0.86% of SL)<br>
+        <strong>Density:</strong> 0.0133 kg/m³ (1.1% of SL)<br>
+        <strong>Balloon diameter:</strong> ~8.4 m
+      </div>
+    </section>
+
+    <div style="height: 900px;" aria-hidden="true"></div>
+
+    <!-- Section: Apogee -->
+    <section
+      class="mission-section"
+      data-scroll-in="9200"
+      data-scroll-out="10500"
+      aria-label="Apogee — maximum altitude"
+    >
+      <p class="section-kicker">08 — Apogee</p>
+      <p class="section-alt">39,000 m · T = −24.9°C · P = 3.19 hPa</p>
+      <h2 class="section-title">Maximum altitude.</h2>
+      <p class="section-body">
+        The balloon — now 10&nbsp;metres in diameter, expanded by near-vacuum — has reached its
+        structural limit. We pause here for 94&nbsp;seconds. The horizon is 703&nbsp;km away.
+        Earth's curvature is unambiguous. Density: 0.365% of sea level.
+      </p>
+      <div class="apogee-readings" aria-label="Apogee instrument readings">
+        <div>
+          <div class="apogee-reading-label">Altitude</div>
+          <div class="apogee-reading-value">39,000 m</div>
+        </div>
+        <div>
+          <div class="apogee-reading-label">Temperature</div>
+          <div class="apogee-reading-value">−24.9°C</div>
+        </div>
+        <div>
+          <div class="apogee-reading-label">Pressure</div>
+          <div class="apogee-reading-value">3.19 hPa</div>
+        </div>
+        <div>
+          <div class="apogee-reading-label">Density</div>
+          <div class="apogee-reading-value">0.365%</div>
+        </div>
+        <div>
+          <div class="apogee-reading-label">Horizon distance</div>
+          <div class="apogee-reading-value">703 km</div>
+        </div>
+        <div>
+          <div class="apogee-reading-label">Balloon diameter</div>
+          <div class="apogee-reading-value">~10 m</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="height: 300px;" aria-hidden="true"></div>
+
+    <!-- Section: Burst -->
+    <section
+      class="mission-section"
+      data-scroll-in="10400"
+      data-scroll-out="11200"
+      aria-label="Balloon burst"
+    >
+      <p class="section-kicker">09 — Burst</p>
+      <p class="section-alt">39,000 m · T = −24.9°C</p>
+      <h2 class="section-title">The envelope fails.</h2>
+      <p class="section-body">
+        A crack propagates at 340&nbsp;m/s through the overstressed latex. In 0.03&nbsp;seconds,
+        the 10-metre envelope is shreds. The payload, suddenly weightless in free fall,
+        begins to drop. The parachute is slaved to a barometric trigger — deployment at 28&nbsp;km.
+        Descent rate: 7.3&nbsp;m/s average. Return ETA: 48&nbsp;minutes.
+      </p>
+      <div class="section-data">
+        <strong>Burst trigger:</strong> stress limit of latex at 10 m diam<br>
+        <strong>Chute deploy:</strong> 28,000 m barometric trigger<br>
+        <strong>Landing zone:</strong> 68°N 23°E (pred. 3.1 km drift)
+      </div>
+    </section>
+
+    <div style="height: 600px;" aria-hidden="true"></div>
+
+    <!-- Section: Descent -->
+    <section
+      class="mission-section"
+      data-scroll-in="11100"
+      data-scroll-out="12100"
+      aria-label="Descent"
+    >
+      <p class="section-kicker">10 — Descent</p>
+      <p class="section-alt">~20,000 m falling</p>
+      <h2 class="section-title">The sky returns.</h2>
+      <p class="section-body">
+        The atmosphere thickens around the descending payload. Blue re-enters the zenith.
+        Cloud layers re-appear — first the altostratus, then the cumulus tops. Pressure
+        rises. Temperature rises (stratospheric warming on descent through isothermal layer).
+        At 2,000&nbsp;m, ground contact is 10&nbsp;minutes away.
+      </p>
+    </section>
+
+    <div style="height: 600px;" aria-hidden="true"></div>
+
+    <!-- Section: Landing -->
+    <section
+      class="mission-section"
+      data-scroll-in="12400"
+      data-scroll-out="13500"
+      aria-label="Landing"
+    >
+      <p class="section-kicker">11 — Recovery</p>
+      <p class="section-alt">0 m · T = +14.8°C · P = 1013.1 hPa</p>
+      <h2 class="section-title">Ground.</h2>
+      <p class="section-body">
+        The payload lands in a birch forest 68°N&nbsp;23°E — 2.8&nbsp;km from the predicted
+        point. Total mission duration: 2&nbsp;hours, 7&nbsp;minutes. The radiosonde has sampled
+        temperature, pressure, and humidity at 39,000 data points. Kiruna receives the telemetry.
+        The atmosphere has been measured, once more, from inside.
+      </p>
+      <div class="section-data">
+        <strong>Mission duration:</strong> 2h 07m<br>
+        <strong>Data points:</strong> 39,000+ (1/sec)<br>
+        <strong>Max altitude:</strong> 38,947 m
+      </div>
+    </section>
+
+    <!-- Final spacer -->
+    <div style="height: 800px;" aria-hidden="true"></div>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer>
+    <p class="footer-credit">Designed &amp; built by Claude Fable&nbsp;5 · local build · 2026</p>
+    <nav aria-label="Site navigation">
+      <a href="guide/" class="footer-link">Designer's Guide →</a>
+    </nav>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

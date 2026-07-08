@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paperlight — A Shadow-Puppet Theatre</title>
+  <meta name="description" content="A five-act folk tale told in layered paper-cutout scenes. Pure SVG and CSS — no canvas, no WebGL.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Progressive enhancement gate: JS class before first paint -->
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GLOBAL SVG DEFS  (filters, gradients — zero dimensions)
+     ══════════════════════════════════════════════════════════ -->
+<svg aria-hidden="true" focusable="false"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <!-- Torn-paper filter: coarse — for far landscape silhouette edges -->
+    <filter id="torn-c" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="turbulence" baseFrequency="0.032 0.018"
+                    numOctaves="3" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise"
+                         scale="14" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- Torn-paper filter: fine — for near layered edges -->
+    <filter id="torn-f" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="turbulence" baseFrequency="0.06 0.035"
+                    numOctaves="3" seed="13" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise"
+                         scale="9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- Moon glow -->
+    <filter id="fmoon" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Lantern glow (SVG-local, for in-scene lantern light) -->
+    <filter id="flantern" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Amber radial gradient for in-scene lantern glow rings -->
+    <radialGradient id="rg-lantern" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#ffb347" stop-opacity="0.55"/>
+      <stop offset="40%"  stop-color="#ff8c20" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ff6600" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rg-lantern-core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#ffe0a0" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Sky gradients (per-scene): dark indigo tops for mountain contrast -->
+    <linearGradient id="sky-a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#0d1628"/>
+      <stop offset="65%"  stop-color="#14101e"/>
+      <stop offset="100%" stop-color="#1a1412"/>
+    </linearGradient>
+    <linearGradient id="sky-b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#090e1c"/>
+      <stop offset="65%"  stop-color="#100c18"/>
+      <stop offset="100%" stop-color="#141012"/>
+    </linearGradient>
+    <linearGradient id="sky-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#07101e"/>
+      <stop offset="65%"  stop-color="#0c0c16"/>
+      <stop offset="100%" stop-color="#100e14"/>
+    </linearGradient>
+    <linearGradient id="sky-d" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#0d1628"/>
+      <stop offset="55%"  stop-color="#16121e"/>
+      <stop offset="80%"  stop-color="#1a1016"/>
+      <stop offset="100%" stop-color="#1a1412"/>
+    </linearGradient>
+    <!-- Window warmth gradient for Act V -->
+    <radialGradient id="rg-window" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#ffb347" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#ff8a00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<!-- Lantern-glow overlay: follows cursor via CSS vars set in main.js -->
+<div class="lantern-glow" aria-hidden="true"></div>
+
+<!-- Fireflies: CSS-only animation, positions set via inline custom props -->
+<div class="fireflies" aria-hidden="true">
+  <span class="firefly" style="left:8%;top:25%;--dx:22px;--dy:-18px;--dx2:-8px;--dy2:25px;--delay:0s;--dur:5.2s"></span>
+  <span class="firefly" style="left:18%;top:55%;--dx:-15px;--dy:-22px;--dx2:20px;--dy2:-10px;--delay:1.3s;--dur:4.8s"></span>
+  <span class="firefly" style="left:28%;top:38%;--dx:30px;--dy:-12px;--dx2:-12px;--dy2:20px;--delay:2.1s;--dur:6.1s"></span>
+  <span class="firefly" style="left:35%;top:70%;--dx:-20px;--dy:18px;--dx2:15px;--dy2:-25px;--delay:0.7s;--dur:5.5s"></span>
+  <span class="firefly" style="left:42%;top:22%;--dx:18px;--dy:-28px;--dx2:-22px;--dy2:12px;--delay:3.2s;--dur:4.6s"></span>
+  <span class="firefly" style="left:55%;top:45%;--dx:-25px;--dy:-15px;--dx2:18px;--dy2:22px;--delay:1.8s;--dur:5.8s"></span>
+  <span class="firefly" style="left:65%;top:30%;--dx:12px;--dy:-20px;--dx2:-18px;--dy2:-14px;--delay:0.4s;--dur:6.3s"></span>
+  <span class="firefly" style="left:70%;top:65%;--dx:-18px;--dy:22px;--dx2:12px;--dy2:-18px;--delay:2.6s;--dur:5.1s"></span>
+  <span class="firefly" style="left:78%;top:42%;--dx:25px;--dy:-10px;--dx2:-15px;--dy2:18px;--delay:1.1s;--dur:4.9s"></span>
+  <span class="firefly" style="left:85%;top:28%;--dx:-22px;--dy:-18px;--dx2:20px;--dy2:10px;--delay:3.5s;--dur:5.7s"></span>
+  <span class="firefly" style="left:92%;top:60%;--dx:15px;--dy:20px;--dx2:-20px;--dy2:-12px;--delay:0.9s;--dur:6.0s"></span>
+  <span class="firefly" style="left:12%;top:75%;--dx:-18px;--dy:-25px;--dx2:22px;--dy2:15px;--delay:2.8s;--dur:5.3s"></span>
+  <span class="firefly" style="left:22%;top:12%;--dx:20px;--dy:18px;--dx2:-15px;--dy2:-22px;--delay:4.0s;--dur:4.7s"></span>
+  <span class="firefly" style="left:48%;top:80%;--dx:-12px;--dy:18px;--dx2:18px;--dy2:-20px;--delay:1.5s;--dur:5.9s"></span>
+  <span class="firefly" style="left:58%;top:18%;--dx:28px;--dy:-22px;--dx2:-10px;--dy2:15px;--delay:3.7s;--dur:6.2s"></span>
+  <span class="firefly" style="left:38%;top:50%;--dx:-20px;--dy:-10px;--dx2:12px;--dy2:28px;--delay:0.2s;--dur:5.4s"></span>
+  <span class="firefly" style="left:62%;top:72%;--dx:15px;--dy:-18px;--dx2:-22px;--dy2:10px;--delay:2.3s;--dur:4.5s"></span>
+  <span class="firefly" style="left:75%;top:15%;--dx:-25px;--dy:15px;--dx2:18px;--dy2:-20px;--delay:1.6s;--dur:6.4s"></span>
+  <span class="firefly" style="left:88%;top:45%;--dx:10px;--dy:22px;--dx2:-18px;--dy2:-15px;--delay:0.6s;--dur:5.0s"></span>
+  <span class="firefly" style="left:5%;top:48%;--dx:22px;--dy:-15px;--dx2:-15px;--dy2:20px;--delay:3.0s;--dur:5.6s"></span>
+  <span class="firefly" style="left:32%;top:88%;--dx:-15px;--dy:-20px;--dx2:20px;--dy2:12px;--delay:1.9s;--dur:4.4s"></span>
+  <span class="firefly" style="left:52%;top:32%;--dx:18px;--dy:-25px;--dx2:-20px;--dy2:8px;--delay:4.2s;--dur:6.5s"></span>
+  <span class="firefly" style="left:72%;top:82%;--dx:-10px;--dy:18px;--dx2:15px;--dy2:-22px;--delay:2.4s;--dur:5.2s"></span>
+  <span class="firefly" style="left:95%;top:35%;--dx:20px;--dy:-12px;--dx2:-18px;--dy2:18px;--delay:0.8s;--dur:4.8s"></span>
+</div>
+
+<!-- Skip navigation -->
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- ═══════════════════════════════════════════════════════════
+     THEATRE HEADER
+     ══════════════════════════════════════════════════════════ -->
+<header class="theatre-header" aria-label="Paperlight — Shadow-Puppet Theatre">
+
+  <!-- Header scene: establishing night stage -->
+  <svg class="header-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice"
+       aria-hidden="true" focusable="false">
+    <rect width="1440" height="900" fill="url(#sky-a)"/>
+    <!-- Stars -->
+    <circle cx="90"  cy="55"  r="1.8" fill="#f5e9d4" opacity=".65"/>
+    <circle cx="215" cy="38"  r="1.2" fill="#f5e9d4" opacity=".45"/>
+    <circle cx="340" cy="72"  r="1.5" fill="#f5e9d4" opacity=".55"/>
+    <circle cx="460" cy="44"  r="1"   fill="#f5e9d4" opacity=".38"/>
+    <circle cx="548" cy="82"  r="1.8" fill="#f5e9d4" opacity=".6"/>
+    <circle cx="640" cy="28"  r="1.3" fill="#f5e9d4" opacity=".48"/>
+    <circle cx="720" cy="60"  r="1"   fill="#f5e9d4" opacity=".35"/>
+    <circle cx="840" cy="42"  r="1.6" fill="#f5e9d4" opacity=".55"/>
+    <circle cx="940" cy="72"  r="1.2" fill="#f5e9d4" opacity=".42"/>
+    <circle cx="1030" cy="35" r="1.4" fill="#f5e9d4" opacity=".5"/>
+    <circle cx="1140" cy="88" r="1"   fill="#f5e9d4" opacity=".3"/>
+    <circle cx="1285" cy="50" r="1.5" fill="#f5e9d4" opacity=".55"/>
+    <circle cx="1385" cy="75" r="1.2" fill="#f5e9d4" opacity=".45"/>
+    <circle cx="155"  cy="112" r="1.2" fill="#f5e9d4" opacity=".35"/>
+    <circle cx="880"  cy="120" r="1"   fill="#f5e9d4" opacity=".28"/>
+    <!-- Moon -->
+    <circle cx="1060" cy="130" r="62" fill="#f5e9d4" opacity=".92" filter="url(#fmoon)"/>
+    <!-- Far mountains (plum) -->
+    <path d="M-20,520 C80,440 220,370 380,400 C540,430 640,320 820,290 C1000,260 1100,340 1240,315 C1380,290 1430,340 1460,330 L1460,900 L-20,900 Z"
+          fill="#52395a" filter="url(#torn-c)"/>
+    <!-- Near hills -->
+    <path d="M-20,620 C120,590 280,565 440,582 C600,599 720,570 900,560 C1080,550 1220,578 1400,565 L1460,568 L1460,900 L-20,900 Z"
+          fill="#221720" filter="url(#torn-f)"/>
+    <!-- Ground -->
+    <rect x="-20" y="690" width="1480" height="210" fill="#0e0b0a"/>
+  </svg>
+
+  <!-- Curtain panels -->
+  <div class="curtain curtain-left"  aria-hidden="true"></div>
+  <div class="curtain curtain-right" aria-hidden="true"></div>
+
+  <!-- Marquee -->
+  <div class="theatre-marquee">
+    <p class="theatre-label">A Shadow-Puppet Theatre</p>
+    <h1 class="theatre-title">Paperlight</h1>
+    <p class="theatre-subtitle">Five acts in paper and shadow</p>
+  </div>
+
+  <p class="scroll-hint" aria-hidden="true">Begin the play</p>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN CONTENT
+     ══════════════════════════════════════════════════════════ -->
+<main id="main">
+
+  <!-- ─────────────────────────────────────────────────────────
+       ACT I — THE LANTERN
+       ───────────────────────────────────────────────────────── -->
+  <section class="act" aria-labelledby="act1-title">
+    <div class="act-scene-wrapper">
+      <svg class="act-scene" viewBox="0 0 1440 600"
+           preserveAspectRatio="xMidYMid slice"
+           aria-hidden="true" focusable="false">
+
+        <!-- Sky -->
+        <rect width="1440" height="600" fill="url(#sky-a)"/>
+
+        <!-- Stars -->
+        <g class="layer-far">
+          <circle cx="72"   cy="42"  r="1.6" fill="#f5e9d4" opacity=".62"/>
+          <circle cx="195"  cy="30"  r="1.1" fill="#f5e9d4" opacity=".44"/>
+          <circle cx="315"  cy="65"  r="1.4" fill="#f5e9d4" opacity=".52"/>
+          <circle cx="440"  cy="40"  r=".9"  fill="#f5e9d4" opacity=".38"/>
+          <circle cx="545"  cy="78"  r="1.7" fill="#f5e9d4" opacity=".58"/>
+          <circle cx="638"  cy="26"  r="1.2" fill="#f5e9d4" opacity=".46"/>
+          <circle cx="700"  cy="58"  r=".8"  fill="#f5e9d4" opacity=".32"/>
+          <circle cx="835"  cy="38"  r="1.5" fill="#f5e9d4" opacity=".52"/>
+          <circle cx="930"  cy="70"  r="1.1" fill="#f5e9d4" opacity=".4"/>
+          <circle cx="1020" cy="33"  r="1.3" fill="#f5e9d4" opacity=".48"/>
+          <circle cx="1290" cy="46"  r="1.4" fill="#f5e9d4" opacity=".53"/>
+          <circle cx="1390" cy="70"  r="1.1" fill="#f5e9d4" opacity=".43"/>
+        </g>
+
+        <!-- Moon -->
+        <g class="layer-far">
+          <circle cx="1085" cy="110" r="58" fill="#f5e9d4" opacity=".9" filter="url(#fmoon)"/>
+          <circle cx="1085" cy="110" r="90" fill="rgba(245,233,212,.05)"/>
+        </g>
+
+        <!-- Far mountains — plum, torn top edge -->
+        <g class="layer-far">
+          <path d="M-30,390 C60,320 195,260 355,295 C515,330 610,225 780,200 C950,175 1055,250 1200,222 C1345,194 1410,240 1470,225 L1470,600 L-30,600 Z"
+                fill="#52395a" filter="url(#torn-c)"/>
+        </g>
+
+        <!-- Near hills -->
+        <g class="layer-mid">
+          <path d="M-30,445 C105,420 238,402 368,418 C498,434 612,406 748,396 C884,386 1010,412 1165,404 C1320,396 1400,420 1470,415 L1470,600 L-30,600 Z"
+                fill="#201720" filter="url(#torn-f)"/>
+        </g>
+
+        <!-- Village buildings — left side, mid-ground -->
+        <g class="layer-mid">
+          <!-- Building 1: small cottage left -->
+          <polygon points="148,374 178,328 208,374" fill="#130f10"/>
+          <rect x="153" y="374" width="50" height="68" fill="#130f10"/>
+          <!-- Building 2: medium with chimney -->
+          <polygon points="232,360 268,306 304,360" fill="#0f0c0e"/>
+          <rect x="238" y="360" width="60" height="80" fill="#0f0c0e"/>
+          <rect x="278" y="298" width="10" height="30" fill="#0f0c0e"/>
+          <!-- Building 3: tallest, centre cluster -->
+          <polygon points="320,348 368,288 416,348" fill="#100d0f"/>
+          <rect x="327" y="348" width="82" height="94" fill="#100d0f"/>
+          <!-- Building 4: medium right of cluster -->
+          <polygon points="432,362 464,312 496,362" fill="#0f0c0e"/>
+          <rect x="438" y="362" width="52" height="78" fill="#0f0c0e"/>
+          <!-- Building 5: small far right of cluster -->
+          <polygon points="514,372 540,334 566,372" fill="#110d0f"/>
+          <rect x="518" y="372" width="44" height="68" fill="#110d0f"/>
+        </g>
+
+        <!-- Stone post + girl + lantern — centre-right, layer-characters -->
+        <g class="layer-characters">
+          <!-- Stone post -->
+          <rect x="742" y="360" width="26" height="98" rx="3" fill="#0d0a09" filter="url(#torn-f)"/>
+
+          <!-- Girl silhouette -->
+          <!-- Head -->
+          <circle cx="755" cy="252" r="14" fill="#0d0a09"/>
+          <!-- Hair bun -->
+          <ellipse cx="755" cy="239" rx="9" ry="6" fill="#0d0a09"/>
+          <!-- Body (hourglass) -->
+          <path d="M 742,265 C 739,280 737,315 739,348 C 740,352 750,354 760,353 C 770,352 772,348 771,315 C 769,280 767,265 768,265 Z"
+                fill="#0d0a09"/>
+          <!-- Left leg -->
+          <rect x="742" y="346" width="11" height="18" rx="2.5" fill="#0d0a09"/>
+          <!-- Right leg -->
+          <rect x="757" y="346" width="11" height="18" rx="2.5" fill="#0d0a09"/>
+          <!-- Left arm hanging -->
+          <path d="M 742,273 L 732,310 L 728,308 L 738,271 Z" fill="#0d0a09"/>
+          <!-- Right arm raised, holding lantern -->
+          <path d="M 766,272 L 778,250 L 774,247 L 762,269 Z" fill="#0d0a09"/>
+          <!-- Hand/cord to lantern -->
+          <line x1="776" y1="250" x2="782" y2="241" stroke="#0d0a09" stroke-width="2.5"/>
+
+          <!-- Lantern glow rings (behind lantern body) -->
+          <circle cx="790" cy="222" r="72" fill="url(#rg-lantern)" opacity=".55"/>
+          <circle cx="790" cy="222" r="34" fill="url(#rg-lantern-core)" opacity=".45"/>
+
+          <!-- Lantern body (amber, hexagonal) -->
+          <polygon points="790,205 800,211 800,232 790,238 780,232 780,211" fill="#ffb347"/>
+          <!-- Lantern top cap -->
+          <rect x="782" y="200" width="16" height="7" rx="2" fill="#0d0a09"/>
+          <!-- Lantern bottom cap -->
+          <rect x="782" y="238" width="16" height="6" rx="2" fill="#0d0a09"/>
+          <!-- Lantern bail -->
+          <line x1="790" y1="200" x2="790" y2="193" stroke="#0d0a09" stroke-width="2"/>
+          <!-- Inner window glow -->
+          <polygon points="790,210 797,214 797,228 790,232 783,228 783,214" fill="rgba(255,230,160,.7)"/>
+        </g>
+
+        <!-- Foreground ground strip -->
+        <g class="layer-near">
+          <path d="M-30,462 C140,452 380,456 660,454 C940,452 1180,458 1470,455 L1470,600 L-30,600 Z"
+                fill="#0c0909" filter="url(#torn-f)"/>
+        </g>
+
+      </svg>
+    </div><!-- /.act-scene-wrapper -->
+
+    <div class="act-content">
+      <span class="act-badge">Act I</span>
+      <h2 id="act1-title" class="act-title">The Lantern</h2>
+      <div class="act-prose">
+        <p>In the year the copper moon stood still, the village of Tengmu lived at the edge of every map. When cartographers' ink ran thin, they simply stopped drawing. Tengmu remained — seventeen houses, one well, one girl named Mei.</p>
+        <p>Each evening she climbed the stone post at the village's edge and lit the lantern her grandmother had carried across three mountain passes. The mountain that watched the valley had grown accustomed to darkness. Mei was reminding&nbsp;it&nbsp;otherwise.</p>
+      </div>
+    </div>
+  </section><!-- /act-1 -->
+
+
+  <!-- Act separator -->
+  <div class="act-sep" aria-hidden="true"><span class="act-sep-label">II</span></div>
+
+  <!-- ─────────────────────────────────────────────────────────
+       ACT II — THE FOX
+       ───────────────────────────────────────────────────────── -->
+  <section class="act" aria-labelledby="act2-title">
+    <div class="act-scene-wrapper">
+      <svg class="act-scene" viewBox="0 0 1440 600"
+           preserveAspectRatio="xMidYMid slice"
+           aria-hidden="true" focusable="false">
+
+        <!-- Very dark sky -->
+        <rect width="1440" height="600" fill="url(#sky-b)"/>
+
+        <!-- Sparse stars -->
+        <g class="layer-far">
+          <circle cx="110"  cy="38"  r="1.4" fill="#f5e9d4" opacity=".5"/>
+          <circle cx="280"  cy="55"  r="1"   fill="#f5e9d4" opacity=".38"/>
+          <circle cx="480"  cy="28"  r="1.6" fill="#f5e9d4" opacity=".55"/>
+          <circle cx="660"  cy="48"  r=".9"  fill="#f5e9d4" opacity=".32"/>
+          <circle cx="860"  cy="35"  r="1.3" fill="#f5e9d4" opacity=".47"/>
+          <circle cx="1050" cy="62"  r="1.1" fill="#f5e9d4" opacity=".4"/>
+          <circle cx="1250" cy="42"  r="1.5" fill="#f5e9d4" opacity=".52"/>
+          <circle cx="1400" cy="68"  r="1"   fill="#f5e9d4" opacity=".36"/>
+        </g>
+
+        <!-- Distant forest horizon (layer-far) — jagged silhouette band -->
+        <g class="layer-far">
+          <path d="M-20,310 L0,270 L20,300 L40,255 L65,285 L85,240 L110,268 L135,230
+                   L160,265 L185,228 L210,258 L235,218 L265,252 L295,210 L325,248
+                   L355,205 L385,245 L415,208 L445,250 L475,212 L505,252 L535,215
+                   L565,258 L595,218 L625,255 L655,212 L685,252 L715,210 L745,255
+                   L775,215 L805,258 L835,218 L865,255 L895,215 L925,252 L955,208
+                   L985,250 L1015,212 L1045,258 L1075,220 L1105,262 L1135,225
+                   L1165,268 L1195,228 L1225,268 L1255,232 L1285,272 L1315,238
+                   L1345,280 L1375,248 L1405,288 L1440,265 L1440,600 L-20,600 Z"
+                fill="#2a1e28" filter="url(#torn-c)"/>
+        </g>
+
+        <!-- Mid forest — denser trees, distinct trunks and crowns -->
+        <g class="layer-mid">
+          <!-- Tree silhouettes: triangular crowns + rect trunks -->
+          <polygon points="60,420 30,340 90,340"   fill="#180f16"/>
+          <rect x="52" y="420" width="16" height="50" fill="#180f16"/>
+          <polygon points="120,410 88,320 152,320"  fill="#160e14"/>
+          <rect x="110" y="410" width="20" height="58" fill="#160e14"/>
+          <polygon points="185,425 148,328 222,328" fill="#180f16"/>
+          <rect x="174" y="425" width="22" height="45" fill="#180f16"/>
+          <polygon points="255,415 215,318 295,318" fill="#150d13"/>
+          <rect x="243" y="415" width="24" height="55" fill="#150d13"/>
+          <!-- Continuation right side -->
+          <polygon points="1180,418 1148,328 1212,328" fill="#180f16"/>
+          <rect x="1168" y="418" width="24" height="52" fill="#180f16"/>
+          <polygon points="1255,408 1220,315 1290,315" fill="#160e14"/>
+          <rect x="1244" y="408" width="22" height="60" fill="#160e14"/>
+          <polygon points="1330,420 1295,325 1365,325" fill="#180f16"/>
+          <rect x="1318" y="420" width="24" height="50" fill="#180f16"/>
+          <polygon points="1400,412 1368,320 1432,320" fill="#150d13"/>
+          <rect x="1388" y="412" width="24" height="58" fill="#150d13"/>
+        </g>
+
+        <!-- Girl following (mid-ground left, smaller) -->
+        <g class="layer-mid">
+          <!-- Girl smaller at ~430,350, following fox -->
+          <circle cx="380" cy="338" r="10"  fill="#100d0e"/>
+          <ellipse cx="380" cy="328" rx="6" ry="4" fill="#100d0e"/>
+          <path d="M 372,348 C 370,358 370,375 372,392 L 388,392 C 390,375 390,358 388,348 Z" fill="#100d0e"/>
+          <rect x="373" y="392" width="7" height="14" rx="2" fill="#100d0e"/>
+          <rect x="382" y="392" width="7" height="14" rx="2" fill="#100d0e"/>
+          <!-- Small lantern she carries -->
+          <polygon points="380,318 385,321 385,331 380,334 375,331 375,321" fill="#ffb347" opacity=".8"/>
+          <circle cx="380" cy="325" r="22" fill="url(#rg-lantern)" opacity=".4"/>
+        </g>
+
+        <!-- Nine-tailed Fox spirit — the dominant figure, right of centre -->
+        <g class="layer-characters">
+          <!-- Fox body: elongated low silhouette -->
+          <path d="M 680,420 C 672,395 680,375 710,368 C 750,360 820,368 855,382 C 878,392 880,412 862,428 C 835,444 762,448 720,442 C 695,436 686,432 680,420 Z"
+                fill="#0a0809"/>
+          <!-- Fox head (right side, slightly raised) -->
+          <path d="M 855,378 C 870,362 892,354 902,360 C 910,366 906,380 890,386 C 904,378 910,366 904,358 C 916,366 914,385 898,394 C 882,403 862,400 855,396 Z"
+                fill="#0a0809"/>
+          <!-- Ears (two pointed) -->
+          <path d="M 888,360 L 895,342 L 906,358 Z" fill="#0a0809"/>
+          <path d="M 898,356 L 907,338 L 916,354 Z" fill="#0a0809"/>
+          <!-- Eyes (small amber glints) -->
+          <circle cx="900" cy="372" r="3" fill="#ffb347" opacity=".8"/>
+          <circle cx="910" cy="370" r="2.5" fill="#ffb347" opacity=".8"/>
+          <!-- Legs (four, beneath body) -->
+          <rect x="705" y="438" width="13" height="28" rx="6" fill="#0a0809"/>
+          <rect x="735" y="440" width="13" height="26" rx="6" fill="#0a0809"/>
+          <rect x="800" y="438" width="13" height="28" rx="6" fill="#0a0809"/>
+          <rect x="835" y="440" width="13" height="26" rx="6" fill="#0a0809"/>
+          <!-- Nine tails (fan spreading LEFT from rear) -->
+          <path d="M 682,418 C 620,395 555,368 490,342 C 455,326 425,312 400,295" stroke="#0c0a0b" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <path d="M 682,422 C 615,408 548,398 480,390 C 440,384 405,378 374,368" stroke="#0c0a0b" stroke-width="13" fill="none" stroke-linecap="round"/>
+          <path d="M 682,428 C 620,422 558,424 495,428 C 452,432 415,432 380,428" stroke="#0c0a0b" stroke-width="13" fill="none" stroke-linecap="round"/>
+          <path d="M 683,412 C 628,378 572,344 512,314 C 472,292 432,276 398,268" stroke="#0c0a0b" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <path d="M 684,406 C 636,368 586,330 532,296 C 494,272 454,256 420,248" stroke="#0c0a0b" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M 682,434 C 628,446 572,458 514,466 C 472,472 434,472 400,468" stroke="#0c0a0b" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <path d="M 681,440 C 630,456 576,472 520,484 C 478,494 440,498 408,494" stroke="#0c0a0b" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M 684,400 C 640,358 594,316 544,280 C 506,254 466,236 432,228" stroke="#0c0a0b" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M 681,446 C 634,466 582,486 528,500 C 488,512 448,518 415,514" stroke="#0c0a0b" stroke-width="10" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- Foreground trees (flanking, closest) -->
+        <g class="layer-near">
+          <!-- Left near tree -->
+          <path d="M-20,600 L-20,280 C10,260 40,250 70,265 L70,600 Z" fill="#0e0b0d"/>
+          <path d="M-10,320 C20,290 50,278 80,290 C50,305 20,318 -10,330 Z" fill="#0e0b0d"/>
+          <!-- Right near tree -->
+          <path d="M1460,600 L1460,270 C1430,250 1400,240 1370,255 L1370,600 Z" fill="#0e0b0d"/>
+          <path d="M1460,315 C1425,285 1395,273 1368,285 C1395,300 1425,315 1460,328 Z" fill="#0e0b0d"/>
+          <!-- Ground strip -->
+          <path d="M-20,470 C200,460 500,464 720,462 C940,460 1200,466 1470,462 L1470,600 L-20,600 Z"
+                fill="#0c0909"/>
+        </g>
+
+      </svg>
+    </div>
+
+    <div class="act-content">
+      <span class="act-badge">Act II</span>
+      <h2 id="act2-title" class="act-title">The Fox</h2>
+      <div class="act-prose">
+        <p>She had not expected to see the fox. It stood at the treeline with nine tails that moved like smoke, its eyes two embers from a fire that had never been&nbsp;lit.</p>
+        <p>It spoke in the language that exists just before understanding. <em>"The mountain remembers eating light,"</em> it said. <em>"Yours is the last one it hasn't swallowed."</em></p>
+        <p>Mei considered this. Then she followed the fox into the forest, because she had always been the kind of girl who walks toward things that should frighten&nbsp;her.</p>
+      </div>
+    </div>
+  </section><!-- /act-2 -->
+
+
+  <!-- Act separator -->
+  <div class="act-sep" aria-hidden="true"><span class="act-sep-label">III</span></div>
+
+  <!-- ─────────────────────────────────────────────────────────
+       ACT III — THE TEMPLE
+       ───────────────────────────────────────────────────────── -->
+  <section class="act" aria-labelledby="act3-title">
+    <div class="act-scene-wrapper">
+      <svg class="act-scene" viewBox="0 0 1440 600"
+           preserveAspectRatio="xMidYMid slice"
+           aria-hidden="true" focusable="false">
+
+        <!-- Near-black sky -->
+        <rect width="1440" height="600" fill="url(#sky-c)"/>
+
+        <!-- Stars (few, cold) -->
+        <g class="layer-far">
+          <circle cx="120"  cy="32"  r="1.3" fill="#f5e9d4" opacity=".45"/>
+          <circle cx="350"  cy="55"  r=".9"  fill="#f5e9d4" opacity=".32"/>
+          <circle cx="580"  cy="28"  r="1.5" fill="#f5e9d4" opacity=".5"/>
+          <circle cx="800"  cy="48"  r="1.1" fill="#f5e9d4" opacity=".38"/>
+          <circle cx="1020" cy="35"  r="1.4" fill="#f5e9d4" opacity=".48"/>
+          <circle cx="1260" cy="55"  r=".9"  fill="#f5e9d4" opacity=".35"/>
+          <circle cx="1420" cy="38"  r="1.2" fill="#f5e9d4" opacity=".42"/>
+        </g>
+
+        <!-- Mountain peak — far, dominant, centred -->
+        <g class="layer-far">
+          <path d="M-20,600 C100,560 250,500 400,480 C550,460 640,400 720,310 C800,220 840,180 860,150 C880,180 920,220 1000,310 C1080,400 1170,460 1320,480 C1400,500 1440,540 1470,600 Z"
+                fill="#52395a" filter="url(#torn-c)"/>
+          <!-- Snow cap / lighter peak tip -->
+          <path d="M 840,155 C 850,130 858,118 860,112 C 862,118 870,130 880,155 C 868,148 852,148 840,155 Z"
+                fill="#f5e9d4" opacity=".18"/>
+        </g>
+
+        <!-- Near mountain slopes -->
+        <g class="layer-mid">
+          <path d="M-20,600 C80,570 220,530 380,520 C540,510 640,480 720,440 C760,420 800,410 840,400 C880,410 920,420 960,440 C1040,480 1140,510 1300,520 C1400,530 1440,560 1470,600 Z"
+                fill="#221620" filter="url(#torn-f)"/>
+        </g>
+
+        <!-- Pagoda temple on mountain summit -->
+        <g class="layer-mid">
+          <!-- Platform / base steps -->
+          <rect x="780" y="385" width="160" height="18" rx="2" fill="#0f0c0e"/>
+          <rect x="794" y="368" width="132" height="20" rx="2" fill="#0f0c0e"/>
+          <!-- Tier 3 body (base) -->
+          <rect x="808" y="342" width="104" height="30" fill="#0f0c0e"/>
+          <!-- Tier 3 roof -->
+          <path d="M 794,342 L 860,315 L 926,342 Z" fill="#0d0a0c"/>
+          <line x1="785" y1="342" x2="935" y2="342" stroke="#0f0c0e" stroke-width="5"/>
+          <!-- Eave up-curl hints -->
+          <path d="M 793,340 Q 788,336 790,330" stroke="#0d0a0c" stroke-width="2" fill="none"/>
+          <path d="M 927,340 Q 932,336 930,330" stroke="#0d0a0c" stroke-width="2" fill="none"/>
+          <!-- Tier 2 body -->
+          <rect x="824" y="298" width="72" height="20" fill="#0d0a0c"/>
+          <!-- Tier 2 roof -->
+          <path d="M 812,298 L 860,275 L 908,298 Z" fill="#0c090b"/>
+          <line x1="806" y1="298" x2="914" y2="298" stroke="#0d0a0c" stroke-width="4"/>
+          <!-- Tier 1 body (top) -->
+          <rect x="838" y="258" width="44" height="20" fill="#0c090b"/>
+          <!-- Tier 1 roof -->
+          <path d="M 828,258 L 860,240 L 892,258 Z" fill="#0b080a"/>
+          <line x1="824" y1="258" x2="896" y2="258" stroke="#0c090b" stroke-width="3"/>
+          <!-- Finial -->
+          <rect x="857" y="228" width="6" height="14" fill="#0b080a"/>
+          <circle cx="860" cy="226" r="4" fill="#0b080a"/>
+          <!-- Prayer wheel — circular element to left of temple -->
+          <circle cx="740" cy="352" r="28" fill="none" stroke="#0d0b0c" stroke-width="8"/>
+          <circle cx="740" cy="352" r="6"  fill="#0d0b0c"/>
+          <line x1="740" y1="324" x2="740" y2="380" stroke="#0d0b0c" stroke-width="4"/>
+          <line x1="712" y1="352" x2="768" y2="352" stroke="#0d0b0c" stroke-width="4"/>
+          <line x1="720" y1="330" x2="760" y2="374" stroke="#0d0b0c" stroke-width="3"/>
+          <line x1="760" y1="330" x2="720" y2="374" stroke="#0d0b0c" stroke-width="3"/>
+          <!-- Wheel axle post -->
+          <rect x="737" y="380" width="6" height="20" fill="#0d0b0c"/>
+        </g>
+
+        <!-- Girl approaching with lantern — layer-characters -->
+        <g class="layer-characters">
+          <!-- Girl smaller (approaching, at ~620, 390) -->
+          <circle cx="620" cy="375" r="11" fill="#0b0909"/>
+          <ellipse cx="620" cy="364" rx="7" ry="5" fill="#0b0909"/>
+          <path d="M 612,386 C 610,398 609,415 611,430 L 628,430 C 630,415 629,398 627,386 Z" fill="#0b0909"/>
+          <rect x="613" y="430" width="8" height="14" rx="2" fill="#0b0909"/>
+          <rect x="623" y="430" width="8" height="14" rx="2" fill="#0b0909"/>
+          <!-- Arm raised with lantern -->
+          <path d="M 626,392 L 638,374 L 634,371 L 622,389 Z" fill="#0b0909"/>
+          <!-- Lantern glow -->
+          <circle cx="644" cy="362" r="52" fill="url(#rg-lantern)" opacity=".55"/>
+          <circle cx="644" cy="362" r="24" fill="url(#rg-lantern-core)" opacity=".45"/>
+          <!-- Lantern -->
+          <polygon points="644,350 651,354 651,368 644,372 637,368 637,354" fill="#ffb347"/>
+          <rect x="638" y="345" width="12" height="7" rx="2" fill="#0b0909"/>
+          <rect x="638" y="372" width="12" height="5" rx="2" fill="#0b0909"/>
+          <polygon points="644,356 649,358 649,365 644,367 639,365 639,358" fill="rgba(255,230,160,.75)"/>
+        </g>
+
+        <!-- Foreground ground / rock ledge -->
+        <g class="layer-near">
+          <path d="M-20,480 C120,468 320,472 560,470 C800,468 1060,474 1300,470 C1380,468 1430,474 1470,472 L1470,600 L-20,600 Z"
+                fill="#0c0909" filter="url(#torn-f)"/>
+        </g>
+
+      </svg>
+    </div>
+
+    <div class="act-content">
+      <span class="act-badge">Act III</span>
+      <h2 id="act3-title" class="act-title">The Temple</h2>
+      <div class="act-prose">
+        <p>At the summit stood a temple no pilgrim had reached in seven generations. Inside, a wheel of paper prayers turned in a wind that had no source. Each prayer was written in handwriting that had not yet been invented.</p>
+        <p>The fox led her to the central altar and stepped aside. Mei understood. She pressed her lantern against the cold stone and gave the mountain her&nbsp;light. The wheel stopped. The mountain exhaled. Something old remembered how to&nbsp;sleep.</p>
+      </div>
+    </div>
+  </section><!-- /act-3 -->
+
+
+  <!-- Act separator -->
+  <div class="act-sep" aria-hidden="true"><span class="act-sep-label">IV</span></div>
+
+  <!-- ─────────────────────────────────────────────────────────
+       ACT IV — THE STORM
+       ───────────────────────────────────────────────────────── -->
+  <section class="act" aria-labelledby="act4-title">
+    <div class="act-scene-wrapper">
+      <svg class="act-scene" viewBox="0 0 1440 600"
+           preserveAspectRatio="xMidYMid slice"
+           aria-hidden="true" focusable="false">
+
+        <!-- Dark stormy sky -->
+        <rect width="1440" height="600" fill="url(#sky-c)"/>
+
+        <!-- Storm wind shapes — diagonal sweep strokes, clearly visible -->
+        <g class="layer-far">
+          <path d="M 0,200 C 200,180 400,195 600,175 C 800,155 1000,170 1200,148 C 1300,138 1380,145 1440,140"
+                stroke="#6b3a6e" stroke-width="42" fill="none" stroke-linecap="round" opacity=".55"/>
+          <path d="M 0,260 C 250,240 500,255 750,235 C 1000,215 1200,238 1440,220"
+                stroke="#5c3060" stroke-width="32" fill="none" stroke-linecap="round" opacity=".5"/>
+          <path d="M 0,140 C 300,118 600,135 900,112 C 1100,96 1300,115 1440,108"
+                stroke="#6b3a6e" stroke-width="26" fill="none" stroke-linecap="round" opacity=".45"/>
+          <path d="M 0,320 C 300,305 600,318 900,298 C 1100,284 1300,300 1440,292"
+                stroke="#4a2848" stroke-width="20" fill="none" stroke-linecap="round" opacity=".4"/>
+        </g>
+
+        <!-- Scatter: 8 fragmenting fox shapes dispersing outward — visible plum -->
+        <g class="layer-far">
+          <!-- Fox fragment 1 — upper-left -->
+          <ellipse cx="240"  cy="148" rx="42" ry="16" fill="#5c3862" transform="rotate(-22 240 148)"/>
+          <path d="M 205,145 C 185,130 165,118 148,110" stroke="#5c3862" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M 203,152 C 182,148 161,148 142,145" stroke="#5c3862" stroke-width="8"  fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 2 — upper-right -->
+          <ellipse cx="1180" cy="160" rx="38" ry="15" fill="#5c3862" transform="rotate(18 1180 160)"/>
+          <path d="M 1212,157 C 1232,142 1252,130 1270,122" stroke="#5c3862" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M 1214,164 C 1236,160 1258,160 1278,157" stroke="#5c3862" stroke-width="8"  fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 3 — mid-left -->
+          <ellipse cx="148"  cy="290" rx="34" ry="13" fill="#4e3058" transform="rotate(-10 148 290)"/>
+          <path d="M 120,286 C 100,276 80,265 62,258"  stroke="#4e3058" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M 118,294 C 96,292 74,292 54,290"   stroke="#4e3058" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 4 — mid-right -->
+          <ellipse cx="1295" cy="278" rx="36" ry="14" fill="#4e3058" transform="rotate(14 1295 278)"/>
+          <path d="M 1325,274 C 1348,264 1368,254 1386,248" stroke="#4e3058" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M 1327,282 C 1352,280 1374,280 1394,278" stroke="#4e3058" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 5 — lower-left -->
+          <ellipse cx="180"  cy="430" rx="30" ry="12" fill="#3d2444" transform="rotate(-8 180 430)"/>
+          <path d="M 155,427 C 135,420 115,412 98,407"  stroke="#3d2444" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 6 — lower-right -->
+          <ellipse cx="1260" cy="418" rx="32" ry="13" fill="#3d2444" transform="rotate(10 1260 418)"/>
+          <path d="M 1287,414 C 1308,408 1328,400 1344,395" stroke="#3d2444" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 7 — top-centre-left -->
+          <ellipse cx="540"  cy="88"  rx="28" ry="11" fill="#5c3862" transform="rotate(-30 540 88)"/>
+          <path d="M 519,80 C 500,68 480,58 464,52"    stroke="#5c3862" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Fox fragment 8 — top-centre-right -->
+          <ellipse cx="900"  cy="92"  rx="28" ry="11" fill="#5c3862" transform="rotate(28 900 92)"/>
+          <path d="M 921,84 C 940,72 960,62 976,56"    stroke="#5c3862" stroke-width="8" fill="none" stroke-linecap="round"/>
+        </g>
+
+        <!-- Central figure: Mei, arm raised to hold lantern high -->
+        <g class="layer-characters">
+          <!-- Lantern (held very high — large glow dominates the storm) -->
+          <circle cx="720" cy="140" r="140" fill="url(#rg-lantern)" opacity=".65"/>
+          <circle cx="720" cy="140" r="68"  fill="url(#rg-lantern-core)" opacity=".6"/>
+          <polygon points="720,122 731,128 731,152 720,158 709,152 709,128" fill="#ffb347"/>
+          <rect x="712" y="115" width="16" height="9"  rx="2" fill="#0d0a09"/>
+          <rect x="712" y="158" width="16" height="7"  rx="2" fill="#0d0a09"/>
+          <polygon points="720,127 729,131 729,148 720,152 711,148 711,131" fill="rgba(255,235,165,.8)"/>
+          <line x1="720" y1="115" x2="720" y2="105" stroke="#0d0a09" stroke-width="2.5"/>
+
+          <!-- Girl: central, stoic, arm raised -->
+          <circle cx="720" cy="280" r="15" fill="#0d0a09"/>
+          <ellipse cx="720" cy="267" rx="10" ry="7" fill="#0d0a09"/>
+          <path d="M 706,294 C 703,312 701,345 703,378 C 704,382 714,385 724,384 C 734,383 736,379 735,345 C 733,312 731,294 733,294 Z"
+                fill="#0d0a09"/>
+          <rect x="706" y="376" width="12" height="22" rx="3" fill="#0d0a09"/>
+          <rect x="722" y="376" width="12" height="22" rx="3" fill="#0d0a09"/>
+          <!-- Both arms raised (holding lantern up with both) -->
+          <path d="M 706,300 L 690,265 L 686,268 L 702,304 Z" fill="#0d0a09"/>
+          <path d="M 733,300 L 749,265 L 745,262 L 729,296 Z" fill="#0d0a09"/>
+          <!-- Cord up to lantern -->
+          <line x1="720" y1="105" x2="720" y2="268" stroke="#0d0a09" stroke-width="2" stroke-dasharray="4,3"/>
+        </g>
+
+        <!-- Ground / rock debris -->
+        <g class="layer-near">
+          <path d="M-20,478 C80,462 220,468 420,465 C620,462 840,468 1080,464 C1260,461 1380,468 1470,464 L1470,600 L-20,600 Z"
+                fill="#0d0a09" filter="url(#torn-f)"/>
+          <!-- Stone debris shapes -->
+          <ellipse cx="320"  cy="475" rx="28" ry="10" fill="#0b0909" transform="rotate(-15 320 475)"/>
+          <ellipse cx="1100" cy="470" rx="24" ry="9"  fill="#0b0909" transform="rotate(12 1100 470)"/>
+          <ellipse cx="620"  cy="480" rx="20" ry="8"  fill="#0b0909" transform="rotate(-8 620 480)"/>
+        </g>
+
+      </svg>
+    </div>
+
+    <div class="act-content">
+      <span class="act-badge">Act IV</span>
+      <h2 id="act4-title" class="act-title">The Storm</h2>
+      <div class="act-prose">
+        <p>The mountain had a long memory. It also had unfinished&nbsp;business.</p>
+        <p>Stone doors fell like thunder. The nine-tailed fox scattered into eight smaller foxes, each carrying a fraction of the truth. Darkness rushed in from every direction at once — old and hungry and specifically interested in&nbsp;lanterns.</p>
+        <p>Mei raised her light above her head. It flickered. She raised it&nbsp;higher. There is a courage that is not brave — it simply has no better option. She walked into the deepest dark. The lantern&nbsp;followed.</p>
+      </div>
+    </div>
+  </section><!-- /act-4 -->
+
+
+  <!-- Act separator -->
+  <div class="act-sep" aria-hidden="true"><span class="act-sep-label">V</span></div>
+
+  <!-- ─────────────────────────────────────────────────────────
+       ACT V — THE RETURN
+       ───────────────────────────────────────────────────────── -->
+  <section class="act" aria-labelledby="act5-title">
+    <div class="act-scene-wrapper">
+      <svg class="act-scene" viewBox="0 0 1440 600"
+           preserveAspectRatio="xMidYMid slice"
+           aria-hidden="true" focusable="false">
+
+        <!-- Sky — very slightly lighter, hint of dawn -->
+        <rect width="1440" height="600" fill="url(#sky-d)"/>
+
+        <!-- Soft amber horizon glow (dawn beginning far right) -->
+        <g class="layer-far">
+          <ellipse cx="1350" cy="600" rx="380" ry="200" fill="#ff8a20" opacity=".08"/>
+        </g>
+        <!-- Dawn moon (low, warm, setting — narrative echo of Act I moon) -->
+        <g class="layer-far">
+          <circle cx="1210" cy="92" r="44" fill="#f5e9d4" opacity=".65" filter="url(#fmoon)"/>
+          <circle cx="1210" cy="92" r="44" fill="#ffe0b0" opacity=".2"/>
+        </g>
+
+        <!-- Stars (fewer, fading) -->
+        <g class="layer-far">
+          <circle cx="100"  cy="45"  r="1.2" fill="#f5e9d4" opacity=".38"/>
+          <circle cx="260"  cy="30"  r=".9"  fill="#f5e9d4" opacity=".28"/>
+          <circle cx="440"  cy="55"  r="1.3" fill="#f5e9d4" opacity=".4"/>
+          <circle cx="620"  cy="35"  r=".8"  fill="#f5e9d4" opacity=".26"/>
+          <circle cx="820"  cy="48"  r="1"   fill="#f5e9d4" opacity=".32"/>
+          <circle cx="1020" cy="38"  r="1.2" fill="#f5e9d4" opacity=".38"/>
+          <circle cx="1220" cy="55"  r=".9"  fill="#f5e9d4" opacity=".28"/>
+        </g>
+
+        <!-- Far hills -->
+        <g class="layer-far">
+          <path d="M-20,380 C100,340 250,300 420,330 C590,360 700,280 880,260 C1060,240 1180,300 1350,280 C1420,268 1450,275 1470,272 L1470,600 L-20,600 Z"
+                fill="#52395a" filter="url(#torn-c)"/>
+        </g>
+
+        <!-- Near hills -->
+        <g class="layer-mid">
+          <path d="M-20,445 C110,425 260,410 420,425 C580,440 700,415 880,408 C1060,401 1220,420 1400,414 L1470,416 L1470,600 L-20,600 Z"
+                fill="#221720" filter="url(#torn-f)"/>
+        </g>
+
+        <!-- Village — same buildings, now lit from within -->
+        <g class="layer-mid">
+          <!-- Building 1 -->
+          <polygon points="180,372 208,325 236,372" fill="#110e0f"/>
+          <rect x="184" y="372" width="48" height="68" fill="#110e0f"/>
+          <!-- Lit window -->
+          <rect x="196" y="385" width="14" height="16" rx="1" fill="#ffb347" opacity=".75"/>
+          <rect x="196" y="385" width="14" height="16" rx="1" fill="url(#rg-window)"/>
+          <!-- Building 2 -->
+          <polygon points="248,358 280,305 312,358" fill="#0f0c0e"/>
+          <rect x="254" y="358" width="52" height="82" fill="#0f0c0e"/>
+          <rect x="262" y="280" width="10" height="28" fill="#0f0c0e"/>
+          <!-- Two lit windows -->
+          <rect x="260" y="372" width="12" height="15" rx="1" fill="#ffb347" opacity=".75"/>
+          <rect x="280" y="372" width="12" height="15" rx="1" fill="#ffb347" opacity=".65"/>
+          <!-- Building 3 (tallest) -->
+          <polygon points="328,345 374,285 420,345" fill="#100d0f"/>
+          <rect x="334" y="345" width="80" height="95" fill="#100d0f"/>
+          <!-- Three lit windows -->
+          <rect x="342" y="358" width="13" height="16" rx="1" fill="#ffb347" opacity=".8"/>
+          <rect x="362" y="358" width="13" height="16" rx="1" fill="#ffb347" opacity=".7"/>
+          <rect x="388" y="358" width="13" height="16" rx="1" fill="#ffb347" opacity=".75"/>
+          <rect x="360" y="382" width="20" height="16" rx="1" fill="#ffb347" opacity=".65"/>
+          <!-- Building 4 -->
+          <polygon points="434,360 465,312 496,360" fill="#0f0c0e"/>
+          <rect x="440" y="360" width="50" height="80" fill="#0f0c0e"/>
+          <rect x="450" y="374" width="12" height="15" rx="1" fill="#ffb347" opacity=".7"/>
+          <rect x="468" y="374" width="12" height="15" rx="1" fill="#ffb347" opacity=".75"/>
+          <!-- Building 5 -->
+          <polygon points="510,370 538,330 566,370" fill="#110e0f"/>
+          <rect x="514" y="370" width="48" height="70" fill="#110e0f"/>
+          <rect x="526" y="384" width="12" height="14" rx="1" fill="#ffb347" opacity=".68"/>
+
+          <!-- Window warm glow halos -->
+          <ellipse cx="203" cy="393" rx="30" ry="18" fill="#ff8a20" opacity=".1"/>
+          <ellipse cx="357" cy="366" rx="42" ry="22" fill="#ff8a20" opacity=".12"/>
+          <ellipse cx="462" cy="382" rx="35" ry="20" fill="#ff8a20" opacity=".1"/>
+        </g>
+
+        <!-- Path home — lighter strip on ground -->
+        <g class="layer-mid">
+          <path d="M 720,460 C 700,455 660,450 620,452 C 560,455 500,452 440,454 L 440,600 L 720,600 Z"
+                fill="#151213" opacity=".6"/>
+        </g>
+
+        <!-- Girl walking home — mid-ground, smaller -->
+        <g class="layer-characters">
+          <!-- Walking girl at ~640, 408, moving towards village -->
+          <circle cx="640" cy="396" r="11" fill="#0c0a0b"/>
+          <ellipse cx="640" cy="386" rx="7" ry="5" fill="#0c0a0b"/>
+          <path d="M 633,407 C 631,418 630,432 632,446 L 648,446 C 650,432 649,418 647,407 Z" fill="#0c0a0b"/>
+          <!-- Walking legs (slight stride) -->
+          <path d="M 633,446 L 628,462 L 634,462 L 638,448 Z" fill="#0c0a0b"/>
+          <path d="M 647,446 L 648,462 L 654,462 L 652,448 Z" fill="#0c0a0b"/>
+          <!-- Arm with lantern, low and relaxed (returning home) -->
+          <path d="M 647,413 L 660,422 L 657,426 L 644,417 Z" fill="#0c0a0b"/>
+          <!-- Lantern glow (gentle, she's home) -->
+          <circle cx="665" cy="428" r="42" fill="url(#rg-lantern)" opacity=".45"/>
+          <circle cx="665" cy="428" r="18" fill="url(#rg-lantern-core)" opacity=".38"/>
+          <!-- Lantern -->
+          <polygon points="665,416 672,420 672,434 665,438 658,434 658,420" fill="#ffb347" opacity=".9"/>
+          <rect x="659" y="411" width="12" height="7" rx="2" fill="#0c0a0b"/>
+          <rect x="659" y="438" width="12" height="5" rx="2" fill="#0c0a0b"/>
+          <polygon points="665,421 671,424 671,432 665,435 659,432 659,424" fill="rgba(255,228,155,.75)"/>
+        </g>
+
+        <!-- Foreground ground -->
+        <g class="layer-near">
+          <path d="M-20,464 C180,452 440,456 720,454 C1000,452 1240,458 1470,454 L1470,600 L-20,600 Z"
+                fill="#0c0909" filter="url(#torn-f)"/>
+        </g>
+
+      </svg>
+    </div>
+
+    <div class="act-content">
+      <span class="act-badge">Act V</span>
+      <h2 id="act5-title" class="act-title">The Return</h2>
+      <div class="act-prose">
+        <p>She came back on a morning that felt like the first morning.</p>
+        <p>Every window she passed lit itself — one after another, like a sentence finding its period. The seventeen houses of Tengmu glowed from the inside out.</p>
+        <p>In their offices, cartographers lifted their pens. The ink that had run thin found itself sufficient, after all. The village appeared on the map. Mei sat at the stone post and watched Tengmu learn to see itself. She kept the lantern burning — because some things, once started, should simply&nbsp;continue.</p>
+      </div>
+    </div>
+  </section><!-- /act-5 -->
+
+
+  <!-- ─────────────────────────────────────────────────────────
+       COLOPHON
+       ───────────────────────────────────────────────────────── -->
+  <section class="colophon" aria-label="End of play">
+    <div class="colophon-rule" aria-hidden="true"></div>
+    <p class="colophon-text">
+      Told in five acts, for one lantern, one fox,<br>
+      and a village that very nearly&nbsp;wasn't.
+    </p>
+    <p class="colophon-end">
+      The shadows are paper-thin. The light comes from behind.<br>
+      The rest is what your eyes do in the dark.&ensp;<button
+        class="act-trigger"
+        id="act6-trigger"
+        aria-expanded="false"
+        title="An epilogue, if you want it">★</button>
+    </p>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────
+       HIDDEN ACT VI — THE CARTOGRAPHER (epilogue)
+       ───────────────────────────────────────────────────────── -->
+  <section class="act-6" id="act-6" aria-label="Epilogue: The Cartographer">
+    <div class="act-6-inner">
+      <span class="act-badge" style="font-size:.65rem;letter-spacing:.3em;opacity:.55">Epilogue</span>
+      <h2 class="act-title" style="font-size:clamp(1.2rem,2.5vw,1.75rem);margin-top:.4rem">The&nbsp;Cartographer</h2>
+      <div class="act-6-prose">
+        <p>Three years later, a cartographer arrived in Tengmu to verify the correction.</p>
+        <p>He found seventeen houses, one well, and a girl who had grown taller. She showed him the stone post. He measured nothing. On his way back through the valley, he paused and looked at the lantern one more&nbsp;time.</p>
+        <p><em>"It's the same light,"</em> he said.</p>
+        <p><em>"Yes,"</em> said Mei. <em>"That's the whole point."</em></p>
+        <p>He wrote nothing in his notebook. He already&nbsp;knew.</p>
+      </div>
+    </div>
+  </section>
+
+</main><!-- /#main -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <p class="footer-credit">Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</p>
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="guide/">Design Guide</a>
+  </nav>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

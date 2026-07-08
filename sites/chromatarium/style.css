@@ -1,0 +1,612 @@
+/* ============================================================
+   CHROMATARIUM — A Museum of Pigment  |  style.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ---- 1. Custom Properties ---- */
+:root {
+  --bone:      #efece5;
+  --ink:       #22201d;
+  --ink-mid:   #4a4742;
+  --ink-faint: #9a9590;
+
+  --step--1: clamp(0.75rem,  0.72rem + 0.14vw, 0.875rem);
+  --step-0:  clamp(1rem,     0.96rem + 0.19vw, 1.125rem);
+  --step-1:  clamp(1.25rem,  1.17rem + 0.38vw, 1.5rem);
+  --step-2:  clamp(1.6rem,   1.44rem + 0.75vw, 2.25rem);
+  --step-3:  clamp(2rem,     1.72rem + 1.38vw, 3.25rem);
+  --step-4:  clamp(2.75rem,  2.18rem + 2.88vw, 5.5rem);
+  --step-5:  clamp(4rem,     3rem    + 5vw,    9rem);
+
+  --sp-xs: 0.5rem;  --sp-sm: 1rem;
+  --sp-md: 2rem;    --sp-lg: 4rem;   --sp-xl: 8rem;
+
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout:  cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Room tokens — overridden per room */
+  --room-bg:       var(--bone);
+  --room-surface:  #e5e1da;
+  --room-wash:     #cdc8be;
+  --room-accent:   var(--ink);
+  --room-deep:     #16140f;
+  --room-text:     var(--ink);
+  --room-text-sec: var(--ink-mid);
+  --room-border:   rgba(34,32,29,0.13);
+}
+
+/* ---- 2. Reset ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--bone);
+  color: var(--ink);
+  font-family: 'Newsreader', Georgia, serif;
+  overflow-x: hidden;
+}
+img, svg { max-width: 100%; }
+
+/* ---- 3. Skip Link ---- */
+.skip-link {
+  position: absolute; top: -100%; left: 1rem;
+  background: var(--ink); color: var(--bone);
+  padding: .5rem 1rem; z-index: 9999;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1);
+}
+.skip-link:focus { top: 1rem; }
+
+/* ---- 4. Grain Overlay ---- */
+#grain-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  pointer-events: none;
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* ---- 5. Dissolve Overlay ---- */
+#dissolve {
+  position: fixed; inset: 0; z-index: 300;
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.55s var(--ease-inout);
+  will-change: opacity;
+}
+#dissolve.fading { opacity: 1; pointer-events: all; }
+
+/* ---- 6. Site Header ---- */
+#site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 2rem;
+  background: rgba(239,236,229,0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(34,32,29,0.10);
+}
+
+.site-logo {
+  text-decoration: none; color: var(--ink);
+  display: flex; flex-direction: column; gap: 1px;
+}
+.site-logo__name {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 600;
+  letter-spacing: 0.10em; text-transform: uppercase;
+}
+.site-logo__tag {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: 0.65rem; font-weight: 400;
+  letter-spacing: 0.06em; color: var(--ink-faint);
+  text-transform: uppercase;
+  display: none;
+}
+@media (min-width: 600px) { .site-logo__tag { display: block; } }
+
+.room-nav {
+  display: flex; align-items: center; gap: 0.25rem;
+  list-style: none;
+}
+.room-nav li { list-style: none; }
+
+.room-btn {
+  display: flex; align-items: center; gap: 0.45rem;
+  background: none; border: none; cursor: pointer;
+  padding: 0.4rem 0.55rem; border-radius: 999px;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 500;
+  color: var(--ink-mid);
+  transition: color 0.2s, background 0.2s;
+}
+.room-btn:hover { color: var(--ink); background: rgba(34,32,29,0.07); }
+.room-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.room-btn[aria-current="true"] .room-btn__dot {
+  box-shadow: 0 0 0 2px white, 0 0 0 3.5px currentColor;
+  transform: scale(1.2);
+}
+.room-btn[aria-current="true"] { color: var(--ink); }
+
+.room-btn__dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+}
+.dot--entrance  { background: var(--ink-faint); }
+.dot--i         { background: #1a3aa8; }
+.dot--ii        { background: #d5321f; }
+.dot--iii       { background: #1d7a5f; }
+.dot--iv        { background: #c8862a; }
+.dot--v         { background: #66023c; }
+.dot--vi        { background: #e8e2d6; border: 1px solid rgba(34,32,29,0.20); }
+
+.room-btn__label { display: none; }
+@media (min-width: 720px) { .room-btn__label { display: inline; } }
+
+/* ---- 7. Rooms ---- */
+main { position: relative; }
+
+.room {
+  display: none;
+  min-height: 100vh;
+  padding-top: 4.5rem; /* header offset */
+  background: var(--room-bg);
+  color: var(--room-text);
+  position: relative;
+  overflow: hidden;
+}
+.room.active { display: block; }
+
+/* Atmospheric wash overlay */
+.room::before {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 8% 92%, var(--room-surface) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 40% at 92% 8%,  var(--room-wash)   0%, transparent 55%);
+  opacity: 0.45;
+}
+.room__inner {
+  position: relative; z-index: 1;
+  max-width: 1160px; margin: 0 auto;
+  padding: var(--sp-md) var(--sp-md) var(--sp-xl);
+}
+
+/* Room label bar */
+.room__label {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: var(--sp-lg);
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--room-text-sec);
+}
+.room__label::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--room-border);
+}
+.room__roman {
+  font-family: 'Newsreader', serif;
+  font-style: italic; font-weight: 300;
+  font-size: var(--step-1);
+  color: var(--room-accent);
+}
+.room__count { color: var(--room-text-sec); }
+
+/* Room hero */
+.room__hero {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: var(--sp-lg);
+  align-items: center;
+  margin-bottom: var(--sp-lg);
+  padding-bottom: var(--sp-lg);
+  border-bottom: 1px solid var(--room-border);
+  padding-top: var(--sp-md);
+}
+@media (max-width: 760px) {
+  .room__hero { grid-template-columns: 1fr; gap: var(--sp-md); }
+}
+
+.room__swatch-wrap {
+  display: flex; justify-content: center; align-items: center;
+  padding: var(--sp-sm) 0;
+}
+.room__swatch {
+  width: clamp(160px, 28vw, 320px);
+  height: clamp(160px, 28vw, 320px);
+  border-radius: 50%;
+  position: relative; overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.18);
+  flex-shrink: 0;
+}
+.room__swatch::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  box-shadow: inset 0 -20px 60px rgba(0,0,0,0.18),
+              inset 0 2px 4px rgba(255,255,255,0.12);
+  z-index: 2;
+}
+.room__swatch::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background:
+    radial-gradient(ellipse 55% 45% at 32% 28%,
+      rgba(255,255,255,0.32) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 72% 75%,
+      rgba(0,0,0,0.12) 0%, transparent 70%);
+  z-index: 3;
+}
+
+.room__title-group {
+  display: flex; flex-direction: column; gap: var(--sp-sm);
+}
+.room__title {
+  font-family: 'Newsreader', serif;
+  font-style: italic; font-weight: 300;
+  font-size: var(--step-4);
+  line-height: 1.04; letter-spacing: -0.02em;
+  color: var(--room-text);
+}
+.room__hook {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step-1); font-weight: 400;
+  color: var(--room-text-sec); letter-spacing: 0.01em;
+}
+.room__formula-hero {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 500;
+  color: var(--room-accent);
+  margin-top: var(--sp-xs);
+  letter-spacing: 0.04em;
+}
+
+/* Essay + marginalia */
+.room__body {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: var(--sp-lg) var(--sp-xl);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .room__body { grid-template-columns: 1fr; }
+}
+
+.room__essay p {
+  font-size: var(--step-0); line-height: 1.78;
+  color: var(--room-text);
+  margin-bottom: 1.3em;
+}
+.room__essay p:last-child { margin-bottom: 0; }
+.room__lede {
+  font-size: var(--step-1) !important;
+  font-style: italic; font-weight: 300;
+  line-height: 1.55 !important;
+}
+
+.room__marginalia {
+  position: sticky; top: 6rem;
+  border-left: 2px solid var(--room-accent);
+  padding-left: 1.25rem;
+}
+@media (max-width: 900px) {
+  .room__marginalia {
+    position: static;
+    border-left: none; padding-left: 0;
+    border-top: 2px solid var(--room-accent);
+    padding-top: var(--sp-md);
+  }
+}
+
+.pigment-facts { list-style: none; }
+.pigment-facts li { margin-bottom: 1rem; }
+.fact-key {
+  display: block;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--room-accent);
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--room-border);
+}
+.fact-val {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 400;
+  color: var(--room-text-sec); line-height: 1.5;
+}
+
+/* Room footer */
+.room__foot {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  margin-top: var(--sp-lg);
+  padding-top: var(--sp-md);
+  border-top: 1px solid var(--room-border);
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); color: var(--room-text-sec);
+}
+.room__index { font-weight: 500; letter-spacing: 0.06em; }
+
+.room__nav-next {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--room-border);
+  padding: 0.5rem 1.1rem; border-radius: 999px;
+  cursor: pointer;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 500;
+  color: var(--room-text);
+  transition: background 0.2s, border-color 0.2s;
+}
+.room__nav-next:hover {
+  background: var(--room-surface);
+  border-color: var(--room-accent);
+}
+.room__nav-next:focus-visible {
+  outline: 2px solid var(--room-accent); outline-offset: 2px;
+}
+
+/* ---- 8. Per-Room OKLCH Palettes ---- */
+
+/* OKLCH derivation: bg=(0.97,C×0.12,H) surf=(0.92,C×0.22) wash=(0.78,C×0.35)
+   accent=(L,C,H) deep=(L×0.76,C×0.85) text=(0.18,C×0.30) textSec=(0.38,C×0.22) */
+
+.room--ultramarine {
+  --room-bg:       oklch(0.97 0.026 264);
+  --room-surface:  oklch(0.92 0.048 264);
+  --room-wash:     oklch(0.78 0.077 264);
+  --room-accent:   oklch(0.37 0.220 264);
+  --room-deep:     oklch(0.28 0.187 264);
+  --room-text:     oklch(0.18 0.066 264);
+  --room-text-sec: oklch(0.38 0.048 264);
+  --room-border:   oklch(0.88 0.034 264);
+}
+.room--ultramarine .room__swatch {
+  background: radial-gradient(ellipse at 35% 28%,
+    oklch(0.57 0.18 268) 0%,
+    oklch(0.37 0.22 264) 52%,
+    oklch(0.24 0.19 260) 100%);
+}
+
+.room--vermilion {
+  --room-bg:       oklch(0.97 0.028 27);
+  --room-surface:  oklch(0.92 0.051 27);
+  --room-wash:     oklch(0.78 0.081 27);
+  --room-accent:   oklch(0.51 0.230 27);
+  --room-deep:     oklch(0.39 0.196 27);
+  --room-text:     oklch(0.18 0.069 27);
+  --room-text-sec: oklch(0.38 0.051 27);
+  --room-border:   oklch(0.88 0.037 27);
+}
+.room--vermilion .room__swatch {
+  background: radial-gradient(ellipse at 35% 28%,
+    oklch(0.70 0.18 34) 0%,
+    oklch(0.51 0.23 27) 52%,
+    oklch(0.34 0.17 20) 100%);
+}
+
+.room--viridian {
+  --room-bg:       oklch(0.97 0.014 163);
+  --room-surface:  oklch(0.92 0.026 163);
+  --room-wash:     oklch(0.78 0.042 163);
+  --room-accent:   oklch(0.47 0.120 163);
+  --room-deep:     oklch(0.36 0.102 163);
+  --room-text:     oklch(0.18 0.036 163);
+  --room-text-sec: oklch(0.38 0.026 163);
+  --room-border:   oklch(0.88 0.021 163);
+}
+.room--viridian .room__swatch {
+  background: radial-gradient(ellipse at 35% 28%,
+    oklch(0.67 0.08 165) 0%,
+    oklch(0.47 0.12 163) 52%,
+    oklch(0.30 0.10 160) 100%);
+}
+
+.room--ochre {
+  --room-bg:       oklch(0.97 0.018 65);
+  --room-surface:  oklch(0.92 0.033 65);
+  --room-wash:     oklch(0.78 0.053 65);
+  --room-accent:   oklch(0.62 0.150 65);
+  --room-deep:     oklch(0.47 0.128 65);
+  --room-text:     oklch(0.18 0.045 65);
+  --room-text-sec: oklch(0.38 0.033 65);
+  --room-border:   oklch(0.88 0.027 65);
+}
+.room--ochre .room__swatch {
+  background: radial-gradient(ellipse at 35% 28%,
+    oklch(0.82 0.12 74) 0%,
+    oklch(0.62 0.15 65) 52%,
+    oklch(0.44 0.13 55) 100%);
+}
+
+.room--tyrian {
+  --room-bg:       oklch(0.97 0.020 336);
+  --room-surface:  oklch(0.92 0.037 336);
+  --room-wash:     oklch(0.78 0.059 336);
+  --room-accent:   oklch(0.25 0.170 336);
+  --room-deep:     oklch(0.19 0.145 336);
+  --room-text:     oklch(0.18 0.051 336);
+  --room-text-sec: oklch(0.38 0.037 336);
+  --room-border:   oklch(0.88 0.030 336);
+}
+.room--tyrian .room__swatch {
+  background: radial-gradient(ellipse at 35% 28%,
+    oklch(0.46 0.14 338) 0%,
+    oklch(0.25 0.17 336) 52%,
+    oklch(0.15 0.14 330) 100%);
+}
+
+/* Lead white: accent reverses to near-ink (the white is the ground) */
+.room--leadwhite {
+  --room-bg:       oklch(0.99 0.002 85);
+  --room-surface:  oklch(0.96 0.004 85);
+  --room-wash:     oklch(0.90 0.006 85);
+  --room-accent:   oklch(0.22 0.004 85);
+  --room-deep:     oklch(0.12 0.002 85);
+  --room-text:     oklch(0.18 0.003 85);
+  --room-text-sec: oklch(0.42 0.002 85);
+  --room-border:   oklch(0.86 0.003 85);
+}
+.room--leadwhite .room__swatch {
+  background: radial-gradient(ellipse at 35% 28%,
+    oklch(1.00 0.000 85) 0%,
+    oklch(0.97 0.004 85) 50%,
+    oklch(0.90 0.008 85) 100%);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08),
+              0 0 0 1px rgba(34,32,29,0.08),
+              inset 0 1px 0 rgba(255,255,255,0.95);
+}
+
+/* ---- 9. Entrance ---- */
+.room--entrance {
+  --room-bg: var(--bone);
+  background: var(--bone);
+}
+.entrance__inner {
+  max-width: 1160px; margin: 0 auto;
+  padding: var(--sp-md) var(--sp-md) var(--sp-xl);
+  position: relative; z-index: 1;
+}
+.entrance__hero {
+  text-align: center;
+  padding: var(--sp-lg) var(--sp-md) var(--sp-md);
+}
+.entrance__eyebrow {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1); font-weight: 500;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1.5rem;
+}
+.entrance__title {
+  font-family: 'Newsreader', serif;
+  font-style: italic; font-weight: 300;
+  font-size: clamp(3rem, 9vw, 9rem);
+  line-height: 0.96; letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+  overflow-wrap: break-word;
+}
+.entrance__sub {
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step-1); font-weight: 400;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--ink-mid);
+  margin-bottom: var(--sp-md);
+}
+.entrance__statement {
+  max-width: 54ch; margin: 0 auto;
+  font-size: var(--step-1); line-height: 1.6;
+  color: var(--ink-mid); font-style: italic;
+}
+
+/* Room cards grid */
+.room-cards {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3px;
+  margin: var(--sp-md) 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  .room-cards { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .room-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.room-card {
+  position: relative; aspect-ratio: 2/3;
+  background: none; border: none;
+  cursor: pointer; overflow: hidden;
+  text-align: left; padding: 0;
+}
+.room-card:focus-visible {
+  outline: 3px solid var(--ink); outline-offset: 2px; z-index: 2;
+}
+.room-card__fill {
+  position: absolute; inset: 0;
+  transition: transform 0.7s var(--ease-out);
+}
+.room-card:hover .room-card__fill,
+.room-card:focus-visible .room-card__fill { transform: scale(1.05); }
+
+.room-card--i   .room-card__fill { background: #1a3aa8; }
+.room-card--ii  .room-card__fill { background: #d5321f; }
+.room-card--iii .room-card__fill { background: #1d7a5f; }
+.room-card--iv  .room-card__fill { background: #c8862a; }
+.room-card--v   .room-card__fill { background: #66023c; }
+.room-card--vi  .room-card__fill {
+  background: linear-gradient(145deg, #f8f5ee 0%, #e8e3d8 100%);
+}
+
+.room-card__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 55%);
+}
+.room-card--vi .room-card__overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.20) 0%, transparent 55%);
+}
+
+.room-card__roman {
+  position: absolute; top: 0.75rem; right: 0.9rem;
+  font-family: 'Newsreader', serif;
+  font-style: italic; font-weight: 300;
+  font-size: var(--step-3); line-height: 1;
+  color: rgba(255,255,255,0.22);
+  pointer-events: none;
+}
+.room-card--vi .room-card__roman { color: rgba(34,32,29,0.14); }
+
+.room-card__info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1rem 0.9rem;
+}
+.room-card__name {
+  display: block;
+  font-family: 'Newsreader', serif;
+  font-style: italic; font-weight: 300;
+  font-size: var(--step-0);
+  color: rgba(255,255,255,0.95); line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+.room-card--vi .room-card__name { color: rgba(34,32,29,0.85); }
+
+.room-card__enter {
+  display: block;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: 0.65rem; font-weight: 600;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  opacity: 0; transform: translateY(4px);
+  transition: opacity 0.3s, transform 0.3s var(--ease-out);
+}
+.room-card--vi .room-card__enter { color: rgba(34,32,29,0.6); }
+.room-card:hover .room-card__enter,
+.room-card:focus-visible .room-card__enter {
+  opacity: 1; transform: translateY(0);
+}
+
+/* Entrance footer */
+.entrance__footer {
+  margin-top: var(--sp-lg);
+  padding-top: var(--sp-md);
+  border-top: 1px solid rgba(34,32,29,0.10);
+  text-align: center;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+/* ---- 10. Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  #dissolve,
+  .room-card__fill,
+  .room-card__enter,
+  .room-btn__dot,
+  .room__nav-next { transition: none !important; }
+  .room-card:hover .room-card__fill { transform: none; }
+}
+
+/* ---- 11. Focus ---- */
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }

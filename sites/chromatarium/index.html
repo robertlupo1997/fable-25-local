@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chromatarium — A Museum of Pigment</title>
+  <meta name="description" content="Six rooms. Six pigments. A museum where every wall is built from one color's OKLCH mathematics.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- Grain texture overlay (background set by JS) -->
+<div id="grain-overlay" aria-hidden="true"></div>
+
+<!-- Color-field dissolve overlay -->
+<div id="dissolve" aria-hidden="true"></div>
+
+<!-- ─── Site Header ───────────────────────────────── -->
+<header id="site-header">
+  <a class="site-logo" href="#entrance" data-room="entrance" aria-label="Chromatarium — return to entrance">
+    <span class="site-logo__name">Chromatarium</span>
+    <span class="site-logo__tag">A Museum of Pigment</span>
+  </a>
+  <nav aria-label="Gallery rooms">
+    <ul class="room-nav">
+      <li>
+        <button class="room-btn" data-room="entrance" aria-label="Entrance" aria-current="true">
+          <span class="room-btn__dot dot--entrance"></span>
+          <span class="room-btn__label">Entrance</span>
+        </button>
+      </li>
+      <li>
+        <button class="room-btn" data-room="ultramarine" aria-label="Room I: Ultramarine">
+          <span class="room-btn__dot dot--i"></span>
+          <span class="room-btn__label">I</span>
+        </button>
+      </li>
+      <li>
+        <button class="room-btn" data-room="vermilion" aria-label="Room II: Vermilion">
+          <span class="room-btn__dot dot--ii"></span>
+          <span class="room-btn__label">II</span>
+        </button>
+      </li>
+      <li>
+        <button class="room-btn" data-room="viridian" aria-label="Room III: Viridian">
+          <span class="room-btn__dot dot--iii"></span>
+          <span class="room-btn__label">III</span>
+        </button>
+      </li>
+      <li>
+        <button class="room-btn" data-room="ochre" aria-label="Room IV: Ochre">
+          <span class="room-btn__dot dot--iv"></span>
+          <span class="room-btn__label">IV</span>
+        </button>
+      </li>
+      <li>
+        <button class="room-btn" data-room="tyrian" aria-label="Room V: Tyrian Purple">
+          <span class="room-btn__dot dot--v"></span>
+          <span class="room-btn__label">V</span>
+        </button>
+      </li>
+      <li>
+        <button class="room-btn" data-room="leadwhite" aria-label="Room VI: Lead White">
+          <span class="room-btn__dot dot--vi"></span>
+          <span class="room-btn__label">VI</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ─── Main ─────────────────────────────────────── -->
+<main id="main">
+
+  <!-- ── ENTRANCE ────────────────────────────────── -->
+  <section id="entrance" class="room room--entrance active" role="region" aria-label="Museum Entrance">
+    <div class="entrance__inner">
+      <div class="entrance__hero">
+        <p class="entrance__eyebrow">Wave 2 · Gallery 9</p>
+        <h1 class="entrance__title">Chromatarium</h1>
+        <p class="entrance__sub">A Museum of Pigment</p>
+        <p class="entrance__statement">The colors gathered here are not decorations. They are discoveries — each one dragged from stone, shell, earth, and acid over centuries of patient chemistry. Six pigments. Six rooms. One thousand years of consequence.</p>
+      </div>
+
+      <div class="room-cards" role="list" aria-label="Gallery rooms">
+        <button class="room-card room-card--i" data-room="ultramarine" role="listitem" aria-label="Enter Room I: Ultramarine">
+          <div class="room-card__fill" aria-hidden="true"></div>
+          <div class="room-card__overlay" aria-hidden="true"></div>
+          <span class="room-card__roman" aria-hidden="true">I</span>
+          <div class="room-card__info">
+            <span class="room-card__name">Ultramarine</span>
+            <span class="room-card__enter">Enter Room →</span>
+          </div>
+        </button>
+        <button class="room-card room-card--ii" data-room="vermilion" role="listitem" aria-label="Enter Room II: Vermilion">
+          <div class="room-card__fill" aria-hidden="true"></div>
+          <div class="room-card__overlay" aria-hidden="true"></div>
+          <span class="room-card__roman" aria-hidden="true">II</span>
+          <div class="room-card__info">
+            <span class="room-card__name">Vermilion</span>
+            <span class="room-card__enter">Enter Room →</span>
+          </div>
+        </button>
+        <button class="room-card room-card--iii" data-room="viridian" role="listitem" aria-label="Enter Room III: Viridian">
+          <div class="room-card__fill" aria-hidden="true"></div>
+          <div class="room-card__overlay" aria-hidden="true"></div>
+          <span class="room-card__roman" aria-hidden="true">III</span>
+          <div class="room-card__info">
+            <span class="room-card__name">Viridian</span>
+            <span class="room-card__enter">Enter Room →</span>
+          </div>
+        </button>
+        <button class="room-card room-card--iv" data-room="ochre" role="listitem" aria-label="Enter Room IV: Ochre">
+          <div class="room-card__fill" aria-hidden="true"></div>
+          <div class="room-card__overlay" aria-hidden="true"></div>
+          <span class="room-card__roman" aria-hidden="true">IV</span>
+          <div class="room-card__info">
+            <span class="room-card__name">Ochre</span>
+            <span class="room-card__enter">Enter Room →</span>
+          </div>
+        </button>
+        <button class="room-card room-card--v" data-room="tyrian" role="listitem" aria-label="Enter Room V: Tyrian Purple">
+          <div class="room-card__fill" aria-hidden="true"></div>
+          <div class="room-card__overlay" aria-hidden="true"></div>
+          <span class="room-card__roman" aria-hidden="true">V</span>
+          <div class="room-card__info">
+            <span class="room-card__name">Tyrian Purple</span>
+            <span class="room-card__enter">Enter Room →</span>
+          </div>
+        </button>
+        <button class="room-card room-card--vi" data-room="leadwhite" role="listitem" aria-label="Enter Room VI: Lead White">
+          <div class="room-card__fill" aria-hidden="true"></div>
+          <div class="room-card__overlay" aria-hidden="true"></div>
+          <span class="room-card__roman" aria-hidden="true">VI</span>
+          <div class="room-card__info">
+            <span class="room-card__name">Lead White</span>
+            <span class="room-card__enter">Enter Room →</span>
+          </div>
+        </button>
+      </div>
+
+      <footer class="entrance__footer">
+        <p>Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+      </footer>
+    </div>
+  </section>
+
+  <!-- ── ROOM I: ULTRAMARINE ─────────────────────── -->
+  <section id="ultramarine" class="room room--ultramarine" role="region" aria-label="Room I: Ultramarine">
+    <div class="room__inner">
+      <div class="room__label">
+        <span class="room__roman">I</span>
+        <span class="room__count">Room 1 of 6</span>
+      </div>
+      <div class="room__hero">
+        <div class="room__swatch-wrap" aria-hidden="true">
+          <div class="room__swatch"></div>
+        </div>
+        <div class="room__title-group">
+          <h2 class="room__title">Ultramarine</h2>
+          <p class="room__hook">Beyond the Sea</p>
+          <p class="room__formula-hero">Na₈₋₁₀Al₆Si₆O₂₄S₂₋₄ · PB29</p>
+        </div>
+      </div>
+      <div class="room__body">
+        <article class="room__essay">
+          <p class="room__lede">The word itself maps a trade route. <em>Ultra mare</em> — beyond the sea — because the lapis lazuli that yields this color comes from a single valley in the Hindu Kush, the Kokcha River drainage of Badakhshan, and had to cross the Mediterranean before it could become paint.</p>
+          <p>The pigment was ground by hand from stone threaded with pyrite gold: powdering the lapis, kneading it in warm wax and oils, then working it in water to separate the deep lazurite from the pale calcite. It took months. It cost accordingly.</p>
+          <p>Medieval patrons held tight control. A 1408 altarpiece commission from Siena specifies that ultramarine — purchased at the patron's expense, not the painter's — shall be used only for the Virgin's mantle. No lesser subject warranted the price. When Vermeer died in 1675, leaving debts and eleven children, the estate listed unpaid ultramarine purchases among the primary liabilities.</p>
+          <p>Synthetic ultramarine arrived in 1826, when Jean-Baptiste Guimet won the prize offered by the Société d'Encouragement pour l'Industrie Nationale — 6,000 francs for a process to replicate the mineral at 1/40th the cost. The chemistry produces the same lazurite structure: sodium, aluminum, silicon, and the S₃•⁻ radical, a sulfur trimer that absorbs at 590–610 nm and returns blue. But geography was removed. So was the difficulty. Painters began using twice as much.</p>
+        </article>
+        <aside class="room__marginalia" aria-label="Pigment data">
+          <ul class="pigment-facts">
+            <li><span class="fact-key">Discovered</span><span class="fact-val">Natural: antiquity (Afghanistan)<br>Synthetic: 1826, France</span></li>
+            <li><span class="fact-key">Source mineral</span><span class="fact-val">Lapis lazuli (lazurite)<br>Badakhshan, Afghanistan</span></li>
+            <li><span class="fact-key">Color Index</span><span class="fact-val">PB29 (synthetic)<br>PB31 (natural)</span></li>
+            <li><span class="fact-key">Lightfastness</span><span class="fact-val">Excellent · ASTM I</span></li>
+            <li><span class="fact-key">Notable users</span><span class="fact-val">Vermeer, Raphael<br>Bellini, Monet</span></li>
+            <li><span class="fact-key">Absorption peak</span><span class="fact-val">590–610 nm (S₃•⁻ radical)</span></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="room__foot">
+        <span class="room__index">Sodium Aluminum Silicate Sulfate · Pigment Blue 29</span>
+        <button class="room__nav-next" data-room="vermilion" aria-label="Go to Room II: Vermilion">
+          Room II: Vermilion →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROOM II: VERMILION ──────────────────────── -->
+  <section id="vermilion" class="room room--vermilion" role="region" aria-label="Room II: Vermilion">
+    <div class="room__inner">
+      <div class="room__label">
+        <span class="room__roman">II</span>
+        <span class="room__count">Room 2 of 6</span>
+      </div>
+      <div class="room__hero">
+        <div class="room__swatch-wrap" aria-hidden="true">
+          <div class="room__swatch"></div>
+        </div>
+        <div class="room__title-group">
+          <h2 class="room__title">Vermilion</h2>
+          <p class="room__hook">The Red of Life and Death</p>
+          <p class="room__formula-hero">HgS · PR106</p>
+        </div>
+      </div>
+      <div class="room__body">
+        <article class="room__essay">
+          <p class="room__lede">Mercury and sulfur, heated together, give red. Mercury(II) sulfide — HgS in its red crystalline alpha form — has been mined at Almadén in Spain and Idrija in Slovenia since antiquity, and ground to powder in every civilization that found it.</p>
+          <p>The Chinese were using cinnabar lacquerware by the second millennium BCE. Roman women powdered it on their cheeks. The Byzantine chronicler Theophanes wrote that emperors signed documents in "purple ink" that was, in fact, vermilion. The color sits exactly where orange becomes red: warm enough to suggest fire, stable enough to suggest blood.</p>
+          <p>Medieval manuscript illuminators treasured it for initials and miniatures, though they knew it darkened. The darkening is photochemical: bright light converts the stable red α-HgS to dark gray β-HgS. Old masterworks sometimes show gray vermilion passages beneath their glazes — the cost of that warmth, compounded over centuries.</p>
+          <p>Cadmium red replaced vermilion for most studio uses by 1900. Vermilion now survives in conservation, in specialist printing, and in the memory of a specific warmth that cadmium, however brilliant, does not quite replicate.</p>
+        </article>
+        <aside class="room__marginalia" aria-label="Pigment data">
+          <ul class="pigment-facts">
+            <li><span class="fact-key">Discovered</span><span class="fact-val">Natural: 2nd millennium BCE<br>China, Rome, Mesoamerica</span></li>
+            <li><span class="fact-key">Source mineral</span><span class="fact-val">Cinnabar (HgS)<br>Almadén, Spain; Idrija, Slovenia</span></li>
+            <li><span class="fact-key">Color Index</span><span class="fact-val">PR106</span></li>
+            <li><span class="fact-key">Lightfastness</span><span class="fact-val">Poor · photodegrades to β-HgS (gray)</span></li>
+            <li><span class="fact-key">Notable users</span><span class="fact-val">Titian, Raphael<br>Byzantine icon painters</span></li>
+            <li><span class="fact-key">Toxicity</span><span class="fact-val">Highly toxic · mercury compound</span></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="room__foot">
+        <span class="room__index">Mercury(II) Sulfide · Pigment Red 106</span>
+        <button class="room__nav-next" data-room="viridian" aria-label="Go to Room III: Viridian">
+          Room III: Viridian →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROOM III: VIRIDIAN ──────────────────────── -->
+  <section id="viridian" class="room room--viridian" role="region" aria-label="Room III: Viridian">
+    <div class="room__inner">
+      <div class="room__label">
+        <span class="room__roman">III</span>
+        <span class="room__count">Room 3 of 6</span>
+      </div>
+      <div class="room__hero">
+        <div class="room__swatch-wrap" aria-hidden="true">
+          <div class="room__swatch"></div>
+        </div>
+        <div class="room__title-group">
+          <h2 class="room__title">Viridian</h2>
+          <p class="room__hook">The Cool Eye</p>
+          <p class="room__formula-hero">Cr₂O₃·2H₂O · PG18</p>
+        </div>
+      </div>
+      <div class="room__body">
+        <article class="room__essay">
+          <p class="room__lede">Some colors arrive with a founding story. In 1838, a Parisian colormaker named Pannetier exhibited at the Salon a new green — chrome oxide hydrate, Cr₂O₃·2H₂O — made by a process he had discovered and declined to publish. A competitor, Guignet, independently worked it out by 1859.</p>
+          <p>Its virtues are formal. Viridian is transparent — it glazes without muddying. It is cool — the hue sits on the blue-green edge, closer to cyan than to the warm greens of landscape. And it is permanent: no fading, no chemical interaction with other pigments, no darkening. In the 1870s and 1880s, the Impressionists needed exactly this: a reliable, transparent cool green that could render shadow in a world of unmixed sunlight.</p>
+          <p>Monet's water lily canvases — dozens of them, made over twenty years of failing eyesight — depend on viridian for the depths beneath reflected sky. His late work grew more abstract as his cataracts worsened, but the cool green of submerged darkness remained, almost a fixed coordinate in the pictorial world he refused to relinquish.</p>
+          <p>The color asks to be used carefully. Unmixed, it looks almost artificial. Painters who have understood it — Cézanne, Sargent, Sickert — deploy it as a quiet note: a shadow coolness, a tonal underpinning that never draws attention to itself. Its gift is restraint.</p>
+        </article>
+        <aside class="room__marginalia" aria-label="Pigment data">
+          <ul class="pigment-facts">
+            <li><span class="fact-key">Discovered</span><span class="fact-val">1838, Pannetier, Paris<br>Published process: Guignet, 1859</span></li>
+            <li><span class="fact-key">Chemistry</span><span class="fact-val">Chromium(III) oxide hydrate<br>Cr₂O₃·2H₂O</span></li>
+            <li><span class="fact-key">Color Index</span><span class="fact-val">PG18</span></li>
+            <li><span class="fact-key">Lightfastness</span><span class="fact-val">Excellent · ASTM I<br>Chemically inert</span></li>
+            <li><span class="fact-key">Notable users</span><span class="fact-val">Monet, Cézanne<br>Sargent, Sickert</span></li>
+            <li><span class="fact-key">Character</span><span class="fact-val">Transparent · cool · no tinting strength</span></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="room__foot">
+        <span class="room__index">Chromium(III) Oxide Hydrate · Pigment Green 18</span>
+        <button class="room__nav-next" data-room="ochre" aria-label="Go to Room IV: Ochre">
+          Room IV: Ochre →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROOM IV: OCHRE ──────────────────────────── -->
+  <section id="ochre" class="room room--ochre" role="region" aria-label="Room IV: Ochre">
+    <div class="room__inner">
+      <div class="room__label">
+        <span class="room__roman">IV</span>
+        <span class="room__count">Room 4 of 6</span>
+      </div>
+      <div class="room__hero">
+        <div class="room__swatch-wrap" aria-hidden="true">
+          <div class="room__swatch"></div>
+        </div>
+        <div class="room__title-group">
+          <h2 class="room__title">Ochre</h2>
+          <p class="room__hook">The First Mark</p>
+          <p class="room__formula-hero">Fe₂O₃ + clay · PY43</p>
+        </div>
+      </div>
+      <div class="room__body">
+        <article class="room__essay">
+          <p class="room__lede">The oldest pigment in this collection is also the simplest: iron oxide mixed with clay, the rust color of the earth itself. At Blombos Cave in the Western Cape of South Africa, archaeologists found engraved ochre pieces dated to 75,000 years before the present — not yet painting, but the first known human manipulation of a material for its visual properties.</p>
+          <p>At Lascaux, ochre is horse. At Altamira, it is bison. At hand-stencil sites from Sulawesi to Argentina, it frames the negative space of human presence. The pigment predates language by an order of magnitude. It may predate symbolic thought in the modern sense, or it may be our oldest evidence of it. The debate is ongoing and, perhaps, unresolvable.</p>
+          <p>Iron oxide is stable in a way that more sophisticated pigments are not. It does not fade, does not react, does not darken. Yellow ochre (goethite, FeO·OH) converts to red ochre (hematite, Fe₂O₃) when heated — you can make red paint from yellow paint by burning it. Cave painters knew this. The knowledge was not recorded; it simply persisted, in the hands, across ten thousand generations.</p>
+          <p>What ochre knows, and what the more refined pigments sometimes forget, is that color is not an achievement. It is a given. The earth comes ready-colored. The question is what you do with what you find.</p>
+        </article>
+        <aside class="room__marginalia" aria-label="Pigment data">
+          <ul class="pigment-facts">
+            <li><span class="fact-key">Oldest known use</span><span class="fact-val">Blombos Cave, South Africa<br>~75,000 BCE</span></li>
+            <li><span class="fact-key">Chemistry</span><span class="fact-val">Goethite (yellow): FeO·OH<br>Hematite (red): Fe₂O₃</span></li>
+            <li><span class="fact-key">Color Index</span><span class="fact-val">PY43 (yellow ochre)<br>PR102 (red ochre)</span></li>
+            <li><span class="fact-key">Lightfastness</span><span class="fact-val">Excellent · ASTM I<br>Permanent in all media</span></li>
+            <li><span class="fact-key">Notable sites</span><span class="fact-val">Lascaux, Altamira<br>Sulawesi, Chauvet</span></li>
+            <li><span class="fact-key">Thermal shift</span><span class="fact-val">Yellow → red at ~260°C<br>(goethite → hematite)</span></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="room__foot">
+        <span class="room__index">Iron Oxide / Goethite · Pigment Yellow 43</span>
+        <button class="room__nav-next" data-room="tyrian" aria-label="Go to Room V: Tyrian Purple">
+          Room V: Tyrian Purple →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROOM V: TYRIAN PURPLE ───────────────────── -->
+  <section id="tyrian" class="room room--tyrian" role="region" aria-label="Room V: Tyrian Purple">
+    <div class="room__inner">
+      <div class="room__label">
+        <span class="room__roman">V</span>
+        <span class="room__count">Room 5 of 6</span>
+      </div>
+      <div class="room__hero">
+        <div class="room__swatch-wrap" aria-hidden="true">
+          <div class="room__swatch"></div>
+        </div>
+        <div class="room__title-group">
+          <h2 class="room__title">Tyrian Purple</h2>
+          <p class="room__hook">The Whelk and the Crown</p>
+          <p class="room__formula-hero">C₁₆H₈Br₂N₂O₂ · Dibromoindigo</p>
+        </div>
+      </div>
+      <div class="room__body">
+        <article class="room__essay">
+          <p class="room__lede">To make this color, you killed shellfish by the thousand. The <em>Murex brandaris</em> and <em>Hexaplex trunculus</em> — sea snails endemic to the Mediterranean — each contain a small gland that produces dibromoindigo, a molecule that, when exposed to light, shifts from pale yellow-green to a purple that does not fade in salt air or strong sun.</p>
+          <p>The city of Tyre, on the coast of what is now Lebanon, controlled the trade. Contemporary accounts describe the processing yards by their smell — the decomposing murex is historically documented as one of the more oppressive industrial odors of antiquity. A single gram of dried pigment required between 10,000 and 12,000 snails. This was not inefficiency; it was simply the chemistry. The dye gland is small, the yield is small, and the color emerges only at the intersection of the right enzyme, the right substrate, and sunlight at the right moment.</p>
+          <p>Roman law eventually formalized what economics had already established. Tyrian purple was the color of power. To wear it without permission was to claim proximity to the emperor. The phrase <em>born in the purple</em> — porphyrogennetos in Greek — named imperial children born in the Porphyra, the purple-draped chamber where empresses labored. When Constantinople fell in 1453, the specific knowledge of production was lost.</p>
+          <p>Modern chemistry recovered the molecule in the early twentieth century. The snail industry did not return. What returned was the formula — and the realization that the color still cannot be cheaply made.</p>
+        </article>
+        <aside class="room__marginalia" aria-label="Pigment data">
+          <ul class="pigment-facts">
+            <li><span class="fact-key">Discovered</span><span class="fact-val">~1500 BCE, Phoenicia (Tyre)<br>Knowledge lost 1453 CE</span></li>
+            <li><span class="fact-key">Source</span><span class="fact-val"><em>Murex brandaris</em> &amp;<br><em>Hexaplex trunculus</em></span></li>
+            <li><span class="fact-key">Chemistry</span><span class="fact-val">6,6′-Dibromoindigo<br>C₁₆H₈Br₂N₂O₂</span></li>
+            <li><span class="fact-key">Yield</span><span class="fact-val">~10,000–12,000 snails<br>per gram of pigment</span></li>
+            <li><span class="fact-key">Lightfastness</span><span class="fact-val">Exceptional · does not fade<br>in light or seawater</span></li>
+            <li><span class="fact-key">Legal status</span><span class="fact-val">Imperial monopoly (Rome)<br>Death penalty for unauthorized use</span></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="room__foot">
+        <span class="room__index">6,6′-Dibromoindigo · Murex Snail Secretion</span>
+        <button class="room__nav-next" data-room="leadwhite" aria-label="Go to Room VI: Lead White">
+          Room VI: Lead White →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROOM VI: LEAD WHITE ─────────────────────── -->
+  <section id="leadwhite" class="room room--leadwhite" role="region" aria-label="Room VI: Lead White">
+    <div class="room__inner">
+      <div class="room__label">
+        <span class="room__roman">VI</span>
+        <span class="room__count">Room 6 of 6</span>
+      </div>
+      <div class="room__hero">
+        <div class="room__swatch-wrap" aria-hidden="true">
+          <div class="room__swatch"></div>
+        </div>
+        <div class="room__title-group">
+          <h2 class="room__title">Lead White</h2>
+          <p class="room__hook">The Ground of Everything</p>
+          <p class="room__formula-hero">2PbCO₃·Pb(OH)₂ · PW1</p>
+        </div>
+      </div>
+      <div class="room__body">
+        <article class="room__essay">
+          <p class="room__lede">Every other pigment in this museum is a color. Lead white is a ground — the substrate, the beginning, the light that everything else is painted against.</p>
+          <p>From the Renaissance through the nineteenth century, almost every European oil painting began with lead white. Not as a color choice but as a structural material: basic lead carbonate (2PbCO₃·Pb(OH)₂) dries faster than any other white in oil, builds impasto that does not crack, and develops a slight translucency over time that allows light to penetrate the paint film and return. Rembrandt's late self-portraits, with their loaded brushwork and their battered surfaces, are lead white. The thick, sculptural quality of his brushstrokes is not possible without it.</p>
+          <p>The pigment was made by the Dutch process: strips of lead rolled into pots with vinegar, buried in horse dung, left for months. The acetic acid and carbon dioxide from the decomposing organic matter converted the lead surface to lead carbonate. Workers breathed the dust. The symptoms of chronic lead poisoning — fatigue, wrist drop, cognitive fog — were common enough in paint-grinding workshops to be considered occupational risk.</p>
+          <p>Lead white was banned in residential paint in most European countries by the 1920s, and in the United States by 1978. Artists' lead white — flake white — remains available under strict labeling requirements, used by painters who know the structural properties and accept the responsibility. Nothing else builds quite the same light. The impasto of Van Gogh's sunflowers is zinc and titanium white. The surfaces are beautiful. They are also different.</p>
+        </article>
+        <aside class="room__marginalia" aria-label="Pigment data">
+          <ul class="pigment-facts">
+            <li><span class="fact-key">Discovered</span><span class="fact-val">Ancient Greece (~400 BCE)<br>Dutch process: 16th century</span></li>
+            <li><span class="fact-key">Chemistry</span><span class="fact-val">Basic lead(II) carbonate<br>2PbCO₃·Pb(OH)₂</span></li>
+            <li><span class="fact-key">Color Index</span><span class="fact-val">PW1</span></li>
+            <li><span class="fact-key">Production</span><span class="fact-val">Dutch process: lead + vinegar<br>+ horse dung, 3–4 months</span></li>
+            <li><span class="fact-key">Banned</span><span class="fact-val">Residential: Europe 1920s<br>US residential: 1978</span></li>
+            <li><span class="fact-key">Notable users</span><span class="fact-val">Rembrandt, Vermeer<br>Rubens, Velázquez, Titian</span></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="room__foot">
+        <span class="room__index">Basic Lead(II) Carbonate · Pigment White 1</span>
+        <button class="room__nav-next" data-room="entrance" aria-label="Return to museum entrance">
+          ← Return to Entrance
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main><!-- #main -->
+
+<script src="main.js"></script>
+</body>
+</html>

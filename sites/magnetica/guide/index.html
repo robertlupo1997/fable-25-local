@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design Guide — Magnetica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,300;0,400;0,700;0,900;1,300&family=Chivo+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --lab-white:    #f2f4f6;
+      --ferro-black:  #0a0a0c;
+      --copper:       #c96f2e;
+      --copper-dark:  #8a4d1f;
+      --copper-faint: rgba(201, 111, 46, 0.10);
+      --ferro-mid:    #3a3a3e;
+      --ferro-light:  #71717a;
+      --border:       #d0d4d8;
+      --content-max:  860px;
+      --t-xs:   0.6875rem;
+      --t-sm:   0.75rem;
+      --t-base: 0.9375rem;
+      --t-md:   1.0625rem;
+      --t-lg:   1.25rem;
+      --t-xl:   1.625rem;
+      --t-2xl:  2rem;
+      --t-3xl:  2.75rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Chivo', system-ui, sans-serif;
+      background: var(--lab-white);
+      color: var(--ferro-black);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      position: sticky;
+      top: 0;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 0 1.5rem;
+      height: 3rem;
+      background: rgba(242,244,246,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+    .nav-wordmark {
+      font-weight: 900;
+      font-size: var(--t-sm);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ferro-black);
+      text-decoration: none;
+    }
+    .nav-wordmark .cu { color: var(--copper); }
+    .nav-sep { color: var(--ferro-light); font-size: var(--t-xs); }
+    .nav-title {
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-xs);
+      color: var(--ferro-light);
+      letter-spacing: 0.06em;
+    }
+    .nav-back {
+      margin-left: auto;
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-xs);
+      color: var(--ferro-mid);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .nav-back:hover { color: var(--copper); border-color: var(--copper); }
+
+    /* ── Layout ── */
+    .guide-wrap {
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    /* ── Eyebrow ── */
+    .eyebrow {
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-xs);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 0.6rem;
+    }
+
+    /* ── Title block ── */
+    .guide-title {
+      font-weight: 900;
+      font-size: var(--t-3xl);
+      line-height: 1.04;
+      letter-spacing: -0.035em;
+      margin-bottom: 0.5rem;
+      text-wrap: balance;
+    }
+    .guide-subtitle {
+      font-size: var(--t-md);
+      color: var(--ferro-light);
+      margin-bottom: 3.5rem;
+    }
+    .guide-subtitle strong {
+      color: var(--ferro-mid);
+      font-weight: 400;
+    }
+
+    /* ── Section headings ── */
+    .section { margin-bottom: 3.5rem; }
+    .section + .section { border-top: 1px solid var(--border); padding-top: 3rem; }
+
+    h2 {
+      font-weight: 700;
+      font-size: var(--t-xl);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-sm);
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ferro-mid);
+      margin: 2rem 0 0.6rem;
+    }
+
+    p { font-size: var(--t-base); color: var(--ferro-mid); line-height: 1.68; margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Code block ── */
+    pre {
+      background: var(--ferro-black);
+      color: #e2e4e8;
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-sm);
+      line-height: 1.7;
+      padding: 1.4rem 1.6rem;
+      overflow-x: auto;
+      border-left: 3px solid var(--copper);
+      margin: 1.4rem 0;
+    }
+    code { font-family: 'Chivo Mono', monospace; font-size: 0.92em; }
+    .kw  { color: #c96f2e; } /* copper — keywords */
+    .cm  { color: #6b7280; } /* comment */
+    .st  { color: #93c5fd; } /* string / var */
+    .fn  { color: #a5b4fc; } /* function name */
+    .nu  { color: #86efac; } /* number */
+
+    /* ── Pass log ── */
+    .pass-log {
+      margin-top: 1.4rem;
+    }
+    .pass {
+      display: grid;
+      grid-template-columns: 7rem 1fr;
+      gap: 0 1.5rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: var(--t-base);
+    }
+    .pass:first-child { border-top: 1px solid var(--border); }
+    .pass-num {
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-xs);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--copper);
+      padding-top: 0.1rem;
+    }
+    .pass-desc { color: var(--ferro-mid); }
+    .pass-desc strong { color: var(--ferro-black); font-weight: 700; }
+
+    /* ── Palette swatch ── */
+    .swatches {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin: 1.2rem 0;
+    }
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-xs);
+      color: var(--ferro-mid);
+    }
+    .swatch-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.08);
+      flex: 0 0 auto;
+    }
+
+    /* ── Footer ── */
+    .guide-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.4rem;
+      margin-top: 2rem;
+      font-family: 'Chivo Mono', monospace;
+      font-size: var(--t-xs);
+      color: var(--ferro-light);
+      letter-spacing: 0.05em;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 600px) {
+      .guide-title { font-size: var(--t-2xl); }
+      .pass { grid-template-columns: 1fr; gap: 0.25rem; }
+      .guide-footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../" class="nav-wordmark">MAGNET<span class="cu">I</span>CA</a>
+  <span class="nav-sep">·</span>
+  <span class="nav-title">Design Guide</span>
+  <a href="../" class="nav-back">← Back to lab</a>
+</nav>
+
+<main class="guide-wrap">
+
+  <!-- ── Header ── -->
+  <p class="eyebrow">Design Guide</p>
+  <h1 class="guide-title">Magnetica</h1>
+  <p class="guide-subtitle">
+    <strong>Brief No. 5 — FABLE 25 LOCAL</strong><br>
+    A lab demonstration site for an impossible material.
+    Physics simulation as the hero; light theme done with discipline.
+  </p>
+
+  <!-- ── Brief ── -->
+  <section class="section">
+    <h2>The brief</h2>
+    <p>
+      Build a demonstration site for <em>EMG-905 ferrofluid</em>, a fictional lab specimen.
+      Signature technique: 2D ferrofluid simulation — metaballs via
+      marching-squares on canvas, spiking into Rosensweig peaks under a draggable magnet;
+      field lines drawn faintly beneath. Palette: lab white <code>#f2f4f6</code>, ferro black
+      <code>#0a0a0c</code>, coil copper <code>#c96f2e</code>. Type: Chivo + Chivo Mono.
+      Prove: physics simulation as the hero, light theme done with discipline.
+    </p>
+    <div class="swatches">
+      <span class="swatch"><span class="swatch-dot" style="background:#f2f4f6;border-color:#d0d4d8;"></span>#f2f4f6 — Lab white</span>
+      <span class="swatch"><span class="swatch-dot" style="background:#0a0a0c;"></span>#0a0a0c — Ferro black</span>
+      <span class="swatch"><span class="swatch-dot" style="background:#c96f2e;"></span>#c96f2e — Coil copper</span>
+    </div>
+  </section>
+
+  <!-- ── Signature technique ── -->
+  <section class="section">
+    <h2>Signature technique: metaball pool + Bezier spike comb</h2>
+    <p>
+      The ferrofluid simulation runs two parallel systems. First, 18 circular blobs
+      with spring physics model the bulk fluid mass — they cluster under gravity with
+      weak magnetic attraction from the draggable magnet. Second, an off-screen
+      pixel-marching loop samples the scalar field of all blob contributions and
+      composites only the fluid region onto the main canvas using
+      <strong>per-pixel alpha</strong>:
+    </p>
+    <pre><span class="cm">// Offscreen pixel loop — alpha-composite over grid + field lines</span>
+<span class="kw">const</span> <span class="st">v</span> = <span class="fn">sampleField</span>((col + <span class="nu">0.5</span>) * scX, (row + <span class="nu">0.5</span>) * scY);
+<span class="kw">const</span> <span class="st">t</span> = <span class="fn">smoothstep</span>(THRESHOLD_LO, THRESHOLD_HI, v);
+d[i]     = <span class="nu">10</span>;  <span class="cm">// ferro black (R)</span>
+d[i + <span class="nu">1</span>] = <span class="nu">10</span>;  <span class="cm">// ferro black (G)</span>
+d[i + <span class="nu">2</span>] = <span class="nu">12</span>;  <span class="cm">// ferro black (B)</span>
+d[i + <span class="nu">3</span>] = Math.<span class="fn">round</span>(t * <span class="nu">255</span>); <span class="cm">// alpha = fluid density</span></pre>
+    <p>
+      The <code>t = 0</code> region above the pool stays fully transparent — the
+      grid and field lines underneath remain visible. The Rosensweig spikes are a
+      separate Bezier-comb canvas path drawn <em>below</em> the metaball layer;
+      their tips extend into the transparent region and show through, while their
+      bases merge seamlessly into the opaque fluid body.
+    </p>
+
+    <h3>Spike geometry</h3>
+    <p>
+      Spikes are a single closed canvas path — not individual shapes.
+      A Gaussian envelope computes the height of each peak based on
+      its horizontal distance from the magnet centerline, then Bezier
+      curves carve smooth valleys between peaks:
+    </p>
+    <pre><span class="kw">function</span> <span class="fn">spikeH</span>(i) {
+  <span class="kw">const</span> <span class="st">off</span> = (i - (numS - <span class="nu">1</span>) / <span class="nu">2</span>) * space;
+  <span class="kw">return</span> h * Math.<span class="fn">exp</span>(-<span class="nu">0.5</span> * (off / (space * numS * <span class="nu">0.29</span>)) ** <span class="nu">2</span>);
+}</pre>
+
+    <h3>Field-line integrator</h3>
+    <p>
+      Twelve field lines integrate a dipole field numerically (4 px per step),
+      starting from evenly spaced angles around the magnet. Each step follows the
+      local field vector — one component from a real magnetic pole at the magnet
+      position, one from a mirror image above (simulating the return path). The
+      result is the characteristic closed-loop dipole pattern visible behind the
+      fluid body.
+    </p>
+
+    <h3>Upgrade: peak-index annotations</h3>
+    <p>
+      After drawing the spike path, a second pass labels each prominent Rosensweig
+      peak with a copper specimen number (01–09) at its tip — small tick marks
+      and monospace type in the same lab-document voice as the copy below the fold.
+      The labels only appear when spike height exceeds 28% of the maximum, suppressing
+      noise on the Gaussian tails.
+    </p>
+  </section>
+
+  <!-- ── Critique log ── -->
+  <section class="section">
+    <h2>Critique pass log</h2>
+    <div class="pass-log">
+
+      <div class="pass">
+        <span class="pass-num">Pass 1</span>
+        <span class="pass-desc">
+          <strong>Initial build verified.</strong>
+          Desktop top/mid/bot and mobile top/bot all shot.
+          Core simulation running; field lines, spikes, rheostat, and specimen label
+          all present. Found: drag hint buried inside pool body; mobile label formula
+          overflowing container; metaball offscreen alpha bug (fully opaque pixels
+          repainting grid and field lines to flat white — spikes completely invisible).
+        </span>
+      </div>
+
+      <div class="pass">
+        <span class="pass-num">Pass 2–4</span>
+        <span class="pass-desc">
+          <strong>Desktop-only iteration (predecessor).</strong>
+          Predecessor agent continued iterating on desktop angles only; mobile was
+          not re-verified. Context overflow terminated the predecessor mid-loop
+          before finals were produced.
+        </span>
+      </div>
+
+      <div class="pass">
+        <span class="pass-num">Pass 5</span>
+        <span class="pass-desc">
+          <strong>Alpha-composite fix — critical rendering bug resolved.</strong>
+          Changed metaball pixel writes from <code>d[i+3]=255</code> (fully opaque,
+          painting the entire canvas white between frames) to
+          <code>d[i+3]=Math.round(t*255)</code>. Fluid region stays solid ferro-black;
+          non-fluid region becomes transparent, leaving grid, field lines, and
+          spike-path tips visible. Canvas now reads as intended.
+          Added peak-index annotations (complexity upgrade).
+          Fixed drag-hint position (moved from inside pool to between magnet and
+          spike tips at <code>top:46%</code>).
+          Fixed mobile lbl-formula overflow (<code>overflow:hidden; text-overflow:ellipsis</code>).
+          Verified mobile top/bot — zero errors.
+          Reduced-motion check: dignified static frame with visible spikes and field lines.
+        </span>
+      </div>
+
+      <div class="pass">
+        <span class="pass-num">Final</span>
+        <span class="pass-desc">
+          <strong>Finals shot at desktop 1440×900 and mobile 390×844.</strong>
+          Zero console errors, zero page errors at all viewports and scroll positions.
+          WCAG AA text contrast confirmed (darkest text #0a0a0c on #f2f4f6 ≫ 4.5:1).
+          All canvas elements aria-hidden. One h1. Skip link present. Guide rendered.
+        </span>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="guide-footer" style="max-width:860px;margin:0 auto 3rem;padding:0 2rem;">
+  <span>Magnetica · Guide</span>
+  <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+</footer>
+
+</body>
+</html>

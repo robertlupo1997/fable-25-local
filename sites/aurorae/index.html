@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institute of Atmospheric Light — Aurora Research Station</title>
+  <meta name="description" content="Continuous monitoring of geomagnetic phenomena and auroral displays above the 65th parallel since 1987.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="aurora" aria-hidden="true"></canvas>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <div class="wordmark">
+        <span class="wordmark-abb">IAL</span>
+        <span class="wordmark-full">Institute of Atmospheric Light</span>
+      </div>
+      <nav aria-label="Site sections">
+        <a href="#mission">Mission</a>
+        <a href="#instruments">Instruments</a>
+        <a href="#archive">Archive</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ── Hero ── -->
+    <section class="hero" aria-labelledby="hero-h1">
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-body">
+
+        <div class="hero-status" aria-label="Station status: live monitoring">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Live Monitoring</span>
+          <span class="sep" aria-hidden="true">·</span>
+          <span>69.6°N · 18.9°E</span>
+          <span class="sep" aria-hidden="true">·</span>
+          <time id="utc-clock" aria-label="Current UTC time">00:00:00 UTC</time>
+        </div>
+
+        <h1 id="hero-h1">The Aurora<br aria-hidden="true">Is Speaking</h1>
+
+        <p class="hero-lead">A continuous record of geomagnetic phenomena above the 65th parallel. Our instruments have watched the sky since&nbsp;1987.</p>
+
+        <div class="kp-widget" aria-label="Planetary K-index readout">
+          <div class="kp-header">
+            <span class="kp-label">Kp Index</span>
+            <span id="kp-readout" aria-live="polite">5</span>
+          </div>
+          <div class="kp-bars" id="kp-bars" aria-hidden="true"></div>
+          <div id="kp-status" aria-live="polite">G1 Storm · Minor</div>
+        </div>
+
+      </div>
+
+      <div class="scroll-cue" aria-hidden="true">
+        <span>Descend to witness the storm</span>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true" focusable="false">
+          <path d="M9 3v12M3 9l6 6 6-6" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ── 01 Mission ── -->
+    <section class="content-section" id="mission" aria-labelledby="mission-h2">
+      <div class="section-inner">
+        <p class="section-index" aria-hidden="true">01</p>
+        <h2 id="mission-h2">We witness what most people never see.</h2>
+        <div class="body-text">
+          <p>The Institute of Atmospheric Light maintains a continuous record of auroral events above the Arctic Circle. Our photometric arrays, riometers, and fluxgate magnetometers feed data to an international archive that has tracked every significant geomagnetic storm since 1987.</p>
+          <p>What you see in the sky is not magic. It is a collision: solar-wind electrons spiraling down Earth's magnetic field lines into the upper atmosphere at 100–150 km altitude, exciting oxygen atoms into their 557.7 nm emission. Green light. And higher — above 200 km — nitrogen bands emit violet and magenta. That is the signature of a deep storm.</p>
+          <p>Our job is to record it precisely. The sky is a laboratory. We take notes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 02 Current Event ── -->
+    <section class="content-section" id="storm" aria-labelledby="storm-h2">
+      <div class="section-inner">
+        <p class="section-index" aria-hidden="true">02</p>
+        <h2 id="storm-h2">G3 Geomagnetic Storm — Active</h2>
+
+        <div class="storm-alert" role="status">
+          <span class="storm-dot" aria-hidden="true"></span>
+          Solar wind velocity 718 km/s · Bz component −17.4 nT southward · Proton density 12.3 p/cm³
+        </div>
+
+        <figure class="magnetometer" aria-label="Fluxgate magnetometer H-component — last 3 hours, Tromsø station">
+          <figcaption class="mag-caption">
+            <span>Fluxgate Magnetometer — H&nbsp;Component</span>
+            <span class="mag-station">TRM · Tromsø 69.6°N</span>
+          </figcaption>
+          <canvas id="mag-chart" aria-hidden="true"></canvas>
+          <div class="mag-scale" aria-hidden="true">
+            <span>−400&nbsp;nT</span>
+            <span>0&nbsp;nT</span>
+            <span>+200&nbsp;nT</span>
+          </div>
+        </figure>
+
+        <div class="data-grid">
+          <dl class="data-item">
+            <dt>Solar Wind Velocity</dt>
+            <dd>718 <abbr title="kilometers per second">km/s</abbr></dd>
+          </dl>
+          <dl class="data-item">
+            <dt>Bz Component</dt>
+            <dd>−17.4 <abbr title="nanotesla">nT</abbr></dd>
+          </dl>
+          <dl class="data-item">
+            <dt>Proton Density</dt>
+            <dd>12.3 <abbr title="protons per cubic centimeter">p/cm³</abbr></dd>
+          </dl>
+          <dl class="data-item">
+            <dt>Kp (3-hour)</dt>
+            <dd>6.3 <abbr title="dimensionless Kp index">Kp</abbr></dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 03 Instruments ── -->
+    <section class="content-section" id="instruments" aria-labelledby="instruments-h2">
+      <div class="section-inner">
+        <p class="section-index" aria-hidden="true">03</p>
+        <h2 id="instruments-h2">The Tools of&nbsp;Patience</h2>
+
+        <div class="kp-sim-block">
+          <label class="kp-sim-label" for="kp-dial">
+            Simulate Solar Wind Intensity
+            <span id="kp-sim-display" aria-live="polite">Kp 5</span>
+          </label>
+          <div class="kp-dial-track">
+            <input type="range" id="kp-dial" class="kp-dial"
+              min="0" max="9" value="5" step="1"
+              aria-label="Kp index simulation — adjust storm intensity from 0 (quiet) to 9 (extreme storm)">
+            <div class="dial-markers" aria-hidden="true">
+              <span>0</span><span>1</span><span>2</span><span>3</span>
+              <span>4</span><span>5</span><span>6</span><span>7</span>
+              <span>8</span><span>9</span>
+            </div>
+          </div>
+        </div>
+
+        <ol class="instruments-list">
+          <li class="instrument-item">
+            <span class="inst-num" aria-hidden="true">01</span>
+            <div class="inst-body">
+              <h3>Fluxgate Magnetometer</h3>
+              <p>Three orthogonal sensors measure Earth's magnetic field to 0.1&nbsp;nT resolution. H-component deflections map ionospheric current systems in real time. Bay disturbances on the x-trace signal substorm onset within minutes.</p>
+            </div>
+          </li>
+          <li class="instrument-item">
+            <span class="inst-num" aria-hidden="true">02</span>
+            <div class="inst-body">
+              <h3>All-Sky Camera</h3>
+              <p>A 180° fisheye lens captures the entire auroral oval from horizon to horizon at 20-second cadence. Dawn keogram synthesis reveals the night's full structure as a single time-compressed image.</p>
+            </div>
+          </li>
+          <li class="instrument-item">
+            <span class="inst-num" aria-hidden="true">03</span>
+            <div class="inst-body">
+              <h3>Riometer Array</h3>
+              <p>Cosmic radio-noise absorption at 30&nbsp;MHz measures energetic particle precipitation in the D-region ionosphere — the invisible companion to optical emission, penetrating cloud cover and polar night alike.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── 04 Archive ── -->
+    <section class="content-section" id="archive" aria-labelledby="archive-h2">
+      <div class="section-inner">
+        <p class="section-index" aria-hidden="true">04</p>
+        <h2 id="archive-h2">Notable Events, 1987–Present</h2>
+
+        <div class="archive-list" role="list">
+          <div class="archive-row" role="listitem">
+            <span class="ev-date">Oct 2003</span>
+            <span class="ev-name">Halloween Storms</span>
+            <div class="ev-bar-wrap" aria-hidden="true"><div class="ev-bar" style="--fill:100%"></div></div>
+            <span class="ev-kp" aria-label="Kp 9">Kp&nbsp;9</span>
+          </div>
+          <div class="archive-row" role="listitem">
+            <span class="ev-date">May 2024</span>
+            <span class="ev-name">Gannon Storm</span>
+            <div class="ev-bar-wrap" aria-hidden="true"><div class="ev-bar" style="--fill:100%"></div></div>
+            <span class="ev-kp" aria-label="Kp 9">Kp&nbsp;9</span>
+          </div>
+          <div class="archive-row" role="listitem">
+            <span class="ev-date">Mar 1989</span>
+            <span class="ev-name">Québec Blackout Event</span>
+            <div class="ev-bar-wrap" aria-hidden="true"><div class="ev-bar" style="--fill:100%"></div></div>
+            <span class="ev-kp" aria-label="Kp 9">Kp&nbsp;9</span>
+          </div>
+          <div class="archive-row" role="listitem">
+            <span class="ev-date">Sep 2017</span>
+            <span class="ev-name">X9.3 Solar Flare Response</span>
+            <div class="ev-bar-wrap" aria-hidden="true"><div class="ev-bar" style="--fill:89%"></div></div>
+            <span class="ev-kp" aria-label="Kp 8">Kp&nbsp;8</span>
+          </div>
+          <div class="archive-row" role="listitem">
+            <span class="ev-date">Apr 2023</span>
+            <span class="ev-name">Easter Substorm Sequence</span>
+            <div class="ev-bar-wrap" aria-hidden="true"><div class="ev-bar" style="--fill:67%"></div></div>
+            <span class="ev-kp" aria-label="Kp 6">Kp&nbsp;6</span>
+          </div>
+        </div>
+
+        <p class="archive-cite">Kp indices: NOAA Space Weather Prediction Center and GFZ Potsdam definitive 3-hour Kp archive. Easter 2023 substorm data: IAL internal log #2023-04-09.</p>
+      </div>
+    </section>
+
+    <!-- ── 05 Contact ── -->
+    <section class="content-section" id="contact" aria-labelledby="contact-h2">
+      <div class="section-inner contact-inner">
+        <p class="section-index" aria-hidden="true">05</p>
+        <h2 id="contact-h2">The sky doesn't rest. Neither do&nbsp;we.</h2>
+        <p class="contact-lead">The station operates continuously through polar night and midnight sun. Data requests, collaboration proposals, and observation reports are handled by the science team at Tromsø.</p>
+        <div class="contact-links">
+          <a href="#" class="cta-link">Data Archive</a>
+          <a href="#" class="cta-link">Observation Reports</a>
+          <a href="#" class="cta-link">Research Proposals</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <span>Institute of Atmospheric Light · Tromsø, Norway · Est. 1987</span>
+      <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

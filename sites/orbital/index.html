@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perigee Commons — Orbital Cooperative</title>
+  <meta name="description" content="A fictional micro-satellite cooperative sharing one LEO constellation across four research institutions.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#satellite-list" class="skip-link">Skip to satellite catalog</a>
+
+  <!-- Full-viewport WebGL canvas -->
+  <canvas id="gl-canvas" aria-hidden="true"></canvas>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="#" class="logo" aria-label="Perigee Commons home">
+        <span class="logo-mark">PCO</span>
+        <span class="logo-name">PERIGEE<br>COMMONS</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="#about" class="nav-link">Mission</a></li>
+          <li><a href="#satellite-list" class="nav-link">Constellation</a></li>
+          <li><button id="guide-btn" class="nav-link nav-btn" onclick="window.location='guide/'">Guide</button></li>
+        </ul>
+      </nav>
+      <div class="epoch-clock" aria-label="Current simulation epoch">
+        <span class="epoch-label">EPOCH</span>
+        <span id="epoch-time" class="epoch-value">T+00:00:00</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero overlay -->
+  <section class="hero-overlay" aria-labelledby="hero-heading">
+    <div class="hero-content">
+      <p class="hero-label">LEO CONSTELLATION · 550 KM · 53° INCLINATION</p>
+      <h1 id="hero-heading" class="hero-heading">One constellation.<br>Shared by&nbsp;many.</h1>
+      <p class="hero-sub">Twelve satellites. Four research institutions. Every orbit in common since&nbsp;2019.</p>
+      <p class="hero-hint">Click any satellite to ride its orbit &mdash; or navigate the constellation catalog below.</p>
+    </div>
+  </section>
+
+  <!-- Satellite info panel (revealed on selection) -->
+  <aside id="sat-panel" class="sat-panel" aria-label="Selected satellite telemetry" aria-live="polite" hidden>
+    <div class="sat-panel-inner">
+      <div class="sat-panel-header">
+        <div>
+          <span class="panel-label">SELECTED VEHICLE</span>
+          <h2 id="sat-name" class="sat-designation">—</h2>
+        </div>
+        <button id="sat-close" class="sat-close" aria-label="Close satellite panel">✕</button>
+      </div>
+
+      <div class="sat-status-row">
+        <span id="sat-status-dot" class="status-dot status-nominal"></span>
+        <span id="sat-status" class="status-text">NOMINAL</span>
+      </div>
+
+      <dl class="sat-data">
+        <div class="sat-data-row">
+          <dt>Sensor</dt>
+          <dd id="sat-sensor">—</dd>
+        </div>
+        <div class="sat-data-row">
+          <dt>Altitude</dt>
+          <dd id="sat-alt">—</dd>
+        </div>
+        <div class="sat-data-row">
+          <dt>Speed</dt>
+          <dd id="sat-speed">—</dd>
+        </div>
+        <div class="sat-data-row">
+          <dt>Inclination</dt>
+          <dd id="sat-incl">—</dd>
+        </div>
+        <div class="sat-data-row">
+          <dt>Operator</dt>
+          <dd id="sat-operator">—</dd>
+        </div>
+        <div class="sat-data-row">
+          <dt>Launch</dt>
+          <dd id="sat-launch">—</dd>
+        </div>
+        <div class="sat-data-row">
+          <dt>Period</dt>
+          <dd id="sat-period">95.4 min</dd>
+        </div>
+      </dl>
+
+      <p class="panel-hint">Press <kbd>Esc</kbd> to release orbit</p>
+    </div>
+  </aside>
+
+  <!-- Main content area (scrollable satellite catalog) -->
+  <main id="about">
+    <section class="about-section" aria-labelledby="about-heading">
+      <div class="about-inner">
+        <h2 id="about-heading" class="section-heading">The Cooperative</h2>
+        <p class="about-body">Perigee Commons is a non-profit orbital cooperative that pools satellite resources across four partner research institutions — providing equitable access to Earth observation data without proprietary lock-in. Our twelve-vehicle constellation delivers global coverage every 90 minutes, shared under a Creative Commons Attribution license.</p>
+        <div class="member-grid">
+          <div class="member-card">
+            <span class="member-sigil">NAL</span>
+            <h3 class="member-name">Nordic Atmosphere Lab</h3>
+            <p class="member-desc">Arctic sea ice extent, atmospheric column NO₂, and polar stratospheric cloud dynamics. Oslo, Norway.</p>
+          </div>
+          <div class="member-card">
+            <span class="member-sigil">PBCO</span>
+            <h3 class="member-name">Pacific Basin Climate Observatory</h3>
+            <p class="member-desc">Sea surface temperature, ENSO precursors, and typhoon track validation. Yokohama, Japan.</p>
+          </div>
+          <div class="member-card">
+            <span class="member-sigil">ARSI</span>
+            <h3 class="member-name">Alpine Remote Sensing Institute</h3>
+            <p class="member-desc">Glacier mass balance, alpine land cover change, and European particulate matter monitoring. Zurich, Switzerland.</p>
+          </div>
+          <div class="member-card">
+            <span class="member-sigil">SRS</span>
+            <h3 class="member-name">Subarctic Research Station</h3>
+            <p class="member-desc">Permafrost thaw dynamics, boreal forest carbon flux, and subarctic AIS vessel traffic. Yellowknife, Canada.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accessible satellite catalog -->
+    <section id="satellite-list" class="catalog-section" aria-labelledby="catalog-heading">
+      <div class="catalog-inner">
+        <h2 id="catalog-heading" class="section-heading">Constellation Catalog</h2>
+        <p class="catalog-desc">Select a satellite to focus the 3D view and display live telemetry.</p>
+        <ul id="sat-nav-list" class="sat-catalog-list" role="listbox" aria-label="Satellite constellation" aria-multiselectable="false">
+          <!-- Populated by main.js -->
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- Telemetry ticker -->
+  <div class="telemetry-bar" role="status" aria-live="polite" aria-atomic="true">
+    <span class="ticker-label">TELEMETRY</span>
+    <div class="ticker-track">
+      <span id="telemetry-msg" class="ticker-msg"></span>
+    </div>
+    <span id="ticker-utc" class="ticker-utc" aria-label="Current UTC time"></span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <p class="footer-text">
+      Perigee Commons Orbital Cooperative &middot; Constellation data simulated via Keplerian propagation &middot; Not a real satellite operator
+    </p>
+    <p class="footer-credit">Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</p>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

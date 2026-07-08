@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tremor — A Century of Earthquakes</title>
+  <meta name="description" content="A scroll-driven data essay on 100 years of major seismic events, using real USGS catalog data. 413 earthquakes, M7.5 and above, 1926–2025.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Martian+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="site-title">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">USGS Seismic Catalog · M7.5+ · 1926–2025</p>
+      <h1 class="hero-title" id="site-title">Tre<em>mor</em></h1>
+      <p class="hero-sub">413 major earthquakes, drawn as they happened — one century of the earth's largest shocks.</p>
+
+      <div class="hero-stats" role="list" aria-label="Dataset summary">
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-value">413</span>
+          <span class="hero-stat-label">events</span>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-value">M7.5–9.5</span>
+          <span class="hero-stat-label">magnitude range</span>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-value">1926–2025</span>
+          <span class="hero-stat-label">years covered</span>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-value">9.5</span>
+          <span class="hero-stat-label">Valdivia 1960</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-canvas-wrap">
+      <canvas id="hero-trace" aria-hidden="true" role="img"></canvas>
+    </div>
+  </section>
+
+  <main id="main">
+    <div class="content-wrap">
+
+      <!-- Intro -->
+      <section class="intro" aria-label="Introduction">
+        <p>Every line on a seismogram is a record of the planet's internal life. This essay draws one line per earthquake — each spike the amplitude of ground motion felt at the instrument, each decade a chapter in a still-unfinished story.</p>
+        <p>The data comes from the <strong>USGS Earthquake Hazards Program</strong>, drawn directly from their FDSN Event Service. 413 earthquakes of M7.5 or greater, occurring between January 1926 and December 2025, baked into this page at build time. <a class="citation" href="https://earthquake.usgs.gov/fdsnws/event/1/" target="_blank" rel="noopener">earthquake.usgs.gov ↗</a></p>
+        <p>A note on completeness: seismic instrumentation improved dramatically through the twentieth century. Events before 1960 are likely undercounted — particularly in remote ocean regions. What the early decades show is a lower bound, not a full picture.</p>
+      </section>
+
+      <hr class="section-rule">
+
+      <!-- 1920s -->
+      <section class="decade" id="d1920" aria-labelledby="h-1920">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1920">The 1920s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">10</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.1</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1920</span>
+              <span class="year-label">1925</span>
+              <span class="year-label">1929</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1920" aria-label="Seismograph trace, 1920s: 10 events up to M8.1" height="160"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1920" aria-hidden="true"></canvas>
+            </div>
+            <p class="completeness-note">⚠ Pre-1930 catalog may be incomplete</p>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1920s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.1</span>
+                <span class="event-date">1929 Jun 27</span>
+                <span class="event-name">South Sandwich Islands</span>
+                <span class="event-depth">15 km depth · shallow</span>
+                <span class="event-note">Remote submarine earthquake in the South Atlantic. Instrumental magnitude near the century's floor.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M7.99</span>
+                <span class="event-date">1928 Jun 17</span>
+                <span class="event-name">Oaxaca, Mexico</span>
+                <span class="event-depth">20 km depth · shallow</span>
+                <span class="event-note">Subduction zone rupture along the Middle America Trench. Strong shaking reported across southern Mexico.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1930s -->
+      <section class="decade" id="d1930" aria-labelledby="h-1930">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1930">The 1930s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">46</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.5</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1930</span>
+              <span class="year-label">1935</span>
+              <span class="year-label">1939</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1930" aria-label="Seismograph trace, 1930s: 46 events up to M8.5" height="160"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1930" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1930s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.5</span>
+                <span class="event-date">1938 Feb 01</span>
+                <span class="event-name">Banda Sea</span>
+                <span class="event-depth">25 km depth · shallow</span>
+                <span class="event-note">Large interplate rupture beneath the Banda Sea between Australia and Indonesia.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.4</span>
+                <span class="event-date">1933 Mar 02</span>
+                <span class="event-name">Sanriku, Japan</span>
+                <span class="event-depth">15 km depth · shallow</span>
+                <span class="event-note">Outer-rise normal faulting earthquake off the Sanriku coast. Generated a destructive tsunami; over 3,000 lives lost.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.2</span>
+                <span class="event-date">1938 Nov 10</span>
+                <span class="event-name">Semidi Islands, Alaska</span>
+                <span class="event-depth">35 km depth</span>
+                <span class="event-note">Alaska Peninsula subduction event.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1940s -->
+      <section class="decade" id="d1940" aria-labelledby="h-1940">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1940">The 1940s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">45</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.6</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1940</span>
+              <span class="year-label">1945</span>
+              <span class="year-label">1949</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1940" aria-label="Seismograph trace, 1940s: 45 events up to M8.6" height="160"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1940" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1940s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.6</span>
+                <span class="event-date">1946 Apr 01</span>
+                <span class="event-name">Unimak Island, Alaska</span>
+                <span class="event-depth">15 km depth · shallow</span>
+                <span class="event-note">The "April Fools' Day Tsunami." Distant tsunami reached Hawaii with 14m waves; the Scotch Cap lighthouse was destroyed. Prompted creation of the Pacific Tsunami Warning Center.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.3</span>
+                <span class="event-date">1946 Dec 20</span>
+                <span class="event-name">Nankaido, Japan</span>
+                <span class="event-depth">15 km depth · shallow</span>
+                <span class="event-note">Major Nankai Trough rupture. Tsunami and strong shaking across western Japan.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.2</span>
+                <span class="event-date">1940 May 24</span>
+                <span class="event-name">Huacho, Peru</span>
+                <span class="event-depth">45 km depth</span>
+                <span class="event-note">South American subduction event. Strong shaking along Peru's central coast.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1950s -->
+      <section class="decade" id="d1950" aria-labelledby="h-1950">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1950">The 1950s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">30</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M9.0</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1950</span>
+              <span class="year-label">1955</span>
+              <span class="year-label">1959</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1950" aria-label="Seismograph trace, 1950s: 30 events up to M9.0" height="170"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1950" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1950s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M9.0</span>
+                <span class="event-date">1952 Nov 04</span>
+                <span class="event-name">Kamchatka, Russia</span>
+                <span class="event-depth">21.6 km depth · shallow</span>
+                <span class="event-note">One of the largest recorded earthquakes at the time. Generated a Pacific-wide tsunami reaching Hawaii with 4m waves.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.6</span>
+                <span class="event-date">1950 Aug 15</span>
+                <span class="event-name">Assam–Tibet</span>
+                <span class="event-depth">15 km depth · shallow</span>
+                <span class="event-note">One of the largest recorded continental earthquakes. Massive landslides dammed the Brahmaputra River; subsequent outburst flooding caused widespread destruction.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.6</span>
+                <span class="event-date">1957 Mar 09</span>
+                <span class="event-name">Aleutian Islands</span>
+                <span class="event-depth">25 km depth · shallow</span>
+                <span class="event-note">Alaska-Aleutian megathrust event. Tsunamis generated; remote islands evacuated.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1960s -->
+      <section class="decade" id="d1960" aria-labelledby="h-1960">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1960">The 1960s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">40</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M9.5</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1960</span>
+              <span class="year-label">1965</span>
+              <span class="year-label">1969</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1960" aria-label="Seismograph trace, 1960s: 40 events up to M9.5" height="200"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1960" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1960s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M9.5</span>
+                <span class="event-date">1960 May 22</span>
+                <span class="event-name">Great Chilean Earthquake</span>
+                <span class="event-depth">25 km depth · shallow</span>
+                <span class="event-note">The largest earthquake ever recorded. The rupture zone extended 1,000 km along the Valdivia fault. Tsunamis reached Japan (6 m), Hawaii (10 m), and the Philippines. Earth's free oscillations were measured for the first time.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M9.2</span>
+                <span class="event-date">1964 Mar 28</span>
+                <span class="event-name">Good Friday, Alaska</span>
+                <span class="event-depth">25 km depth · shallow</span>
+                <span class="event-note">Second largest on record. Land subsided by 2 m across 250,000 km². Tsunami devastated Valdez, Kodiak, and Crescent City, California.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.7</span>
+                <span class="event-date">1965 Feb 04</span>
+                <span class="event-name">Western Aleutians</span>
+                <span class="event-depth">30.3 km depth · shallow</span>
+                <span class="event-note">Rat Islands (Hawadax) thrust earthquake. Large Pacific tsunami generated.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1970s -->
+      <section class="decade" id="d1970" aria-labelledby="h-1970">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1970">The 1970s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">41</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.3</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1970</span>
+              <span class="year-label">1975</span>
+              <span class="year-label">1979</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1970" aria-label="Seismograph trace, 1970s: 41 events up to M8.3" height="160"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1970" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1970s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.3</span>
+                <span class="event-date">1977 Aug 19</span>
+                <span class="event-name">Sumba, Indonesia</span>
+                <span class="event-depth">15.9 km depth · shallow</span>
+                <span class="event-note">Outer-rise normal faulting event in the Indian Ocean. Tsunami reached southern Java and Australia's northwest coast.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.1</span>
+                <span class="event-date">1971 Jul 26</span>
+                <span class="event-name">Bougainville, Solomon Islands</span>
+                <span class="event-depth">51.5 km depth</span>
+                <span class="event-note">Northwest of Bougainville Island, intermediate-depth thrust event.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.0</span>
+                <span class="event-date">1970 Jul 31</span>
+                <span class="event-name">Northern Peru (deep)</span>
+                <span class="event-depth">644.8 km depth · deep</span>
+                <span class="event-note">One of the deepest large earthquakes recorded. At this depth, the slab is under immense pressure; rupture mechanics differ from shallow events.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1980s -->
+      <section class="decade" id="d1980" aria-labelledby="h-1980">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1980">The 1980s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">20</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.0</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1980</span>
+              <span class="year-label">1985</span>
+              <span class="year-label">1989</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1980" aria-label="Seismograph trace, 1980s: 20 events up to M8.0" height="160"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1980" aria-hidden="true"></canvas>
+            </div>
+            <p class="completeness-note">↓ Quieter decade or catalog artifact?</p>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1980s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item">
+                <span class="event-mag">M8.0</span>
+                <span class="event-date">1985 Sep 19</span>
+                <span class="event-name">Michoacán, Mexico</span>
+                <span class="event-depth">27.9 km depth · shallow</span>
+                <span class="event-note">Distant shaking amplified by Mexico City's lakebed soils; over 10,000 killed. Exposed the lethal effect of soft sediment resonance on urban infrastructure.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.0</span>
+                <span class="event-date">1985 Mar 03</span>
+                <span class="event-name">Valparaíso, Chile</span>
+                <span class="event-depth">33 km depth · shallow</span>
+                <span class="event-note">Chilean subduction zone megathrust. Strong shaking across central Chile.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.0</span>
+                <span class="event-date">1989 May 23</span>
+                <span class="event-name">Macquarie Ridge</span>
+                <span class="event-depth">10 km depth · very shallow</span>
+                <span class="event-note">Strike-slip earthquake near New Zealand's antipode. Far from population centers; tsunamis observed but minor.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 1990s -->
+      <section class="decade" id="d1990" aria-labelledby="h-1990">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-1990">The 1990s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">42</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.3</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">1990</span>
+              <span class="year-label">1995</span>
+              <span class="year-label">1999</span>
+            </div>
+            <canvas class="decade-trace" data-decade="1990" aria-label="Seismograph trace, 1990s: 42 events up to M8.3" height="160"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="1990" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 1990s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.3</span>
+                <span class="event-date">1994 Oct 04</span>
+                <span class="event-name">Shikotan, Kuril Islands</span>
+                <span class="event-depth">14 km depth · very shallow</span>
+                <span class="event-note">Powerful tsunami-genic event near the Kuril Island chain. Japan issued tsunami warnings across Hokkaido.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.2</span>
+                <span class="event-date">1994 Jun 09</span>
+                <span class="event-name">Bolivia (deep)</span>
+                <span class="event-depth">631.3 km depth · very deep</span>
+                <span class="event-note">The largest deep-focus earthquake ever recorded. At 631 km, rupture occurs within the subducting slab; no tsunami, but felt across much of South America.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.1</span>
+                <span class="event-date">1998 Mar 25</span>
+                <span class="event-name">Balleny Islands</span>
+                <span class="event-depth">10 km depth · very shallow</span>
+                <span class="event-note">Intraplate earthquake in the Southern Ocean, far from any subduction zone — a rarer tectonic mechanism.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 2000s -->
+      <section class="decade" id="d2000" aria-labelledby="h-2000">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-2000">The 2000s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">58</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M9.1</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">2000</span>
+              <span class="year-label">2005</span>
+              <span class="year-label">2009</span>
+            </div>
+            <canvas class="decade-trace" data-decade="2000" aria-label="Seismograph trace, 2000s: 58 events up to M9.1" height="190"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="2000" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 2000s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M9.1</span>
+                <span class="event-date">2004 Dec 26</span>
+                <span class="event-name">Indian Ocean / Sumatra</span>
+                <span class="event-depth">30 km depth · shallow</span>
+                <span class="event-note">Third largest ever recorded. The resulting tsunami killed over 227,000 people across 14 countries — the deadliest natural disaster in modern history. The rupture lasted nearly 10 minutes, the longest ever recorded, and displaced the seafloor by up to 15 m.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.6</span>
+                <span class="event-date">2005 Mar 28</span>
+                <span class="event-name">Nias, Indonesia</span>
+                <span class="event-depth">30 km depth · shallow</span>
+                <span class="event-note">Aftershock-class rupture of the 2004 Sunda megathrust. Still one of the largest earthquakes of the century; over 1,300 casualties.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.4</span>
+                <span class="event-date">2001 Jun 23</span>
+                <span class="event-name">Atico, Peru</span>
+                <span class="event-depth">33 km depth · shallow</span>
+                <span class="event-note">Subduction zone thrust event. Tsunami warnings issued across the Pacific.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 2010s -->
+      <section class="decade" id="d2010" aria-labelledby="h-2010">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-2010">The 2010s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">55</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M9.1</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">2010</span>
+              <span class="year-label">2015</span>
+              <span class="year-label">2019</span>
+            </div>
+            <canvas class="decade-trace" data-decade="2010" aria-label="Seismograph trace, 2010s: 55 events up to M9.1" height="190"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="2010" aria-hidden="true"></canvas>
+            </div>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 2010s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M9.1</span>
+                <span class="event-date">2011 Mar 11</span>
+                <span class="event-name">Tōhoku, Japan</span>
+                <span class="event-depth">29 km depth · shallow</span>
+                <span class="event-note">The most powerful earthquake in Japan's recorded history. The tsunami reached 40 m in some coastal areas; nearly 20,000 killed. The Fukushima Daiichi nuclear plant was destroyed by the wave. Japan moved 2.4 m toward North America.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.8</span>
+                <span class="event-date">2010 Feb 27</span>
+                <span class="event-name">Maule, Chile</span>
+                <span class="event-depth">22.9 km depth · shallow</span>
+                <span class="event-note">Fifth largest ever recorded. City of Concepción largely destroyed. The axis of Earth shifted by 8 cm; the day shortened by 1.26 microseconds.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.6</span>
+                <span class="event-date">2012 Apr 11</span>
+                <span class="event-name">Wharton Basin</span>
+                <span class="event-depth">20 km depth · shallow</span>
+                <span class="event-note">One of the largest strike-slip earthquakes ever recorded. Occurred within the oceanic plate, not at a subduction boundary — still poorly understood.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 2020s -->
+      <section class="decade" id="d2020" aria-labelledby="h-2020">
+        <header class="decade-header">
+          <h2 class="decade-name" id="h-2020">The 2020s</h2>
+          <div class="decade-stats">
+            <div class="stat-item">
+              <span class="stat-value">26</span>
+              <span class="stat-label">events</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">M8.8</span>
+              <span class="stat-label">maximum</span>
+            </div>
+          </div>
+        </header>
+        <div class="decade-body">
+          <div class="trace-column">
+            <div class="year-axis" aria-hidden="true">
+              <span class="year-label">2020</span>
+              <span class="year-label">2025</span>
+              <span class="year-label">2030</span>
+            </div>
+            <canvas class="decade-trace" data-decade="2020" aria-label="Seismograph trace, 2020s: 26 events up to M8.8" height="170"></canvas>
+            <div class="depth-section">
+              <div class="depth-label">Focal depth distribution</div>
+              <canvas class="depth-canvas" data-decade="2020" aria-hidden="true"></canvas>
+            </div>
+            <p class="completeness-note">↳ Decade ongoing · data through 2025</p>
+          </div>
+          <aside class="felt-report" aria-label="Notable events of the 2020s">
+            <h3 class="felt-title">Felt Report</h3>
+            <ul class="event-list">
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.8</span>
+                <span class="event-date">2025 Jul 29</span>
+                <span class="event-name">Kamchatka Peninsula</span>
+                <span class="event-depth">35 km depth · shallow</span>
+                <span class="event-note">Largest earthquake of the 2020s so far. Major rupture along the Kamchatka subduction zone. Tsunami warnings issued across the Pacific basin.</span>
+              </li>
+              <li class="event-item event-item--great">
+                <span class="event-mag">M8.2</span>
+                <span class="event-date">2021 Jul 29</span>
+                <span class="event-name">Chignik, Alaska</span>
+                <span class="event-depth">35 km depth · shallow</span>
+                <span class="event-note">Alaska Peninsula thrust event. Tsunami warnings issued for the Alaska coast.</span>
+              </li>
+              <li class="event-item">
+                <span class="event-mag">M8.1</span>
+                <span class="event-date">2021 Mar 04</span>
+                <span class="event-name">Kermadec Islands, NZ</span>
+                <span class="event-depth">28.9 km depth · shallow</span>
+                <span class="event-note">Tonga-Kermadec subduction event. Tsunami waves observed; evacuation orders in coastal areas.</span>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <hr class="section-rule">
+
+      <!-- Epilogue -->
+      <section class="epilogue" aria-labelledby="epilogue-head">
+        <div class="epilogue-cols">
+          <div class="epilogue-text">
+            <h2 class="epilogue-heading" id="epilogue-head">What the record shows</h2>
+            <p>Great earthquakes are not random in time. They cluster: the 1952–1965 "age of great earthquakes" produced six events above M8.5 in thirteen years, including the two largest ever measured. The 1980s, by contrast, passed with no M8.1 events at all — whether a genuine seismic quiet or a catalog artifact remains debated.</p>
+            <p>No region is immune. Circum-Pacific subduction zones dominate, but the Assam–Tibet collision, the intraplate Balleny Islands, and the oceanic Wharton Basin show that the planet's skin is under stress everywhere it is being recycled, bent, or born.</p>
+            <p>The next great rupture will happen. The only uncertainty is where, and when the instrumentation will be in place to catch it whole.</p>
+          </div>
+          <aside class="epilogue-chart-wrap" aria-label="Seismic energy by decade">
+            <p class="chart-heading">Energy by decade</p>
+            <canvas id="energy-chart" aria-label="Horizontal bar chart showing relative seismic energy by decade. The 1960s bar dominates, reflecting the M9.5 and M9.2 megaquakes."></canvas>
+            <p class="chart-note">Relative seismic moment · log₁₀ scale</p>
+          </aside>
+        </div>
+        <div class="data-citation" role="complementary" aria-label="Data source citation">
+          <span class="data-citation-label">Data source</span>
+          <span class="data-citation-text">
+            USGS Earthquake Hazards Program · FDSN Event Service<br>
+            Query: M7.5+, 1926-01-01 to 2026-01-01, ordered by time<br>
+            Fetched 2026-07-08 ·
+            <a href="https://earthquake.usgs.gov/fdsnws/event/1/" target="_blank" rel="noopener">earthquake.usgs.gov/fdsnws/event/1/</a><br>
+            Pre-1960 catalog reflects instrumental limitations of the era.
+          </span>
+        </div>
+      </section>
+
+    </div><!-- .content-wrap -->
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+      <span class="footer-source">
+        Data: <a href="https://earthquake.usgs.gov/fdsnws/event/1/" target="_blank" rel="noopener">USGS FDSN Event Service</a> · 413 events · M7.5+
+      </span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

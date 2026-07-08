@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGNALHOUSE — Signal Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bakelite: #0e0f11;
+      --panel:    #141518;
+      --panel-mid:#1c1e22;
+      --cream:    #e8dcc0;
+      --cream-dim:#a8a090;
+      --cream-dark:#5a5448;
+      --red:      #d43a2f;
+      --red-dim:  #8a2820;
+      --metal:    #2e3038;
+      --amber:    #c4903a;
+      --font-mono:'IBM Plex Mono', monospace;
+      --font-sans:'Archivo', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bakelite);
+      color: var(--cream);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    .skip { position: absolute; top:-9999px; left:0; background:var(--red); color:var(--cream); padding:8px 16px; font-family:var(--font-mono); font-size:.85rem; z-index:9999; }
+    .skip:focus { top:0; }
+
+    /* Classification tape */
+    .tape {
+      background: var(--red);
+      color: var(--cream);
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-align: center;
+      padding: 5px 16px;
+    }
+
+    header {
+      border-bottom: 1px solid var(--metal);
+      padding: 40px clamp(24px,6vw,80px) 32px;
+    }
+    .back {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--cream-dim);
+      text-decoration: none;
+      letter-spacing: .08em;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .back:hover { color: var(--cream); }
+    .back:focus-visible { outline: 2px solid var(--cream-dim); outline-offset:2px; }
+    .guide-super {
+      font-family: var(--font-mono);
+      font-size: .7rem;
+      color: var(--red);
+      letter-spacing: .15em;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-family: var(--font-sans);
+      font-size: clamp(2rem,5vw,4rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: var(--cream);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .h1-sub {
+      font-family: var(--font-mono);
+      font-size: .8rem;
+      color: var(--cream-dim);
+      letter-spacing: .08em;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 56px clamp(24px,6vw,80px) 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    /* Section */
+    .guide-section {}
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--cream-dark);
+      letter-spacing: .18em;
+      border-bottom: 1px solid var(--metal);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-family: var(--font-sans);
+      font-size: clamp(1.3rem,2.5vw,1.8rem);
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    p { color: var(--cream-dim); margin-bottom: 1em; max-width: 68ch; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--cream); font-weight: 600; }
+
+    /* Code block */
+    .code-block {
+      background: var(--panel);
+      border: 1px solid var(--metal);
+      border-left: 3px solid var(--red-dim);
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+    pre {
+      font-family: var(--font-mono);
+      font-size: clamp(.7rem,1.3vw,.82rem);
+      line-height: 1.65;
+      color: var(--cream);
+      white-space: pre;
+    }
+    .tok-comment { color: var(--cream-dark); }
+    .tok-keyword { color: var(--amber); }
+    .tok-string  { color: var(--cream-dim); }
+    .tok-num     { color: #d43a2f; }
+
+    /* Pass critique table */
+    .pass-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 4px;
+    }
+    .pass-card {
+      border: 1px solid var(--metal);
+      background: var(--panel);
+    }
+    .pass-header {
+      background: var(--panel-mid);
+      border-bottom: 1px solid var(--metal);
+      padding: 10px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+    }
+    .pass-num {
+      font-family: var(--font-mono);
+      font-size: .65rem;
+      color: var(--red);
+      letter-spacing: .15em;
+    }
+    .pass-title {
+      font-family: var(--font-mono);
+      font-size: .75rem;
+      color: var(--cream-dim);
+      letter-spacing: .08em;
+    }
+    .pass-upgrade {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: .62rem;
+      color: var(--amber);
+      letter-spacing: .08em;
+    }
+    .pass-body { padding: 16px; }
+    .pass-body ul {
+      padding-left: 20px;
+      color: var(--cream-dim);
+      font-size: .85rem;
+      line-height: 1.8;
+    }
+    .pass-body li { margin-bottom: 4px; }
+    .pass-body li strong { color: var(--cream); }
+
+    /* Palette swatch */
+    .palette {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .swatch-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .swatch-label {
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--cream-dim);
+    }
+
+    footer {
+      border-top: 1px solid var(--metal);
+      padding: 16px clamp(24px,6vw,80px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: .72rem;
+      color: var(--cream-dark);
+    }
+    footer a { color: var(--cream-dim); text-decoration: none; }
+    footer a:hover { color: var(--cream); }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip">Skip to content</a>
+  <div class="tape">SIGNAL GUIDE // SIGNALHOUSE // BUILDER NOTES // FABLE 25 LOCAL</div>
+
+  <header role="banner">
+    <a href="../" class="back">← Back to receiver</a>
+    <p class="guide-super">FABLE 25 · STUDIO 4 · BUILDER NOTES</p>
+    <h1>Signal Guide</h1>
+    <p class="h1-sub">Signalhouse — Numbers Station Archive · Design &amp; Build Documentation</p>
+  </header>
+
+  <main id="main">
+
+    <!-- BRIEF -->
+    <section class="guide-section">
+      <p class="section-label">THE BRIEF</p>
+      <h2>A cold-war listening post that never shut down</h2>
+      <p>The brief asked for a fictional shortwave monitoring station: a numbers-station
+      archive with an interactive shortwave receiver. The signature technique was
+      <strong>WebAudio oscillators only</strong> — filtered noise for static, oscillators for
+      morse code, bandpass formant filters for voice-like transmissions. Zero samples.
+      The challenge: make procedural synthesis sound like it belongs.</p>
+      <p>Palette: bakelite <strong>#0e0f11</strong>, dial cream <strong>#e8dcc0</strong>,
+      tuning red <strong>#d43a2f</strong>. Type: <strong>IBM Plex Mono</strong> (instruments,
+      readouts, logbook) + <strong>Archivo</strong> (headers, body). Prove that raw oscillators
+      can carry a narrative site.</p>
+      <div class="palette">
+        <div class="swatch"><div class="swatch-dot" style="background:#0e0f11;border:1px solid #2e3038"></div><span class="swatch-label">#0e0f11 bakelite</span></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#e8dcc0"></div><span class="swatch-label">#e8dcc0 cream</span></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#d43a2f"></div><span class="swatch-label">#d43a2f tuning red</span></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#c4903a"></div><span class="swatch-label">#c4903a amber</span></div>
+        <div class="swatch"><div class="swatch-dot" style="background:#1c1e22;border:1px solid #2e3038"></div><span class="swatch-label">#1c1e22 panel</span></div>
+      </div>
+    </section>
+
+    <!-- SIGNATURE TECHNIQUE -->
+    <section class="guide-section">
+      <p class="section-label">SIGNATURE TECHNIQUE</p>
+      <h2>Phosphor-persistence waterfall with raw oscillator synthesis</h2>
+      <p>The spectrum waterfall uses a persistent pixel buffer where each new row of spectrum
+      data is written at the top, and all existing rows decay toward the bakelite background
+      color through an amber warmth — not straight to black. The effect mimics the phosphor
+      persistence of a real CRT spectrum display, leaving warm ghost-traces of strong signals.</p>
+      <p>Each station type synthesizes sound differently from WebAudio primitives:</p>
+      <ul style="color:var(--cream-dim);padding-left:20px;margin-bottom:1em;line-height:1.9;font-size:.85rem">
+        <li><strong>Buzz / Voice (MDZhB)</strong>: 50 Hz square wave through bandpass filter + formant synthesis for occasional voice bursts</li>
+        <li><strong>Interval signal</strong>: Precisely-timed sine oscillators at melodic intervals, scheduled with AudioContext time</li>
+        <li><strong>Numbers (HM01)</strong>: Formant tones at vowel-characteristic frequencies, cycled digit-by-digit</li>
+        <li><strong>Morse (E03)</strong>: 700 Hz oscillator with gain envelope keyed to the dot/dash schedule</li>
+      </ul>
+
+      <div class="code-block">
+        <pre><span class="tok-comment">// Phosphor-persistence waterfall — real code from main.js
+// Each frame: decay existing rows toward bakelite floor, then
+// prepend a new computed spectrum row at y=0.</span>
+
+<span class="tok-keyword">const</span> PHOSPHOR_DECAY = <span class="tok-num">0.86</span>; <span class="tok-comment">// per-frame retention</span>
+
+addRow() {
+  <span class="tok-keyword">const</span> floorR = <span class="tok-num">14</span>, floorG = <span class="tok-num">15</span>, floorB = <span class="tok-num">17</span>; <span class="tok-comment">// #0e0f11 decomposed</span>
+
+  <span class="tok-comment">// Decay all existing pixels toward the bakelite background</span>
+  <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> i = <span class="tok-num">0</span>; i &lt; W * H * <span class="tok-num">4</span>; i += <span class="tok-num">4</span>) {
+    pixels[i]   = Math.round(floorR + (pixels[i]   - floorR) * PHOSPHOR_DECAY);
+    pixels[i+<span class="tok-num">1</span>] = Math.round(floorG + (pixels[i+<span class="tok-num">1</span>] - floorG) * PHOSPHOR_DECAY);
+    pixels[i+<span class="tok-num">2</span>] = Math.round(floorB + (pixels[i+<span class="tok-num">2</span>] - floorB) * PHOSPHOR_DECAY);
+  }
+
+  <span class="tok-comment">// Shift existing content down one row</span>
+  pixels.copyWithin(W * <span class="tok-num">4</span>, <span class="tok-num">0</span>, (H - <span class="tok-num">1</span>) * W * <span class="tok-num">4</span>);
+
+  <span class="tok-comment">// Write new top row from simulated spectrum</span>
+  <span class="tok-keyword">for</span> (<span class="tok-keyword">let</span> x = <span class="tok-num">0</span>; x &lt; W; x++) {
+    <span class="tok-keyword">const</span> freq = freqLo + (x / W) * (freqHi - freqLo);
+    <span class="tok-keyword">const</span> db   = this._getSpectrumAt(freq, t);    <span class="tok-comment">// noise + station peaks</span>
+    <span class="tok-keyword">const</span> [r, g, b] = dbToColor(db);               <span class="tok-comment">// maps -95..0 dBFS to RGB</span>
+    pixels[x * <span class="tok-num">4</span>] = r; pixels[x * <span class="tok-num">4</span> + <span class="tok-num">1</span>] = g; pixels[x * <span class="tok-num">4</span> + <span class="tok-num">2</span>] = b;
+  }
+  this.ctx.putImageData(this.imageData, <span class="tok-num">0</span>, <span class="tok-num">0</span>);
+}</pre>
+      </div>
+
+      <div class="code-block" style="margin-top:16px">
+        <pre><span class="tok-comment">// Formant synthesis — voice-like sound from oscillators alone
+// A sawtooth fundamental drives two bandpass filters at
+// characteristic vowel formant frequencies. An LFO adds vibrato.</span>
+
+_playFormantPhrase(gain, text, onDone) {
+  <span class="tok-keyword">const</span> vowelForms = [
+    { f1: <span class="tok-num">730</span>, f2: <span class="tok-num">1090</span> }, <span class="tok-comment">// vowel A</span>
+    { f1: <span class="tok-num">300</span>, f2: <span class="tok-num">870</span>  }, <span class="tok-comment">// vowel E</span>
+    { f1: <span class="tok-num">270</span>, f2: <span class="tok-num">2290</span> }, <span class="tok-comment">// vowel I</span>
+  ];
+  <span class="tok-keyword">const</span> fund = ctx.createOscillator(); fund.type = <span class="tok-string">'sawtooth'</span>;
+  <span class="tok-keyword">const</span> f1 = ctx.createBiquadFilter();
+  f1.type = <span class="tok-string">'bandpass'</span>; f1.Q.value = <span class="tok-num">6</span>;
+  <span class="tok-keyword">const</span> f2 = ctx.createBiquadFilter();
+  f2.type = <span class="tok-string">'bandpass'</span>; f2.Q.value = <span class="tok-num">5</span>;
+  <span class="tok-comment">// morph formants per syllable, gaining and releasing for
+  // a word-like rhythm — zero samples, pure oscillator math</span>
+}</pre>
+      </div>
+    </section>
+
+    <!-- CRITIQUE PASSES -->
+    <section class="guide-section">
+      <p class="section-label">ITERATION PASSES — WHAT THE CRITIQUE FOUND</p>
+      <h2>Three passes, honest findings</h2>
+
+      <div class="pass-list">
+
+        <div class="pass-card">
+          <div class="pass-header">
+            <span class="pass-num">PASS 1</span>
+            <span class="pass-title">Initial build critique</span>
+            <span class="pass-upgrade">+ Upgrade: phosphor amber persistence</span>
+          </div>
+          <div class="pass-body">
+            <ul>
+              <li><strong>Tuning band left edge clipped</strong>: The "3 MHz" label at the far left was showing only "MHz" — <code>textAlign:center</code> at x=0 pushed half the text offscreen. Fixed with edge-detection and clamped alignment.</li>
+              <li><strong>Mobile band labels crushed</strong>: At 390px, labels printed every 1 MHz resulting in collisions. Fixed by scaling step to 2 MHz and adding a minimum spacing check.</li>
+              <li><strong>OFF-state waterfall too empty</strong>: The power-off canvas was near-pure black. Made it render visible TV-snow static with warm brightness spikes.</li>
+              <li><strong>Signal meter labels clipped right</strong>: "+60" dB label overflowed the 200px canvas. Widened canvas to 240×110 and tightened the arc geometry.</li>
+              <li><strong>Complexity upgrade</strong>: Added phosphor-persistence decay — each waterfall row fades through bakelite-tone warmth rather than cutting to black, producing the amber ghost-trails of a real CRT spectrum analyzer.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pass-card">
+          <div class="pass-header">
+            <span class="pass-num">PASS 2</span>
+            <span class="pass-title">Layout and polish critique</span>
+            <span class="pass-upgrade">+ Upgrade: animated station diamond markers</span>
+          </div>
+          <div class="pass-body">
+            <ul>
+              <li><strong>Tuning band right edge still cut</strong>: "18 MHz" clipped to just "18" at the rightmost pixel. Rewrote label rendering to right-align with short form at the edge.</li>
+              <li><strong>Waterfall freq labels overlapped POWER OFF message</strong>: The labels strip was positioned as an absolute overlay inside the bezel div, competing with the instructional message. Moved it to a separate element below the bezel entirely.</li>
+              <li><strong>Transmission panel empty state felt prose-like</strong>: A plain sentence in a technical instrument looks wrong. Replaced with monospaced instrument readout: "SQUELCH ACTIVE · NO SIGNAL DETECTED".</li>
+              <li><strong>Mobile controls meter awkward</strong>: Full-width meter below three small knobs left a visual gap. Improved alignment and centering of meter canvas within its bay.</li>
+              <li><strong>Complexity upgrade</strong>: Station diamond markers on the tuning band now animate with a breathing pulse — morse stations pulse fast (8 Hz), buzz stations breathe slowly (2 Hz), interval signals at 5 Hz. The glow effect uses <code>shadowBlur</code> modulated by a sine wave keyed to each station type.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pass-card">
+          <div class="pass-header">
+            <span class="pass-num">PASS 3</span>
+            <span class="pass-title">Final verification</span>
+            <span class="pass-upgrade">+ Upgrade: phosphor warm-up sequence</span>
+          </div>
+          <div class="pass-body">
+            <ul>
+              <li><strong>Pulsing station markers confirmed</strong>: The diamond markers animate correctly in the live render — fast morse pulse visible as rapid flicker, slow buzz as a gentle breathe.</li>
+              <li><strong>Waterfall label strip clean</strong>: "5.00M 6.00M 7.00M..." strip now sits cleanly between the bezel bottom edge and the tuning scale, no overlap with POWER OFF message.</li>
+              <li><strong>Zero console errors confirmed</strong>: Three full viewport/scroll passes across both desktop and mobile, no JS errors or page errors.</li>
+              <li><strong>Prefers-reduced-motion verified</strong>: All animations suppressed cleanly — the waterfall renders a static frame, station diamonds lose their pulse, badge dot loses its blink. The page is fully readable and composed without motion.</li>
+              <li><strong>Complexity upgrade</strong>: Power-on sequence now plays a phosphor warm-up flash — CSS keyframe on <code>.active</code> waterfall fires a <code>filter:brightness</code> sequence (dark → overexposed flash → dim → settle) mimicking a CRT screen coming to life. Duration: 0.6 seconds, respects prefers-reduced-motion.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE NOTE -->
+    <section class="guide-section">
+      <p class="section-label">TECHNICAL NOTES</p>
+      <h2>What proved the brief</h2>
+      <p>The brief said: <em>prove sound design from raw oscillators, zero samples</em>. The
+      formant synthesis is the proof. By routing a sawtooth oscillator through two bandpass
+      filters at F1/F2 vowel frequencies (730/1090 Hz for "A", 300/870 Hz for "E", 270/2290
+      Hz for "I") and modulating the gain with a per-syllable envelope, the result is
+      unambiguously voice-like. Not intelligible speech — but uncanny.</p>
+      <p>The morse code scheduler uses <code>AudioContext.currentTime</code> for precise timing.
+      Dot = 80ms, dash = 240ms, gap = 80ms, char-gap = 240ms. Fifteen words per minute.
+      The gain envelope uses <code>setTargetAtTime</code> for the attack and release, keeping
+      edges sharp without clicking.</p>
+      <p>The waterfall draws ~12 rows per second using an ImageData pixel buffer manipulated
+      directly. The <code>copyWithin</code> typed-array call shifts all rows without allocation.
+      At 900×200 px and DPR cap at 2, it runs comfortably within the 16ms frame budget.</p>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+    <a href="../">← Receiver</a>
+  </footer>
+</body>
+</html>
