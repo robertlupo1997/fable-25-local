@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tempo — A Polyrhythm Observatory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="wordmark" aria-label="Tempo">Tempo</span>
+      <button id="audio-toggle" class="audio-btn" aria-label="Enable audio (currently muted)" aria-pressed="false">
+        <svg class="icon-muted" aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M3 7.5H6.5L11 4v12l-4.5-3.5H3V7.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          <line x1="14" y1="7" x2="18" y2="13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="18" y1="7" x2="14" y2="13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <svg class="icon-sound" aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none" style="display:none">
+          <path d="M3 7.5H6.5L11 4v12l-4.5-3.5H3V7.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+          <path d="M14 7.5a4.5 4.5 0 010 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M16 5a7.5 7.5 0 010 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span class="audio-label">Sound off</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- Observatory: the main visualization -->
+    <section class="observatory" aria-label="Polyrhythm visualization">
+      <div class="observatory-intro">
+        <h1 class="display-title">Three&thinsp;&middot;&thinsp;Four&thinsp;&middot;&thinsp;Five</h1>
+        <p class="lede">A polyrhythm observatory after Steve Reich</p>
+      </div>
+
+      <div class="canvas-wrap" role="img" aria-label="Concentric rings of orbiting dots representing rhythms of 3, 4, and 5 beats per cycle">
+        <canvas id="canvas" aria-hidden="true"></canvas>
+        <!-- Reduced-motion static diagram -->
+        <svg class="static-diagram" aria-hidden="true" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="160" cy="160" r="115" stroke="#191714" stroke-opacity=".15" stroke-width="1"/>
+          <circle cx="160" cy="160" r="78" stroke="#191714" stroke-opacity=".15" stroke-width="1"/>
+          <circle cx="160" cy="160" r="44" stroke="#191714" stroke-opacity=".15" stroke-width="1"/>
+          <!-- 3 dots on outer ring at 0°, 120°, 240° -->
+          <circle cx="160" cy="45" r="7" fill="#c4843a"/>
+          <circle cx="259.6" cy="215" r="7" fill="#c4843a"/>
+          <circle cx="60.4" cy="215" r="7" fill="#c4843a"/>
+          <!-- 4 dots on middle ring at 0°, 90°, 180°, 270° -->
+          <circle cx="160" cy="82" r="6" fill="#2aad80"/>
+          <circle cx="238" cy="160" r="6" fill="#2aad80"/>
+          <circle cx="160" cy="238" r="6" fill="#2aad80"/>
+          <circle cx="82" cy="160" r="6" fill="#2aad80"/>
+          <!-- 5 dots on inner ring at 0°, 72°, 144°, 216°, 288° -->
+          <circle cx="160" cy="116" r="5" fill="#7060d0"/>
+          <circle cx="201.8" cy="128.5" r="5" fill="#7060d0"/>
+          <circle cx="186.9" cy="172.7" r="5" fill="#7060d0"/>
+          <circle cx="133.1" cy="172.7" r="5" fill="#7060d0"/>
+          <circle cx="118.2" cy="128.5" r="5" fill="#7060d0"/>
+          <!-- Center dot -->
+          <circle cx="160" cy="160" r="3" fill="#191714" fill-opacity=".4"/>
+          <!-- Labels -->
+          <text x="55" y="50" font-family="Rubik,sans-serif" font-size="11" fill="#191714" fill-opacity=".5">3</text>
+          <text x="90" y="87" font-family="Rubik,sans-serif" font-size="11" fill="#191714" fill-opacity=".5">4</text>
+          <text x="124" y="120" font-family="Rubik,sans-serif" font-size="11" fill="#191714" fill-opacity=".5">5</text>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <button id="play-pause" class="btn-play" aria-label="Play polyrhythm (currently paused)">
+          <span class="play-glyph" aria-hidden="true">▶</span>
+          <span id="play-label">Play</span>
+        </button>
+
+        <div class="control-row">
+          <div class="control-cell">
+            <label class="ctrl-label" for="speed-slider">Speed
+              <output id="speed-display" for="speed-slider" class="ctrl-value">slow</output>
+            </label>
+            <input type="range" id="speed-slider" class="range-input" min="6" max="48" value="16" aria-label="Cycle speed">
+          </div>
+
+          <div class="control-cell">
+            <span class="ctrl-label">Voices</span>
+            <div class="voice-grid" role="group" aria-label="Voice count selection">
+              <button class="voice-btn active" data-n="3" aria-pressed="true">3</button>
+              <button class="voice-btn active" data-n="4" aria-pressed="true">4</button>
+              <button class="voice-btn active" data-n="5" aria-pressed="true">5</button>
+              <button class="voice-btn" data-n="6" aria-pressed="false">6</button>
+              <button class="voice-btn" data-n="7" aria-pressed="false">7</button>
+            </div>
+          </div>
+
+          <div class="control-cell">
+            <button id="view-toggle" class="btn-view" aria-pressed="false">Polygon view</button>
+          </div>
+
+          <div class="control-cell">
+            <button id="unison-btn" class="btn-unison" aria-pressed="false" title="Lock all voices into unison alignment">Unison</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Phase shift section -->
+    <section class="phase-section">
+      <div class="section-inner">
+        <div class="phase-text">
+          <h2>The Drift</h2>
+          <p>Reich's signature move: pull one voice barely out of phase. The ghost rhythms that emerge &mdash; accents that appear and vanish, phrases no performer intended &mdash; are what he called <em>phase music.</em></p>
+        </div>
+        <div class="phase-ctrl">
+          <label class="ctrl-label" for="phase-slider">
+            Voice 1 phase offset
+            <output id="phase-display" for="phase-slider" class="ctrl-value">0°</output>
+          </label>
+          <input type="range" id="phase-slider" class="range-input range-wide" min="-180" max="180" value="0">
+          <button id="phase-reset" class="btn-link">Reset to zero</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About / editorial -->
+    <section class="about-section">
+      <div class="section-inner about-grid">
+        <div class="about-col">
+          <h2>On rhythm and time</h2>
+          <p>When independent rhythms cycle at ratios of 3 to 4 to 5, the beats never fully align &mdash; except at the precise beginning and end of every sixty-unit period. In between, their interference creates patterns: accents that migrate across the measure, silences that breathe in unexpected places, phrases that emerge from the mathematics rather than from any single performer's intention.</p>
+          <p>The composer Steve Reich encountered this while working with tape loops in the 1960s. He aligned two identical recordings, then let one drift. The music that resulted from that drift &mdash; not composed, only initiated &mdash; changed his career and, ultimately, the way a generation came to listen.</p>
+          <p class="pullquote">"I don't push the music, I set it in motion and listen to where it goes."</p>
+        </div>
+        <div class="about-col">
+          <h3>Conducting the observatory</h3>
+          <ul class="instructions">
+            <li>Enable sound above, then press <strong>Play</strong>.</li>
+            <li>Add voices 6 and 7 to deepen the texture.</li>
+            <li>Drag the phase slider to hear the drift that Reich discovered.</li>
+            <li>Switch to <strong>Polygon view</strong> to see how rhythmic ratios inscribe geometry.</li>
+            <li>Wait for the moment all voices align at once &mdash; the universe clicks into unison.</li>
+          </ul>
+          <div class="voice-key" aria-label="Voice color key">
+            <div class="key-row"><span class="key-dot" style="background:#c4843a"></span><span>3 beats — amber</span></div>
+            <div class="key-row"><span class="key-dot" style="background:#2aad80"></span><span>4 beats — teal</span></div>
+            <div class="key-row"><span class="key-dot" style="background:#7060d0"></span><span>5 beats — violet</span></div>
+            <div class="key-row"><span class="key-dot" style="background:#bf6820"></span><span>6 beats — sienna</span></div>
+            <div class="key-row"><span class="key-dot" style="background:#2470c8"></span><span>7 beats — blue</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="credit">Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

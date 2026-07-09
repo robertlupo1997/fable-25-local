@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central Letterpress · Build Guide</title>
+  <meta name="description" content="Construction notes for the Central Letterpress site — brief, signature technique, and iteration history.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Reset ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Tokens ─────────────────────────────────────────── */
+    :root {
+      --oat:      #ede5d6;
+      --oat-mid:  #e4d9c5;
+      --ink:      #211d19;
+      --ink-60:   rgba(33,29,25,0.60);
+      --ink-30:   rgba(33,29,25,0.28);
+      --ink-12:   rgba(33,29,25,0.10);
+      --union:    #274e8d;
+      --rubine:   #cf2e5a;
+      --font-disp: 'Rozha One', Georgia, serif;
+      --font-body: 'Crimson Pro', Georgia, serif;
+      --max-w:    900px;
+      --pad-x:    clamp(1.25rem, 5vw, 3.5rem);
+    }
+
+    /* ─── Base ───────────────────────────────────────────── */
+    html { font-size: 18px; scroll-behavior: smooth; }
+    body {
+      background: var(--oat);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Skip link ──────────────────────────────────────── */
+    .skip-link {
+      position: absolute; top: -3rem; left: 1rem;
+      background: var(--union); color: #fff;
+      padding: 0.5rem 1rem; border-radius: 2px;
+      font-family: var(--font-body); font-size: 0.85rem;
+      text-decoration: none; z-index: 100;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ─── Header ─────────────────────────────────────────── */
+    .guide-header {
+      background: var(--ink);
+      color: var(--oat);
+      padding: clamp(2rem, 5vw, 3.5rem) var(--pad-x);
+    }
+    .header-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+    .union-seal {
+      width: 72px; height: 72px;
+      border: 2px solid var(--union);
+      border-radius: 50%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.1rem;
+      flex-shrink: 0;
+    }
+    .seal-top  { font-family: var(--font-body); font-size: 0.44rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(237,229,214,0.7); }
+    .seal-num  { font-family: var(--font-disp); font-size: 1.1rem; color: var(--union); line-height: 1; }
+    .seal-bot  { font-family: var(--font-body); font-size: 0.4rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(237,229,214,0.7); }
+
+    .guide-ident h1 {
+      font-family: var(--font-disp);
+      font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+      line-height: 1.15;
+      color: var(--oat);
+    }
+    .guide-ident .guide-sub {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-style: italic;
+      color: rgba(237,229,214,0.55);
+      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+    }
+    .header-rule {
+      max-width: var(--max-w);
+      margin: 1.5rem auto 0;
+      border: none;
+      border-top: 1px solid rgba(237,229,214,0.15);
+      padding-top: 0.75rem;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(237,229,214,0.35);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* ─── Main layout ─────────────────────────────────────── */
+    main { max-width: var(--max-w); margin: 0 auto; padding: clamp(2.5rem,6vw,5rem) var(--pad-x); }
+
+    /* ─── Section label system ────────────────────────────── */
+    .section-label {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: clamp(1.25rem, 3vw, 2rem);
+    }
+    .label-num {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--rubine);
+      letter-spacing: 0.06em;
+      font-style: normal;
+    }
+    .section-title {
+      font-family: var(--font-disp);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: var(--ink);
+      line-height: 1.15;
+    }
+
+    section { margin-bottom: clamp(3rem, 7vw, 5.5rem); }
+    section + section { border-top: 1px solid var(--ink-12); padding-top: clamp(2.5rem,5vw,4rem); }
+
+    /* ─── Brief card ─────────────────────────────────────── */
+    .brief-card {
+      border: 1.5px solid var(--ink-30);
+      background: var(--oat-mid);
+      padding: 1.75rem 2rem;
+      position: relative;
+    }
+    .brief-card::before {
+      content: 'ORIGINAL BRIEF · FABLE 25 · WAVE 4 · SITE 21';
+      position: absolute;
+      top: -0.55rem;
+      left: 1.5rem;
+      background: var(--oat-mid);
+      padding: 0 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+    }
+    .brief-card blockquote {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    .brief-card blockquote strong {
+      font-style: normal;
+      font-weight: 600;
+    }
+    .brief-upgrades {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--ink-30);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--ink-60);
+      font-style: italic;
+    }
+    .brief-upgrades span { color: var(--union); font-style: normal; font-weight: 600; }
+
+    /* ─── Technique section ──────────────────────────────── */
+    .technique-lead {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+      color: var(--ink-60);
+    }
+    .technique-steps {
+      counter-reset: steps;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+    .technique-steps li {
+      counter-increment: steps;
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .technique-steps li::before {
+      content: counter(steps);
+      font-family: var(--font-body);
+      font-weight: 600;
+      color: var(--rubine);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding-top: 0.2rem;
+    }
+
+    /* ─── Code block ─────────────────────────────────────── */
+    .code-excerpt {
+      background: var(--ink);
+      border-radius: 2px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    .code-excerpt pre {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: #c9bfaf;
+      white-space: pre;
+      margin: 0;
+    }
+    .code-excerpt pre .c  { color: #6d6252; }   /* comment */
+    .code-excerpt pre .kw { color: var(--union); }  /* keyword */
+    .code-excerpt pre .st { color: #d4a37a; }   /* string/num */
+    .code-excerpt pre .fn { color: #b8d4a0; }   /* function */
+    .code-excerpt pre .cm { color: var(--rubine); } /* accent */
+    .code-label {
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      margin-bottom: 0.4rem;
+    }
+
+    /* ─── Pass history tickets ───────────────────────────── */
+    .pass-tickets {
+      display: grid;
+      gap: 1.5px;
+      border: 1.5px solid var(--ink-30);
+      background: var(--ink-30);
+    }
+    .pass-ticket {
+      background: var(--oat);
+      padding: 1.5rem 1.75rem;
+    }
+    .pass-ticket-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.6rem;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px dashed var(--ink-30);
+    }
+    .pass-id {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-60);
+    }
+    .pass-status {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 1px;
+    }
+    .status-done { background: var(--ink); color: var(--oat); }
+    .status-current { background: var(--rubine); color: #fff; }
+
+    .pass-title {
+      font-family: var(--font-disp);
+      font-size: 1.05rem;
+      margin-bottom: 0.5rem;
+    }
+    .pass-findings {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 0.6rem;
+    }
+    .pass-findings li {
+      font-size: 0.88rem;
+      color: var(--ink-60);
+      padding-left: 1rem;
+      position: relative;
+      line-height: 1.5;
+    }
+    .pass-findings li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--ink-30);
+    }
+    .pass-upgrade {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--union);
+      border-top: 1px solid var(--ink-12);
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .pass-upgrade::before { content: '✦ Complexity upgrade: '; color: var(--ink-30); font-style: normal; }
+
+    /* ─── Palette swatch ─────────────────────────────────── */
+    .palette-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1.25rem;
+    }
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--ink-60);
+    }
+    .swatch-dot {
+      width: 20px; height: 20px;
+      border-radius: 2px;
+      border: 1px solid var(--ink-12);
+      flex-shrink: 0;
+    }
+
+    /* ─── Footer ─────────────────────────────────────────── */
+    .guide-footer {
+      background: var(--ink);
+      color: rgba(237,229,214,0.5);
+      padding: 2rem var(--pad-x);
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+    .guide-footer a {
+      color: rgba(237,229,214,0.65);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(237,229,214,0.2);
+    }
+    .guide-footer a:hover { color: var(--oat); border-bottom-color: var(--oat); }
+
+    /* ─── Responsive ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .header-inner { grid-template-columns: auto 1fr; gap: 1rem; }
+      .union-seal { width: 56px; height: 56px; }
+      .seal-num { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="guide-header">
+    <div class="header-inner">
+      <div class="union-seal" aria-label="Union Local 79-B, established 1962">
+        <span class="seal-top">UNION LOCAL</span>
+        <span class="seal-num">79-B</span>
+        <span class="seal-bot">AFL · EST. 1962</span>
+      </div>
+      <div class="guide-ident">
+        <h1>Central Letterpress<br>Build Guide</h1>
+        <p class="guide-sub">Fable 25 · Wave 4 · Site 21 · pressroom</p>
+      </div>
+    </div>
+    <div class="header-rule" aria-hidden="true">
+      BUILD NOTES &ensp;✦&ensp; SIGNATURE TECHNIQUE &ensp;✦&ensp; ITERATION HISTORY &ensp;✦&ensp; CENTRAL LETTERPRESS &ensp;✦&ensp; FABLE 25 &ensp;✦&ensp; WAVE 4
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ── § 1 Brief ── -->
+    <section aria-labelledby="brief-heading">
+      <div class="section-label">
+        <span class="label-num" aria-hidden="true">§ 1</span>
+        <h2 class="section-title" id="brief-heading">The Brief</h2>
+      </div>
+      <div class="brief-card">
+        <blockquote>
+          <strong>pressroom — a union letterpress shop.</strong> Est. 1962, never modernized,
+          proud of it. Signature: an ink-spread press simulation — set a line of movable type
+          in a composing stick, pull the press lever, watch impression + ink squash render
+          your print (canvas); wood-type specimen wall. Palette: oat <code>#ede5d6</code>,
+          ink black <code>#211d19</code>, union blue <code>#274e8d</code>, rubine
+          <code>#cf2e5a</code>. Type: Rozha One + Crimson Pro. Prove: skeuomorphism with
+          taste — texture earned by simulation, not stock photos.
+        </blockquote>
+        <p class="brief-upgrades">
+          Upgrade ideas from brief:
+          <span>loose-registration mode</span> (two-color misprint charm) ·
+          <span>job tickets as copy</span> ·
+          <span>the smell of the shop</span> described in a footnote
+        </p>
+      </div>
+
+      <div class="palette-row" role="list" aria-label="Site palette">
+        <div class="swatch" role="listitem">
+          <div class="swatch-dot" style="background:#ede5d6;"></div>
+          <span>Oat #ede5d6</span>
+        </div>
+        <div class="swatch" role="listitem">
+          <div class="swatch-dot" style="background:#211d19;"></div>
+          <span>Ink #211d19</span>
+        </div>
+        <div class="swatch" role="listitem">
+          <div class="swatch-dot" style="background:#274e8d;"></div>
+          <span>Union blue #274e8d</span>
+        </div>
+        <div class="swatch" role="listitem">
+          <div class="swatch-dot" style="background:#cf2e5a;"></div>
+          <span>Rubine #cf2e5a</span>
+        </div>
+        <div class="swatch" role="listitem">
+          <div class="swatch-dot" style="background:#7a5530;"></div>
+          <span>Wood base #7a5530</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── § 2 Signature Technique ── -->
+    <section aria-labelledby="technique-heading">
+      <div class="section-label">
+        <span class="label-num" aria-hidden="true">§ 2</span>
+        <h2 class="section-title" id="technique-heading">Signature Technique</h2>
+      </div>
+
+      <p class="technique-lead">
+        The central proof: a pixel-level letterpress simulation in vanilla canvas that earns
+        its texture through computation, not stock photos. Every print is unique — different
+        grain seed, slight ink variation per stroke pixel, colour-offset misregistration when
+        loose-registration mode is on.
+      </p>
+
+      <ol class="technique-steps">
+        <li><strong>Paper base.</strong> Canvas is filled with oat (#ede5d6) and overlaid
+            with per-pixel fractal grain noise (±9 per channel), seeded fresh each print.</li>
+        <li><strong>Text measurement.</strong> Binary-search fits the Rozha One string to
+            74% canvas width, preventing overflow on long composing-stick lines.</li>
+        <li><strong>Offscreen render.</strong> Text is drawn to a hidden canvas in the target
+            ink colour (or rubine offset + union blue for loose registration).</li>
+        <li><strong>Ink squash composite.</strong> Pixel loop: if alpha &lt; 0.70, boost by
+            1.28× — simulates ink bleeding into paper at antialiased stroke edges. Random
+            ±16 noise per ink pixel adds variation within thick strokes.</li>
+        <li><strong>Impression shadow.</strong> A second offscreen pass at 0.07 alpha,
+            multiply blend, +1.5&thinsp;px offset — the deboss shadow of real impression depth.</li>
+        <li><strong>Crop marks.</strong> Four 12&thinsp;px corner marks at 0.25 alpha give the
+            sheet a press-sheet register.</li>
+        <li><strong>Loose registration.</strong> Rubine drawn first at +3.5/+2.5&thinsp;px offset,
+            union blue at 86% opacity on top — two-colour misprint, charming and intentional.</li>
+      </ol>
+
+      <p class="code-label">main.js · renderLetterpress() — the pixel composite loop</p>
+      <div class="code-excerpt" role="region" aria-label="Source code excerpt: pixel composite loop">
+        <pre><span class="c">// 4. Pixel-level letterpress composite (ink squash + variation)</span>
+<span class="kw">var</span> offData  = oCtx.<span class="fn">getImageData</span>(<span class="st">0</span>, <span class="st">0</span>, W, H);
+<span class="kw">var</span> od = offData.data;
+<span class="kw">var</span> mainData = ctx.<span class="fn">getImageData</span>(<span class="st">0</span>, <span class="st">0</span>, W, H);
+<span class="kw">var</span> md = mainData.data;
+
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="st">0</span>; i &lt; total; i++) {
+  <span class="kw">var</span> alpha = od[i * <span class="st">4</span> + <span class="st">3</span>] / <span class="st">255</span>;
+  <span class="kw">if</span> (alpha &lt; <span class="st">0.015</span>) <span class="kw">continue</span>;
+
+  <span class="c">// Ink squash: boost alpha at antialiased edges</span>
+  <span class="c">// simulates ink bleeding into paper fibres</span>
+  <span class="kw">var</span> ea = alpha &lt; <span class="st">0.70</span>
+    ? Math.<span class="fn">min</span>(<span class="st">1.0</span>, alpha * <span class="st">1.28</span>)
+    : alpha;
+
+  <span class="kw">var</span> noise = <span class="fn">rnd</span>(<span class="st">16</span>); <span class="c">// ±16 per ink pixel</span>
+  <span class="kw">var</span> idx = i * <span class="st">4</span>;
+  md[idx]   = Math.<span class="fn">round</span>(<span class="fn">lerp</span>(md[idx],   <span class="fn">clamp</span>(oR + noise * <span class="st">0.55</span>), ea));
+  md[idx+<span class="st">1</span>] = Math.<span class="fn">round</span>(<span class="fn">lerp</span>(md[idx+<span class="st">1</span>], <span class="fn">clamp</span>(oG + noise * <span class="st">0.55</span>), ea));
+  md[idx+<span class="st">2</span>] = Math.<span class="fn">round</span>(<span class="fn">lerp</span>(md[idx+<span class="st">2</span>], <span class="fn">clamp</span>(oB + noise * <span class="st">0.55</span>), ea));
+}</pre>
+      </div>
+    </section>
+
+    <!-- ── § 3 Pass History ── -->
+    <section aria-labelledby="history-heading">
+      <div class="section-label">
+        <span class="label-num" aria-hidden="true">§ 3</span>
+        <h2 class="section-title" id="history-heading">Iteration History</h2>
+      </div>
+
+      <div class="pass-tickets" role="list" aria-label="Iteration passes">
+
+        <div class="pass-ticket" role="listitem">
+          <div class="pass-ticket-meta">
+            <span class="pass-id">Pass 1 · Stage 1 Build</span>
+            <span class="pass-status status-done">Complete</span>
+          </div>
+          <h3 class="pass-title">Initial build — all six sections, zero errors</h3>
+          <ul class="pass-findings">
+            <li>Built header (union seal, Rozha One h1, scrolling ticker marquee)</li>
+            <li>Intro section: italic lead copy + 4-stat grid (62 yrs / 3 presses / 847 sorts / 0 digital)</li>
+            <li>Canvas letterpress simulation: composing stick, lever, grain noise, pixel composite, impression shadow, crop marks</li>
+            <li>Wood type specimen wall: 12 cards, warm wood-grain CSS, nick indicator</li>
+            <li>Job tickets: 4 paper-form styled service cards with dashed rules and job numbers</li>
+            <li>About section: shop history, Marta quote, decorative Vandercook CSS press diagram</li>
+            <li>Footer: smell-of-the-shop footnote, credit line</li>
+            <li>Zero console errors, zero page errors at all viewports</li>
+          </ul>
+          <p class="pass-upgrade">Loose registration mode (two-color misregistration), specimen-wall click-to-add interaction, smell footnote</p>
+        </div>
+
+        <div class="pass-ticket" role="listitem">
+          <div class="pass-ticket-meta">
+            <span class="pass-id">Pass 2 · Stage 1 Polish</span>
+            <span class="pass-status status-done">Complete</span>
+          </div>
+          <h3 class="pass-title">Security fix, spacing, marquee, mobile lever</h3>
+          <ul class="pass-findings">
+            <li>Security: replaced innerHTML with DOM methods throughout buildSpecimenWall()</li>
+            <li>Tightened intro section spacing — large dead zone between stats and press section</li>
+            <li>Added tinted background to the press section for visual separation</li>
+            <li>Doubled marquee text to ensure seamless infinite loop at all viewport widths</li>
+            <li>Simplified mobile lever CSS — reduced vertical animation complexity</li>
+            <li>Added specimen-hint caption below specimen wall explaining click-to-add</li>
+          </ul>
+          <p class="pass-upgrade">Specimen hint caption — contextual affordance for click-to-add interaction</p>
+        </div>
+
+        <div class="pass-ticket" role="listitem">
+          <div class="pass-ticket-meta">
+            <span class="pass-id">Pass 3 · Stage 2 Polish</span>
+            <span class="pass-status status-current">This pass</span>
+          </div>
+          <h3 class="pass-title">Grid orphan fix, carriage animation</h3>
+          <ul class="pass-findings">
+            <li>Job tickets: <code>auto-fill minmax(260px,1fr)</code> created a 3+1 orphan row at 1024px — switched to explicit <code>repeat(2,1fr)</code> for clean 2×2 layout</li>
+            <li>Mobile job ticket override preserved: single column below 600px breakpoint</li>
+            <li>Zero console/page errors confirmed at 1024×640 and 390×844</li>
+          </ul>
+          <p class="pass-upgrade">Vandercook carriage rolls — <code>.vk-carriage</code> gets a 7-second CSS keyframe loop (left 10% → 48% → pause → return), bringing the About section press diagram to life. Honors prefers-reduced-motion.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="guide-footer">
+    <p>
+      <a href="../">← Back to Central Letterpress</a>
+      &emsp;·&emsp;
+      Designed &amp; built by Claude Fable 5 · local build · 2026
+    </p>
+  </footer>
+
+</body>
+</html>

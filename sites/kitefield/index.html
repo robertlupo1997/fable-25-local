@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitefield — Annual Kite Festival · Bramblefell Meadow</title>
+  <meta name="description" content="Every June, the meadow becomes the sky's living room. Bramblefell Kite Festival — bringing 200 kites aloft since 1978.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <!-- ─── Hero ─────────────────────────────────────────────────────────── -->
+  <section id="hero" aria-label="Kitefield — live kite simulation">
+    <canvas id="sky" aria-hidden="true"></canvas>
+
+    <!-- Overlay: festival identity -->
+    <div class="hero-identity" aria-hidden="true">
+      <div class="hero-eyebrow">Est. 1978 · Bramblefell Meadow</div>
+      <h1 class="hero-title">Kite&shy;field</h1>
+      <div class="hero-sub">Annual Summer Festival<br>Last Weekend in June</div>
+    </div>
+
+    <!-- Overlay: flight hint -->
+    <p class="flight-hint" id="flight-hint" aria-hidden="true">
+      Move your cursor to guide your kite
+    </p>
+
+    <!-- Wind sock widget label -->
+    <div class="windsock-label" aria-live="polite" id="wind-label"></div>
+
+    <!-- Scroll cue -->
+    <div class="scroll-cue" aria-hidden="true">
+      <svg width="20" height="32" viewBox="0 0 20 32" fill="none">
+        <rect x="1" y="1" width="18" height="28" rx="9" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="10" cy="9" r="3" fill="currentColor" class="scroll-dot"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ─── Content ───────────────────────────────────────────────────────── -->
+  <main id="content">
+
+    <!-- Intro -->
+    <section class="section section--intro">
+      <div class="container">
+        <div class="intro-grid">
+          <div class="intro-lede">
+            <p class="lede">Every June, the meadow becomes the sky's living room.</p>
+          </div>
+          <div class="intro-body">
+            <p>Since 1978, the fields above Bramblefell have filled with two hundred kites at once — box kites, delta wings, fighters on invisible strings, and a few contraptions that openly defy categorisation. The festival runs across the last full weekend in June, with free entry to the meadow from first light to last.</p>
+            <p>We are run entirely by volunteers, funded by the flying community, and deeply opposed to any kite with a branded logo on it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Programme -->
+    <section class="section section--programme">
+      <div class="container">
+        <header class="section-header">
+          <span class="eyebrow">Saturday, 28 June</span>
+          <h2>The Day's Programme</h2>
+        </header>
+
+        <div class="programme">
+
+          <div class="programme-block">
+            <div class="programme-time">09:00</div>
+            <div class="programme-detail">
+              <strong>Morning Free-Fly</strong>
+              <p>Open sky, all ages, all kites. The meadow fills from first arrival. No registration required.</p>
+            </div>
+          </div>
+
+          <div class="programme-block">
+            <div class="programme-time">11:30</div>
+            <div class="programme-detail">
+              <strong>Junior Fliers — Longest Tail</strong>
+              <p>Under-14 category. Any material, any design. Measured from nose to tip. Winner takes the Bramblefell Cup.</p>
+            </div>
+          </div>
+
+          <div class="programme-block">
+            <div class="programme-time">13:00</div>
+            <div class="programme-detail">
+              <strong>Lunch Break</strong>
+              <p>Food vendors in the lower meadow. The Hatch serves pulled pork and flatbreads. Kites may remain aloft unattended at your own risk.</p>
+            </div>
+          </div>
+
+          <div class="programme-block">
+            <div class="programme-time">15:00</div>
+            <div class="programme-detail">
+              <strong>Open Category — Bring Your Own Design</strong>
+              <p>The main event. Judged on construction, altitude, and the quality of the flier's conversation.</p>
+            </div>
+          </div>
+
+          <div class="programme-block">
+            <div class="programme-time">17:30</div>
+            <div class="programme-detail">
+              <strong>Synchronised Ballet</strong>
+              <p>Six pilots, one sky, a twelve-minute piece set to Ravel's string quartet. Attendance last year was 1,400. Arrive early.</p>
+            </div>
+          </div>
+
+          <div class="programme-block programme-block--featured">
+            <div class="programme-time">20:00</div>
+            <div class="programme-detail">
+              <strong>Lantern Lift</strong>
+              <p>Lit kites at dusk. The meadow goes quiet. Strings glow. This is the one that makes people return every year.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Bring Your Kit -->
+    <section class="section section--kit">
+      <div class="container">
+        <div class="kit-grid">
+          <header class="kit-header">
+            <span class="eyebrow">Practical Notes</span>
+            <h2>Bring Your Kit</h2>
+          </header>
+          <div class="kit-notes">
+            <ul class="notes-list">
+              <li>Delta kites handle the meadow's crosswind well. Avoid box kites on gusty days — the turbulence behind the ridge makes them unpredictable.</li>
+              <li>String: 80 lb test minimum. The field record holder used 200 metres of 150 lb Dyneema. He also lost the kite.</li>
+              <li>Leave the carbon spars at home if there's any rain in the forecast. Fibreglass is heavier but you'll be glad of it.</li>
+              <li>Dogs are welcome on a lead. The kite fights are not, technically, dogfights.</li>
+              <li>Parking is limited on the access road. The field is a 20-minute walk from Bramblefell station.</li>
+            </ul>
+            <p class="note-aside">The meadow is operated as a nature reserve. Please carry out everything you bring in. String tails found after dark become the festival's problem and yours.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Find Us -->
+    <section class="section section--find">
+      <div class="container">
+        <div class="find-grid">
+          <div class="find-info">
+            <span class="eyebrow">Getting There</span>
+            <h2>The Meadow</h2>
+            <address>
+              Bramblefell Upper Field<br>
+              Heatherton Road<br>
+              BF4 7NN
+            </address>
+            <p>Rail: Bramblefell station, Northern line. 20 minutes on foot via the bridlepath, signposted from the station exit.</p>
+          </div>
+          <div class="find-conditions">
+            <h3>What we watch for</h3>
+            <ul class="conditions-list">
+              <li><span class="cond-label">Wind</span> 10–30 km/h ideal. Below 10 and nothing flies. Above 45 and the field is closed.</li>
+              <li><span class="cond-label">Rain</span> A shower won't stop us. A thunderstorm will. Check the festival account the morning of.</li>
+              <li><span class="cond-label">Visibility</span> Under 2 km: mandatory grounding of all kites above 100 m altitude.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── Footer ────────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-mark">
+        <span class="footer-name">Kitefield</span>
+        <span class="footer-years">1978 — ongoing</span>
+      </div>
+      <p class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

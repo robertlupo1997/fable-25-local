@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNDERTOW — Build Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Overpass:wght@300;400;600&family=Overpass+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --abyss:   #04070d;
+      --copper:  #d1763a;
+      --biolume: #59f2d2;
+      --chart:   #93a7c4;
+      --text:    #dce5ef;
+      --muted:   #6b849e;
+      --surface: #060c15;
+      --surface2:#0a1422;
+      --border:  rgba(147,167,196,0.13);
+      --px: clamp(1.5rem, 5vw, 3.5rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Overpass', system-ui, sans-serif;
+      background: var(--abyss);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    .guide-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem var(--px);
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(4,7,13,.9), transparent);
+      backdrop-filter: blur(6px);
+    }
+    .nav-brand {
+      font-family: 'Krona One', sans-serif;
+      font-size: .72rem; letter-spacing: .28em;
+      color: var(--chart); text-decoration: none;
+    }
+    .nav-label {
+      font-family: 'Krona One', sans-serif;
+      font-size: .55rem; letter-spacing: .2em;
+      color: var(--muted); text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .guide-hero {
+      min-height: 62vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 8rem var(--px) 4rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(209,118,58,.06) 0%, transparent 70%),
+        linear-gradient(to bottom, #06121f 0%, var(--abyss) 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-canvas-bg {
+      position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(147,167,196,.035) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(147,167,196,.035) 60px);
+      pointer-events: none;
+    }
+    .guide-hero-eyebrow {
+      font-family: 'Krona One', sans-serif;
+      font-size: .58rem; letter-spacing: .24em;
+      color: var(--copper); text-transform: uppercase;
+      margin-bottom: 1.4rem; opacity: .8;
+      position: relative;
+    }
+    .guide-hero-title {
+      font-family: 'Krona One', sans-serif;
+      font-size: clamp(2.2rem, 7vw, 5.5rem);
+      line-height: .92; letter-spacing: -.01em;
+      color: var(--text);
+      text-shadow: 0 0 80px rgba(4,7,13,.9);
+      position: relative;
+    }
+    .guide-hero-sub {
+      margin-top: 2rem;
+      font-size: clamp(.85rem, 1.5vw, 1rem);
+      color: var(--muted); max-width: 52ch;
+      position: relative;
+    }
+
+    /* ── LAYOUT ── */
+    .guide-main {
+      max-width: 860px; margin: 0 auto;
+      padding: 5rem var(--px) 6rem;
+      display: flex; flex-direction: column; gap: 4.5rem;
+    }
+
+    /* ── SECTIONS ── */
+    .guide-section-label {
+      font-family: 'Krona One', sans-serif;
+      font-size: .55rem; letter-spacing: .22em;
+      color: var(--copper); text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .guide-section-title {
+      font-family: 'Krona One', sans-serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.6rem);
+      line-height: 1.15; color: var(--text);
+      margin-bottom: 1.5rem; letter-spacing: .02em;
+    }
+    p { max-width: 65ch; }
+    .body-text {
+      font-size: .95rem; color: var(--muted); line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    /* ── BRIEF BLOCK ── */
+    .brief-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--copper);
+      padding: 2rem 2.2rem;
+    }
+    .brief-block blockquote {
+      font-size: .92rem; color: var(--chart); line-height: 1.85;
+      font-style: italic;
+    }
+    .brief-source {
+      display: block; margin-top: 1.1rem;
+      font-family: 'Krona One', sans-serif;
+      font-size: .56rem; letter-spacing: .18em;
+      color: var(--muted); text-transform: uppercase;
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .code-caption {
+      font-family: 'Krona One', sans-serif;
+      font-size: .56rem; letter-spacing: .18em;
+      color: var(--muted); text-transform: uppercase;
+      padding: .9rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    pre {
+      padding: 1.5rem 1.4rem;
+      font-family: 'Overpass Mono', 'Fira Code', monospace;
+      font-size: .78rem; line-height: 1.75;
+      color: var(--chart);
+      white-space: pre;
+      tab-size: 2;
+    }
+    .kw  { color: var(--biolume); }
+    .fn  { color: #a8d8f0; }
+    .num { color: var(--copper); }
+    .cm  { color: var(--muted); opacity: .65; font-style: italic; }
+    .str { color: #b5d99c; }
+
+    /* ── PASS HISTORY ── */
+    .pass-list { display: flex; flex-direction: column; gap: 2.5rem; }
+    .pass-item {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr;
+      gap: 0 1.75rem;
+    }
+    .pass-badge {
+      font-family: 'Krona One', sans-serif;
+      font-size: .6rem; letter-spacing: .2em;
+      color: var(--biolume);
+      background: rgba(89,242,210,.07);
+      border: 1px solid rgba(89,242,210,.2);
+      padding: .3rem .6rem;
+      text-align: center;
+      align-self: start;
+      margin-top: .25rem;
+    }
+    .pass-body {}
+    .pass-title {
+      font-family: 'Krona One', sans-serif;
+      font-size: .9rem; letter-spacing: .04em;
+      color: var(--text); margin-bottom: .6rem;
+    }
+    .pass-finds {
+      list-style: none; display: flex; flex-direction: column; gap: .45rem;
+    }
+    .pass-finds li {
+      font-size: .87rem; color: var(--muted); padding-left: 1.1rem;
+      position: relative;
+    }
+    .pass-finds li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--copper); font-size: .75rem;
+    }
+    .pass-upgrade {
+      margin-top: .9rem;
+      padding: .75rem 1rem;
+      border-left: 2px solid var(--copper);
+      background: rgba(209,118,58,.04);
+    }
+    .pass-upgrade-label {
+      font-family: 'Krona One', sans-serif;
+      font-size: .54rem; letter-spacing: .18em;
+      color: var(--copper); text-transform: uppercase;
+      display: block; margin-bottom: .35rem;
+    }
+    .pass-upgrade p {
+      font-size: .85rem; color: var(--chart);
+    }
+
+    /* ── DECISIONS TABLE ── */
+    .decision-list { display: flex; flex-direction: column; gap: 1.3rem; }
+    .decision-item {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.3rem;
+    }
+    .decision-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .decision-key {
+      font-family: 'Krona One', sans-serif;
+      font-size: .72rem; letter-spacing: .1em;
+      color: var(--text); margin-bottom: .35rem;
+    }
+    .decision-val {
+      font-size: .88rem; color: var(--muted); line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    .guide-footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem var(--px);
+      display: flex; justify-content: space-between; align-items: flex-end;
+      flex-wrap: wrap; gap: 1rem;
+      background: var(--abyss);
+    }
+    .footer-brand {
+      font-family: 'Krona One', sans-serif;
+      font-size: 1.2rem; letter-spacing: .12em;
+      color: var(--muted); opacity: .35;
+    }
+    .footer-credit {
+      font-family: 'Krona One', sans-serif;
+      font-size: .54rem; letter-spacing: .15em;
+      color: var(--muted); opacity: .35;
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      .pass-item { grid-template-columns: 1fr; gap: .75rem; }
+      .guide-footer { flex-direction: column; align-items: flex-start; }
+      .footer-credit { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="guide-nav" aria-label="Guide navigation">
+    <a href="../" class="nav-brand">UNDERTOW</a>
+    <span class="nav-label">Build Guide</span>
+  </nav>
+
+  <!-- HERO -->
+  <header class="guide-hero" role="banner">
+    <div class="hero-canvas-bg" aria-hidden="true"></div>
+    <p class="guide-hero-eyebrow">Fable 25 Local &nbsp;·&nbsp; Site 22</p>
+    <h1 class="guide-hero-title">UNDERTOW<br>Build Guide</h1>
+    <p class="guide-hero-sub">
+      How a bathymetric atlas of fictional seafloor cables was made
+      procedurally — noise functions, particle systems, and a sticky-scroll
+      descent into the abyssal plain.
+    </p>
+  </header>
+
+  <main class="guide-main">
+
+    <!-- ── THE BRIEF ── -->
+    <section aria-labelledby="brief-h2">
+      <span class="guide-section-label">The Brief Received</span>
+      <h2 class="guide-section-title" id="brief-h2">What was asked for</h2>
+
+      <div class="brief-block">
+        <blockquote>
+          "An atlas of the seafloor cables. The internet's basement, visited.
+          Signature: a canvas bathymetry map (procedurally inked depth contours)
+          where bioluminescent packet-particles travel plausible-but-fictional
+          cable routes; a cross-section ride from landing station to abyssal plain
+          on scroll. Palette: abyss #04070d, cable copper #d1763a,
+          biolume #59f2d2, chart #93a7c4. Type: Krona One + Overpass.
+          Prove: technical subject, poetic execution; darkness with legible depth."
+        </blockquote>
+        <span class="brief-source">FABLE 25 LOCAL — BRIEFS.md, Wave 4, Site 22</span>
+      </div>
+
+      <p class="body-text" style="margin-top:1.5rem;">
+        Upgrade ideas specified in the brief: latency readouts between fictional
+        cities; a shark-bite incident log; pressure gauge deepening as you scroll.
+        All three were implemented; coordinate grid labels and sonar ping animations
+        were added beyond the brief during iteration passes.
+      </p>
+    </section>
+
+    <!-- ── SIGNATURE TECHNIQUE ── -->
+    <section aria-labelledby="technique-h2">
+      <span class="guide-section-label">Signature Technique</span>
+      <h2 class="guide-section-title" id="technique-h2">Procedural bathymetry — contour rendering via fBm value noise</h2>
+
+      <p class="body-text">
+        The hero map is a live canvas texture built from seven-octave
+        fractional Brownian motion (fBm) applied to value noise. Each pixel is
+        evaluated against seven isobath thresholds — if the noise value falls
+        within ±0.006 of any threshold, the pixel is rendered as a contour line
+        in chart blue. Otherwise it is coloured by depth band.
+      </p>
+      <p class="body-text">
+        A mid-ocean ridge suppressor is applied by computing the pixel's
+        horizontal distance from a sinusoid centred at x≈0.38 of the canvas
+        width, and subtracting a depth contribution proportional to proximity.
+        This creates the continuous shallowing feature visible running
+        vertically through the left-centre of the map.
+      </p>
+      <p class="body-text" style="margin-bottom:1.8rem;">
+        On desktop the texture is built at 2× downsampling (S=2) for speed;
+        on mobile (viewport &lt;600px) it builds at S=1 — full resolution — so
+        the isobath lines remain sharp at small viewport widths.
+      </p>
+
+      <div class="code-wrap">
+        <div class="code-caption">main.js — buildTexture (lines 119–170)</div>
+        <pre><span class="kw">function</span> <span class="fn">buildTexture</span>(w, h) {
+  <span class="cm">// Mobile: S=1 (full res) for sharp contours; desktop: S=2 keeps build fast</span>
+  <span class="kw">const</span> S  = w &lt; <span class="num">600</span> ? <span class="num">1</span> : <span class="num">2</span>;
+  <span class="kw">const</span> tw = Math.<span class="fn">ceil</span>(w / S), th = Math.<span class="fn">ceil</span>(h / S);
+  <span class="kw">const</span> oc = document.<span class="fn">createElement</span>(<span class="str">'canvas'</span>);
+  oc.width = tw; oc.height = th;
+  <span class="kw">const</span> ctx = oc.<span class="fn">getContext</span>(<span class="str">'2d'</span>);
+  <span class="kw">const</span> img = ctx.<span class="fn">createImageData</span>(tw, th);
+  <span class="kw">const</span> d   = img.data;
+
+  <span class="kw">for</span> (<span class="kw">let</span> py = <span class="num">0</span>; py &lt; th; py++) {
+    <span class="kw">for</span> (<span class="kw">let</span> px = <span class="num">0</span>; px &lt; tw; px++) {
+      <span class="kw">const</span> nx = (px / tw) * <span class="num">6.8</span> + <span class="num">0.6</span>;
+      <span class="kw">const</span> ny = (py / th) * <span class="num">4.4</span> + <span class="num">1.1</span>;
+      <span class="kw">let</span> dep = <span class="fn">fbm</span>(nx, ny);
+
+      <span class="cm">// Power curve: push most of the image toward the deep</span>
+      dep = Math.<span class="fn">pow</span>(dep, <span class="num">0.62</span>);
+
+      <span class="cm">// Mid-ocean ridge: sinuous shallowing at ~38% across canvas</span>
+      <span class="kw">const</span> ridgeX = <span class="num">0.38</span> + Math.<span class="fn">sin</span>((py / th) * Math.PI * <span class="num">1.6</span>) * <span class="num">0.04</span>;
+      <span class="kw">const</span> rd = Math.<span class="fn">abs</span>((px / tw) - ridgeX);
+      dep = Math.<span class="fn">max</span>(<span class="num">0</span>, dep - Math.<span class="fn">max</span>(<span class="num">0</span>, <span class="num">0.22</span> - rd * rd * <span class="num">16</span>) * <span class="num">0.28</span>);
+
+      <span class="cm">// Contour check: ±0.006 of each isobath threshold → chart blue</span>
+      <span class="kw">const</span> onContour = CONTOURS.<span class="fn">some</span>(l =&gt; Math.<span class="fn">abs</span>(dep - l) &lt; <span class="num">0.006</span>);
+
+      <span class="kw">let</span> r, g, b;
+      <span class="kw">if</span> (onContour) {
+        r = <span class="num">88</span>; g = <span class="num">118</span>; b = <span class="num">150</span>;   <span class="cm">// chart isobath line</span>
+      } <span class="kw">else if</span> (dep &lt; <span class="num">0.13</span>) {
+        r = <span class="num">25</span>; g = <span class="num">56</span>;  b = <span class="num">95</span>;    <span class="cm">// continental shelf</span>
+      } <span class="kw">else if</span> (dep &lt; <span class="num">0.22</span>) {
+        r = <span class="num">17</span>; g = <span class="num">40</span>;  b = <span class="num">72</span>;    <span class="cm">// upper slope</span>
+      } <span class="kw">else if</span> (dep &lt; <span class="num">0.52</span>) {
+        r = <span class="num">7</span>;  g = <span class="num">14</span>;  b = <span class="num">30</span>;    <span class="cm">// deep sea</span>
+      } <span class="kw">else</span> {
+        r = <span class="num">4</span>;  g = <span class="num">7</span>;   b = <span class="num">13</span>;    <span class="cm">// abyss</span>
+      }
+
+      <span class="kw">const</span> i = (py * tw + px) * <span class="num">4</span>;
+      d[i] = r; d[i+<span class="num">1</span>] = g; d[i+<span class="num">2</span>] = b; d[i+<span class="num">3</span>] = <span class="num">255</span>;
+    }
+  }
+  ctx.<span class="fn">putImageData</span>(img, <span class="num">0</span>, <span class="num">0</span>);
+  <span class="kw">return</span> oc;
+}</pre>
+      </div>
+
+      <p class="body-text" style="margin-top:1.5rem;">
+        Cable routes are Catmull-Rom splines evaluated at 90 steps.
+        Bioluminescent packets are particle objects that traverse the spline
+        at t∈[0,1], rendered with a radial-gradient outer glow and a
+        bright pixel core. Each pass, new opacity/size parameters are sampled
+        randomly on construction; the speed ranges 0.00005–0.00013 per millisecond.
+      </p>
+    </section>
+
+    <!-- ── PASS HISTORY ── -->
+    <section aria-labelledby="history-h2">
+      <span class="guide-section-label">Iteration History</span>
+      <h2 class="guide-section-title" id="history-h2">What each pass found and changed</h2>
+
+      <div class="pass-list">
+
+        <div class="pass-item">
+          <div class="pass-badge">PASS 1</div>
+          <div class="pass-body">
+            <p class="pass-title">First render critique</p>
+            <ul class="pass-finds">
+              <li>Texture too blocky at S=4 — changed to S=2 for smoother contours with a reasonable build time</li>
+              <li>Cable lines too faint at α 0.50 core — raised to α 0.72, added mid-glow layer at α 0.30</li>
+              <li>Hero title overflowing on mobile at 390px — Krona One is very wide; clamped to <code>clamp(1.9rem, 11.5vw, 2.8rem)</code></li>
+              <li>Missing coordinate grid — longitude labels added across top, latitude down left side (nautical chart aesthetic)</li>
+            </ul>
+            <div class="pass-upgrade">
+              <span class="pass-upgrade-label">Complexity upgrade</span>
+              <p>Coordinate grid labels (lon 170°W→100°E / lat 60°N→25°S) in 9px Overpass at α 0.38.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pass-item">
+          <div class="pass-badge">PASS 2</div>
+          <div class="pass-body">
+            <p class="pass-title">Mobile sharpness + text legibility</p>
+            <ul class="pass-finds">
+              <li>Mobile canvas at 390px showed blurry/blocky contours from 2× upscaling — changed S to adaptive: S=1 on viewports &lt;600px</li>
+              <li>Hero body copy lacked text-shadow — added <code>0 0 28px rgba(4,7,13,.92)</code> + soft outer glow to <code>.hero-sub</code></li>
+              <li>Eyebrow and scroll-cue label needed more visible backing against the map texture — raised opacity, added shadow</li>
+            </ul>
+            <div class="pass-upgrade">
+              <span class="pass-upgrade-label">Complexity upgrade</span>
+              <p>Sonar ping animation: expanding copper rings emanate from landing station endpoints, cycling through all four cable routes every 1.8 s. Implemented with a module-level array; expired pings removed via <code>filter()</code> to avoid splice-in-forEach.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pass-item">
+          <div class="pass-badge">PASS 3</div>
+          <div class="pass-body">
+            <p class="pass-title">HUD richness + instrument depth</p>
+            <ul class="pass-finds">
+              <li>Descent HUD showed depth, pressure, zone — but no temperature, despite the thermocline being central to deep-ocean narrative</li>
+              <li>HUD bottom row felt sparse with only Zone and cable label — temperature block fills the gap and creates a natural three-column instrument row</li>
+            </ul>
+            <div class="pass-upgrade">
+              <span class="pass-upgrade-label">Complexity upgrade</span>
+              <p>Water temperature readout in descent HUD: thermocline profile modelled as a piecewise linear function (24°C surface → 19°C at 200m → 7°C at 1000m → 3°C at 3000m → 2°C abyss). Updates live on every scroll event alongside depth and pressure.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── DECISIONS ── -->
+    <section aria-labelledby="decisions-h2">
+      <span class="guide-section-label">Design Decisions</span>
+      <h2 class="guide-section-title" id="decisions-h2">Durable choices and why</h2>
+
+      <div class="decision-list">
+        <div class="decision-item">
+          <p class="decision-key">Single dark theme, no toggle</p>
+          <p class="decision-val">
+            A light-mode rendering of an ocean atlas would look like a geography worksheet.
+            The brief demands "darkness with legible depth" — the palette is load-bearing,
+            not aesthetic preference. No <code>prefers-color-scheme</code> toggle.
+          </p>
+        </div>
+        <div class="decision-item">
+          <p class="decision-key">Value noise, not Worley/Voronoi</p>
+          <p class="decision-val">
+            Value noise produces the rounded continental-shelf blobs visible in the hero map.
+            Real bathymetry would use Voronoi noise for sharp dendritic ridges. Value noise
+            was chosen for implementation simplicity; the known weakness is documented in NOTES.md.
+          </p>
+        </div>
+        <div class="decision-item">
+          <p class="decision-key">Catmull-Rom, not geodesic arcs</p>
+          <p class="decision-val">
+            Cable waypoints are stored as canvas fractions [0–1] and threaded through a
+            Catmull-Rom spline. Great-circle routing would require projection math outside scope.
+            Routes are visually plausible, not geographically calibrated — and the page says so
+            ("fictional cable routes").
+          </p>
+        </div>
+        <div class="decision-item">
+          <p class="decision-key">IntersectionObserver pauses the descent rAF loop</p>
+          <p class="decision-val">
+            The 450vh sticky-scroll descent section runs a continuous requestAnimationFrame
+            loop for the bioluminescent pulse animation. An IntersectionObserver cancels the
+            loop when the section leaves the viewport, respecting the build standard's
+            "rAF loops pause on document.hidden" rule.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="guide-footer" role="contentinfo">
+    <p class="footer-brand">UNDERTOW</p>
+    <p class="footer-credit">Designed &amp; built by Claude Fable 5 &nbsp;&middot;&nbsp; local build &nbsp;&middot;&nbsp; 2026</p>
+  </footer>
+
+</body>
+</html>

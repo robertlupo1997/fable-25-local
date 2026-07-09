@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central Letterpress — Est. 1962</title>
+  <meta name="description" content="Union letterpress shop. Movable type. Unmovable standards. Chicago, IL. Established 1962.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Hidden SVG filters for grain -->
+  <svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden">
+    <defs>
+      <filter id="svg-grain" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" result="noise"/>
+        <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+        <feBlend in="SourceGraphic" in2="gray" mode="multiply"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <header class="site-header">
+    <div class="header-band">
+      <div class="union-seal" aria-label="Union Local 79-B, American Federation of Labor, established 1962">
+        <span class="seal-top">UNION LOCAL</span>
+        <span class="seal-num">79-B</span>
+        <span class="seal-bot">AFL · EST. 1962</span>
+      </div>
+
+      <div class="shop-ident">
+        <h1 class="shop-name">Central<br>Letterpress</h1>
+        <p class="shop-tagline">Movable type.&thinsp; Unmovable standards.</p>
+      </div>
+
+      <address class="shop-address" aria-label="Shop address">
+        2315 W. Cermak Road<br>
+        Chicago, IL 60608<br>
+        Mon–Fri 8 – 17
+      </address>
+    </div>
+    <div class="header-rule" aria-hidden="true">
+      <span class="rule-ornament" aria-hidden="true">✦&ensp;LETTERPRESS&ensp;PRINTING&ensp;✦&ensp;UNION&ensp;SHOP&ensp;✦&ensp;CHICAGO&ensp;✦&ensp;VANDERCOOK&ensp;NO.&thinsp;4&ensp;✦&ensp;EST.&ensp;1962&ensp;✦&ensp;LETTERPRESS&ensp;PRINTING&ensp;✦&ensp;UNION&ensp;SHOP&ensp;✦&ensp;CHICAGO&ensp;✦&ensp;VANDERCOOK&ensp;NO.&thinsp;4&ensp;✦&ensp;EST.&ensp;1962&ensp;✦</span>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ── Intro ── -->
+    <section class="intro-section">
+      <div class="intro-inner">
+        <p class="intro-lead">We've been printing union cards, broadsides, chapbooks, and the occasional manifesto since Eisenhower was in office. We have two Vandercooks, one C&amp;P floor model, and no plans to change anything.</p>
+        <div class="intro-stats" role="list" aria-label="Shop facts">
+          <div class="stat" role="listitem">
+            <span class="stat-num">62</span>
+            <span class="stat-label">Years in operation</span>
+          </div>
+          <div class="stat" role="listitem">
+            <span class="stat-num">3</span>
+            <span class="stat-label">Working presses</span>
+          </div>
+          <div class="stat" role="listitem">
+            <span class="stat-num">847</span>
+            <span class="stat-label">Wood type sorts on hand</span>
+          </div>
+          <div class="stat" role="listitem">
+            <span class="stat-num">0</span>
+            <span class="stat-label">Digital workflows</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── The Press ── -->
+    <div class="press-section-wrap">
+    <section id="press" class="press-section" aria-labelledby="press-heading">
+      <div class="section-label">
+        <span class="label-num" aria-hidden="true">№ 1</span>
+        <h2 id="press-heading" class="section-title">Set Your Line</h2>
+        <span class="label-sub">Type below · <kbd>↵</kbd> or pull the lever to print</span>
+      </div>
+
+      <div class="press-workspace">
+
+        <!-- Composing Stick -->
+        <div class="composing-area">
+          <div class="stick-header">
+            <span class="stick-name">Composing Stick</span>
+            <span class="stick-counter"><span id="emCount">0</span>&thinsp;/&thinsp;<span id="emMax">14</span> em</span>
+          </div>
+          <div
+            class="composing-stick"
+            id="composingStick"
+            role="group"
+            aria-label="Composing stick — type to add characters, Backspace to delete, Enter to print"
+            tabindex="0"
+            aria-describedby="stick-hint"
+          >
+            <div class="stick-rail">
+              <div class="sort-row" id="sortRow" aria-live="polite" aria-label="Characters in stick"></div>
+              <div class="stick-cursor" id="stickCursor" aria-hidden="true"></div>
+            </div>
+            <div class="stick-gauge-bar">
+              <div class="stick-gauge-fill" id="gaugeBar"></div>
+            </div>
+          </div>
+          <p id="stick-hint" class="stick-hint">Click here and type to set type. <kbd>⌫</kbd> removes last character.</p>
+
+          <div class="stick-controls">
+            <button class="btn-clear" id="clearBtn" aria-label="Clear composing stick">Clear Stick</button>
+            <label class="loose-reg-label">
+              <input type="checkbox" id="looseToggle" class="loose-checkbox" aria-describedby="loose-desc">
+              <span class="loose-indicator" aria-hidden="true"></span>
+              Loose registration
+            </label>
+            <span id="loose-desc" class="sr-only">Prints in two offset colors for a classic misregistration effect</span>
+          </div>
+        </div>
+
+        <!-- Canvas + Lever -->
+        <div class="press-output-row">
+          <div class="canvas-wrapper">
+            <canvas
+              id="outputCanvas"
+              width="660"
+              height="220"
+              aria-label="Letterpress print output"
+            ></canvas>
+          </div>
+          <div class="lever-column">
+            <div
+              class="lever-assembly"
+              id="pressLever"
+              role="button"
+              tabindex="0"
+              aria-label="Press lever — click or press Enter to print"
+            >
+              <div class="lever-cap">
+                <span>IMPRESSION</span>
+              </div>
+              <div class="lever-shaft" aria-hidden="true">
+                <div class="lever-arm" id="leverArm"></div>
+              </div>
+              <div class="lever-grip" aria-hidden="true">
+                <span>PULL</span>
+              </div>
+              <div class="lever-base" aria-hidden="true"></div>
+            </div>
+            <p class="lever-label" aria-hidden="true">Impression<br>lever</p>
+          </div>
+        </div>
+
+        <div class="print-actions" id="printActions" hidden>
+          <button class="btn-save" id="saveBtn" aria-label="Download your print as a PNG image">
+            ↓&ensp;Save Print
+          </button>
+          <span class="print-note">Each impression is unique.</span>
+        </div>
+
+      </div>
+    </section>
+    </div><!-- /.press-section-wrap -->
+
+    <!-- ── Wood Type Specimen Wall ── -->
+    <section class="specimen-section" aria-labelledby="specimen-heading">
+      <div class="section-label">
+        <span class="label-num" aria-hidden="true">№ 2</span>
+        <h2 id="specimen-heading" class="section-title">Wood Type Specimens</h2>
+        <span class="label-sub">Central Press Collection · Acquired 1962 – 1981</span>
+      </div>
+      <div class="specimen-grid" id="specimenGrid" role="list" aria-label="Wood type specimen collection — click any block to add to composing stick"></div>
+      <p class="specimen-hint" aria-live="polite">Click any block to add that character to the composing stick above.</p>
+    </section>
+
+    <!-- ── Job Tickets ── -->
+    <section class="tickets-section" aria-labelledby="tickets-heading">
+      <div class="section-label">
+        <span class="label-num" aria-hidden="true">№ 3</span>
+        <h2 id="tickets-heading" class="section-title">What We Print</h2>
+      </div>
+      <div class="job-tickets">
+        <div class="job-ticket">
+          <div class="ticket-meta">
+            <span class="ticket-job">JOB No.&thinsp;7291</span>
+            <span class="ticket-status open">Open</span>
+          </div>
+          <h3 class="ticket-title">Union Cards &amp; Membership Books</h3>
+          <p>Standard issue for affiliated locals. Two-color, blind emboss, 300&thinsp;gsm cotton stock. Four to six week lead time. No rush jobs.</p>
+          <p class="ticket-spec">2-color letterpress · cotton stock · foil seal available</p>
+        </div>
+        <div class="job-ticket">
+          <div class="ticket-meta">
+            <span class="ticket-job">JOB No.&thinsp;7292</span>
+            <span class="ticket-status open">Open</span>
+          </div>
+          <h3 class="ticket-title">Broadsides &amp; Handbills</h3>
+          <p>Announcements, meeting notices, rally sheets, concert posters. We've printed for labor organizers, neighborhood associations, poetry societies, and one very persistent city council candidate.</p>
+          <p class="ticket-spec">1 or 2-color · newsprint or bond · up to 11×17</p>
+        </div>
+        <div class="job-ticket">
+          <div class="ticket-meta">
+            <span class="ticket-job">JOB No.&thinsp;7293</span>
+            <span class="ticket-status open">Open</span>
+          </div>
+          <h3 class="ticket-title">Chapbooks &amp; Small Editions</h3>
+          <p>Short-run books, zines, and journals for writers and small presses. Hand-sewn binding available. Something that deserves to last longer than a PDF.</p>
+          <p class="ticket-spec">editions 50 – 500 · hand-sewn or saddle-stitch · cover stocks to 600&thinsp;gsm</p>
+        </div>
+        <div class="job-ticket">
+          <div class="ticket-meta">
+            <span class="ticket-job">JOB No.&thinsp;7294</span>
+            <span class="ticket-status open">Open</span>
+          </div>
+          <h3 class="ticket-title">Wedding &amp; Event Stationery</h3>
+          <p>We don't care what the occasion is, we care that it's printed right. Invitations, programs, place cards. Blind deboss on thick stock. Your guests will notice.</p>
+          <p class="ticket-spec">deep impression · 600+ gsm available · pocket folds</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── About ── -->
+    <section class="about-section" aria-labelledby="about-heading">
+      <div class="about-inner">
+        <div class="about-text">
+          <div class="section-label section-label--inline">
+            <span class="label-num" aria-hidden="true">№ 4</span>
+            <h2 id="about-heading" class="section-title">Est. 1962</h2>
+          </div>
+          <p class="about-lead">Central Letterpress opened when the Graphic Communications Union negotiated shop rights on Cermak Road. The original owner, Władysław "Walt" Kozłowski, installed a Vandercook No.&thinsp;4 and a Chandler &amp; Price 12×18 in a space that still has the same concrete floor.</p>
+          <p>Walt's daughter Marta runs the shop now. She learned to set type at twelve. She has no interest in digital presses, laser cutters, or "hybrid workflows." The Vandercooks work. The type is clean. The impression is real.</p>
+          <p>We are proud members of the Printing, Publishing and Media Workers Sector of the Communication Workers of America, AFL-CIO.</p>
+          <blockquote class="shop-quote">
+            <p>"Ink on paper is not a nostalgic act. It is a permanent one."</p>
+            <cite>— Marta Kozłowski, proprietor</cite>
+          </blockquote>
+        </div>
+
+        <figure class="press-diagram" aria-hidden="true" aria-label="Decorative Vandercook press diagram">
+          <div class="vk-press">
+            <div class="vk-frame">
+              <div class="vk-cylinder"></div>
+              <div class="vk-bed"></div>
+              <div class="vk-carriage-rail"></div>
+              <div class="vk-carriage"></div>
+            </div>
+            <div class="vk-legs">
+              <div class="vk-leg"></div>
+              <div class="vk-leg"></div>
+              <div class="vk-leg"></div>
+              <div class="vk-leg"></div>
+            </div>
+          </div>
+          <figcaption class="press-caption">Vandercook No. 4 · Serial 13847 · In service since 1962</figcaption>
+        </figure>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-name">Central Letterpress</span>
+          <span class="footer-union">Union Local 79-B · AFL-CIO</span>
+        </div>
+        <div class="footer-contact">
+          <p>2315 W. Cermak Road, Chicago IL 60608</p>
+          <p>Monday – Friday, 8:00 to 17:00</p>
+          <p>No email. No online ordering. Call ahead.</p>
+        </div>
+      </div>
+      <hr class="footer-hr" aria-hidden="true">
+      <div class="footer-bottom">
+        <p class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+        <p class="footer-smell"><span aria-hidden="true">*</span> The shop smells like linseed oil and petroleum distillate from the Vandercook rollers, cutting fluid from the brass rule cutter, machine oil in the press bearings, and sixty-two years of cotton-fiber paper dust pressed into the concrete floor and the Douglas-fir joists above. You notice it when you walk in the door. You miss it when you leave.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

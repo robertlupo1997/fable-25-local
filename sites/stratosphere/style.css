@@ -324,13 +324,13 @@ body {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    transparent 25%,
-    rgba(10, 13, 22, 0.38) 50%,
-    rgba(10, 13, 22, 0.68) 68%,
-    rgba(10, 13, 22, 0.88) 100%
+    transparent 20%,
+    rgba(10, 13, 22, 0.45) 48%,
+    rgba(10, 13, 22, 0.75) 65%,
+    rgba(10, 13, 22, 0.92) 100%
   );
-  mask-image: linear-gradient(to right, black 58%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, black 58%, transparent 100%);
+  mask-image: linear-gradient(to right, black 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 55%, transparent 100%);
   pointer-events: none;
   z-index: -1;
 }
@@ -357,17 +357,17 @@ body {
   letter-spacing: -0.03em;
   color: var(--white);
   margin-bottom: 24px;
-  text-shadow: 0 2px 16px rgba(0,0,0,0.75), 0 4px 40px rgba(0,0,0,0.60);
+  text-shadow: 0 1px 8px rgba(10,13,22,0.9), 0 2px 16px rgba(10,13,22,0.75), 0 4px 40px rgba(10,13,22,0.60);
 }
 
 .hero-subtitle {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.78rem;
   letter-spacing: 0.06em;
-  color: rgba(244, 247, 251, 0.85);
+  color: rgba(244, 247, 251, 0.92);
   margin-bottom: 28px;
   line-height: 1.6;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.65), 0 2px 20px rgba(0,0,0,0.50);
+  text-shadow: 0 1px 8px rgba(10,13,22,0.9), 0 2px 20px rgba(10,13,22,0.65);
 }
 
 .hero-body {
@@ -376,7 +376,7 @@ body {
   color: rgba(244, 247, 251, 0.92);
   font-weight: 300;
   max-width: 520px;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.60), 0 2px 16px rgba(0,0,0,0.45);
+  text-shadow: 0 1px 8px rgba(10,13,22,0.9), 0 2px 16px rgba(10,13,22,0.60);
 }
 
 .scroll-hint {

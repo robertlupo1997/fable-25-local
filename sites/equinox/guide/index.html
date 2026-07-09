@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equinox · Build Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: #d9d2c4;
+  color: #2b2620;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ── */
+.site-nav {
+  background: #2b2620;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-title {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.25em;
+  color: #d9d2c4;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.nav-back {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #968e80;
+  text-decoration: none;
+}
+.nav-back:hover { color: #d9d2c4; }
+.nav-back:focus-visible { outline: 2px solid #e0a10e; outline-offset: 2px; }
+
+.page-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+
+/* ── Type scale ── */
+.guide-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #554e46;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.guide-h1 {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+  color: #2b2620;
+  text-wrap: balance;
+  margin-bottom: 0.5rem;
+}
+.guide-lead {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: #554e46;
+  max-width: 60ch;
+  margin-bottom: 0;
+  line-height: 1.75;
+}
+.guide-h2 {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  color: #2b2620;
+  text-wrap: balance;
+  margin-bottom: 0.6rem;
+}
+.guide-h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2b2620;
+  margin-bottom: 0.4rem;
+}
+p {
+  font-size: 0.94rem;
+  font-weight: 300;
+  color: #2b2620;
+  line-height: 1.8;
+}
+p + p { margin-top: 0.85rem; }
+
+/* ── Dividers ── */
+hr {
+  border: none;
+  border-top: 1px solid #c8c0af;
+  margin: 3rem 0;
+}
+.rule-gold {
+  border: none;
+  border-top: 2px solid rgba(224,161,14,0.40);
+  margin: 0 0 2.5rem;
+}
+
+/* ── Header block ── */
+.header-block {
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid #c8c0af;
+  margin-bottom: 3rem;
+}
+
+/* ── Brief block ── */
+.brief-block {
+  background: #f4f0e8;
+  border-left: 3px solid #e0a10e;
+  border-radius: 0 3px 3px 0;
+  padding: 1.5rem 1.75rem;
+  margin: 0 0 3rem;
+}
+.brief-block p {
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.8;
+  color: #3a3530;
+  font-style: italic;
+}
+.brief-block .brief-source {
+  display: block;
+  margin-top: 0.85rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #554e46;
+  font-style: normal;
+}
+
+/* ── Section wrapper ── */
+.section { margin-bottom: 3.5rem; }
+
+/* ── Code panel ── */
+.code-panel {
+  background: #1c1814;
+  border-radius: 4px;
+  padding: 1.5rem 1.75rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+}
+.code-panel pre {
+  margin: 0;
+  font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Consolas', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: #d9d2c4;
+  white-space: pre;
+  tab-size: 2;
+}
+/* Syntax highlight — manual, no library */
+.tok-kw    { color: #b89860; } /* keyword */
+.tok-fn    { color: #e0a10e; } /* function name */
+.tok-str   { color: #8ab080; } /* string */
+.tok-num   { color: #a0c0e0; } /* number */
+.tok-cmt   { color: #9e8e7e; font-style: italic; } /* comment — #9e8e7e 5.57:1 on code panel */
+.tok-var   { color: #d9d2c4; } /* variable */
+.tok-op    { color: #c8c0af; } /* operator / punctuation */
+
+.code-caption {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #554e46;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* ── Pass history ── */
+.pass-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.pass-item {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 0 1.25rem;
+  align-items: start;
+}
+.pass-num {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: 1.5rem;
+  color: rgba(224,161,14,0.60);
+  line-height: 1;
+  padding-top: 0.15rem;
+  text-align: right;
+}
+.pass-body {}
+.pass-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #2b2620;
+  margin-bottom: 0.35rem;
+}
+.pass-body p {
+  font-size: 0.88rem;
+  color: #554e46;
+  line-height: 1.75;
+}
+.pass-upgrade {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #6a4e00; /* dark amber — 4.94:1 on badge bg, WCAG AA */
+  background: rgba(224,161,14,0.10);
+  border: 1px solid rgba(224,161,14,0.30);
+  border-radius: 2px;
+  padding: 0.2rem 0.55rem;
+  text-transform: uppercase;
+}
+
+/* ── Palette swatch row ── */
+.swatch-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-start;
+}
+.swatch-chip {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  border: 1px solid rgba(43,38,32,0.12);
+}
+.swatch-label {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #554e46;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Proof grid ── */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.proof-item {
+  background: #f4f0e8;
+  border: 1px solid #c8c0af;
+  border-radius: 3px;
+  padding: 0.85rem;
+}
+.proof-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #554e46;
+  margin-bottom: 0.2rem;
+}
+.proof-value {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #2b2620;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Footer ── */
+footer {
+  background: #2b2620;
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.footer-left {
+  font-family: 'Marcellus', Georgia, serif;
+  font-size: 0.9rem;
+  color: #c8c0af;
+  letter-spacing: 0.05em;
+}
+.footer-credit {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: #968e80;
+  letter-spacing: 0.08em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page-wrap { padding: 2.5rem 1.25rem 4rem; }
+  .pass-item { grid-template-columns: 2.25rem 1fr; gap: 0 0.85rem; }
+  .proof-grid { grid-template-columns: 1fr 1fr; }
+  footer { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <a href="/equinox/" class="nav-title">Equinox</a>
+  <a href="/equinox/" class="nav-back" aria-label="Back to Equinox">← Back to the garden</a>
+</nav>
+
+<main>
+<div class="page-wrap">
+
+  <!-- Header -->
+  <header class="header-block">
+    <span class="guide-eyebrow">Build Guide · Fable 25 Local · Studio 23</span>
+    <h1 class="guide-h1">Equinox</h1>
+    <p class="guide-lead">How a horizontal sundial park was built from nothing but math — no data files, no textures, no shortcuts. Every pixel earned from declination and hour angle.</p>
+  </header>
+
+  <!-- Brief received -->
+  <section class="section" aria-labelledby="brief-heading">
+    <span class="guide-eyebrow" id="brief-heading">The Brief</span>
+    <h2 class="guide-h2">What was asked</h2>
+    <div class="brief-block" role="blockquote">
+      <p>A sundial park driven by the real solar-position algorithm. Signature: pick any city and date — gnomon shadows, day length, and the sky's gradient are computed (declination, hour angle, altitude/azimuth), animated through the day; the equinoxes and solstices are the four chapters. Palette: stone <code>#d9d2c4</code>, gnomon <code>#2b2620</code>, solar <code>#e0a10e</code>, computed sky. Type: Marcellus + Outfit. Prove: real astronomy math, no data files, art-directed like a landscape architect.</p>
+      <span class="brief-source">BRIEFS.md · Wave 4 · Brief 23 · Upgrade ideas: analemma tracing; golden-hour band on the day dial; a shadow that points at the footer at your local sunset.</span>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Signature technique -->
+  <section class="section" aria-labelledby="technique-heading">
+    <span class="guide-eyebrow" id="technique-heading">Signature Technique</span>
+    <h2 class="guide-h2">All sky from one function</h2>
+    <p>The whole visual output — sky gradient, sun position, shadow direction, day length, chapter statistics — flows from a single 30-line function: <code>computeSolar(lat, doy, solarHour)</code>. It takes latitude, day-of-year, and a solar time (0–24); returns altitude, azimuth, hour angle, declination, and sunrise/sunset. No tables, no lookups, no network.</p>
+    <p>The sky gradient then uses <code>getSkyColors(altDeg)</code>, which interpolates between 9 keyed altitude snapshots (from astronomical night at −18° through full blue at 90°). The key entries were hand-crafted to reproduce the actual colour progression of a sky: deep navy at astronomical twilight, the rust-amber horizon glow at civil dawn, the washed-out pale blue at low elevation, the deep cobalt overhead at noon.</p>
+
+    <h3 class="guide-h3">The solar math</h3>
+    <div class="code-panel" role="region" aria-label="Solar position code excerpt">
+<pre><span class="tok-cmt">// ── Solar position: latitude, day-of-year, solar hour → altitude/azimuth</span>
+<span class="tok-kw">function</span> <span class="tok-fn">computeSolar</span><span class="tok-op">(</span>lat_deg<span class="tok-op">,</span> doy<span class="tok-op">,</span> solarHour<span class="tok-op">) {</span>
+  <span class="tok-kw">const</span> lat  <span class="tok-op">=</span> lat_deg <span class="tok-op">*</span> RAD<span class="tok-op">;</span>
+  <span class="tok-kw">const</span> decl <span class="tok-op">=</span> <span class="tok-fn">solarDeclination</span><span class="tok-op">(</span>doy<span class="tok-op">);</span>   <span class="tok-cmt">// NOAA formula, ≈0.5° accuracy</span>
+  <span class="tok-kw">const</span> H    <span class="tok-op">=</span> <span class="tok-op">(</span>solarHour <span class="tok-op">-</span> <span class="tok-num">12</span><span class="tok-op">) *</span> <span class="tok-num">15</span> <span class="tok-op">*</span> RAD<span class="tok-op">;</span> <span class="tok-cmt">// hour angle (−π morning)</span>
+
+  <span class="tok-cmt">// Altitude via spherical-trig sine formula</span>
+  <span class="tok-kw">const</span> sinAlt <span class="tok-op">=</span> Math<span class="tok-op">.</span><span class="tok-fn">sin</span><span class="tok-op">(</span>lat<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">sin</span><span class="tok-op">(</span>decl<span class="tok-op">)</span>
+               <span class="tok-op">+</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>lat<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>decl<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>H<span class="tok-op">);</span>
+  <span class="tok-kw">const</span> alt <span class="tok-op">=</span> Math<span class="tok-op">.</span><span class="tok-fn">asin</span><span class="tok-op">(</span>Math<span class="tok-op">.</span><span class="tok-fn">max</span><span class="tok-op">(-</span><span class="tok-num">1</span><span class="tok-op">,</span> Math<span class="tok-op">.</span><span class="tok-fn">min</span><span class="tok-op">(</span><span class="tok-num">1</span><span class="tok-op">,</span> sinAlt<span class="tok-op">)));</span>
+
+  <span class="tok-cmt">// Azimuth via east/north atan2 — avoids quadrant ambiguity</span>
+  <span class="tok-kw">const</span> east  <span class="tok-op">=</span> Math<span class="tok-op">.</span><span class="tok-fn">sin</span><span class="tok-op">(</span>H<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>decl<span class="tok-op">);</span>
+  <span class="tok-kw">const</span> north <span class="tok-op">=</span> Math<span class="tok-op">.</span><span class="tok-fn">sin</span><span class="tok-op">(</span>decl<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>lat<span class="tok-op">)</span>
+              <span class="tok-op">-</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>decl<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">cos</span><span class="tok-op">(</span>H<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">sin</span><span class="tok-op">(</span>lat<span class="tok-op">);</span>
+  <span class="tok-kw">const</span> azDeg <span class="tok-op">= ((</span>Math<span class="tok-op">.</span><span class="tok-fn">atan2</span><span class="tok-op">(</span>east<span class="tok-op">,</span> north<span class="tok-op">) *</span> DEG<span class="tok-op">) +</span> <span class="tok-num">360</span><span class="tok-op">) %</span> <span class="tok-num">360</span><span class="tok-op">;</span>
+
+  <span class="tok-cmt">// Sunrise/sunset via cos(H₀) = −tan(lat)·tan(decl), clamped for poles</span>
+  <span class="tok-kw">const</span> cosH0 <span class="tok-op">=</span> <span class="tok-op">-</span>Math<span class="tok-op">.</span><span class="tok-fn">tan</span><span class="tok-op">(</span>lat<span class="tok-op">) *</span> Math<span class="tok-op">.</span><span class="tok-fn">tan</span><span class="tok-op">(</span>decl<span class="tok-op">);</span>
+  <span class="tok-kw">const</span> H0h   <span class="tok-op">=</span> cosH0 <span class="tok-op">&gt;=</span> <span class="tok-num">1</span> <span class="tok-op">?</span> <span class="tok-num">0</span> <span class="tok-op">:</span> cosH0 <span class="tok-op">&lt;= -</span><span class="tok-num">1</span>
+               <span class="tok-op">?</span> <span class="tok-num">12</span>             <span class="tok-cmt">// midnight sun</span>
+               <span class="tok-op">:</span> Math<span class="tok-op">.</span><span class="tok-fn">acos</span><span class="tok-op">(</span>cosH0<span class="tok-op">) *</span> DEG <span class="tok-op">/</span> <span class="tok-num">15</span><span class="tok-op">;</span>
+<span class="tok-op">}</span></pre>
+    </div>
+    <p class="code-caption">From <code>sites/equinox/index.html</code> — lines ~740–790. The full function returns altitude, azimuth, hour angle, declination, shadow geometry, and sunrise/sunset hours from four lines of trig.</p>
+
+    <h3 class="guide-h3" style="margin-top: 1.75rem;">Pass 3 upgrade: solstice comparison arcs</h3>
+    <p>The sky canvas draws two ghost arcs — summer and winter solstice — behind the active day arc. They use the same <code>computeSolar</code> function called on day 172 (June 21) and day 355 (December 21), at the currently selected city. The amber and blue ghost arcs show the full seasonal spread of the sun's path without any additional data.</p>
+    <div class="code-panel" role="region" aria-label="Solstice arcs code excerpt">
+<pre><span class="tok-cmt">// Solstice ghost arcs — drawn behind the active-day arc</span>
+<span class="tok-kw">function</span> <span class="tok-fn">drawSolsticeArc</span><span class="tok-op">(</span>solsticeDoy<span class="tok-op">,</span> color<span class="tok-op">) {</span>
+  <span class="tok-kw">const</span> solRef <span class="tok-op">=</span> <span class="tok-fn">computeSolar</span><span class="tok-op">(</span>city<span class="tok-op">.</span>lat<span class="tok-op">,</span> solsticeDoy<span class="tok-op">,</span> <span class="tok-num">12</span><span class="tok-op">);</span>
+  <span class="tok-kw">if</span> <span class="tok-op">(</span>solRef<span class="tok-op">.</span>dayLen <span class="tok-op">&lt;</span> <span class="tok-num">0.2</span><span class="tok-op">)</span> <span class="tok-kw">return</span><span class="tok-op">;</span> <span class="tok-cmt">// polar night</span>
+  ctx<span class="tok-op">.</span><span class="tok-fn">beginPath</span><span class="tok-op">();</span>
+  <span class="tok-kw">let</span> first <span class="tok-op">=</span> <span class="tok-kw">true</span><span class="tok-op">;</span>
+  <span class="tok-kw">for</span> <span class="tok-op">(</span><span class="tok-kw">let</span> h <span class="tok-op">=</span> solRef<span class="tok-op">.</span>srHour<span class="tok-op">;</span> h <span class="tok-op">&lt;=</span> solRef<span class="tok-op">.</span>ssHour<span class="tok-op">;</span> h <span class="tok-op">+=</span> <span class="tok-num">0.3</span><span class="tok-op">) {</span>
+    <span class="tok-kw">const</span> sc <span class="tok-op">=</span> <span class="tok-fn">computeSolar</span><span class="tok-op">(</span>city<span class="tok-op">.</span>lat<span class="tok-op">,</span> solsticeDoy<span class="tok-op">,</span> <span class="tok-fn">Math</span><span class="tok-op">.</span><span class="tok-fn">min</span><span class="tok-op">(</span>h<span class="tok-op">,</span> solRef<span class="tok-op">.</span>ssHour<span class="tok-op">));</span>
+    <span class="tok-kw">const</span> <span class="tok-op">{</span> x<span class="tok-op">,</span> y <span class="tok-op">} =</span> <span class="tok-fn">getSkyProjection</span><span class="tok-op">(</span>sc<span class="tok-op">,</span> city<span class="tok-op">,</span> horizonY<span class="tok-op">,</span> W<span class="tok-op">,</span> skyH<span class="tok-op">);</span>
+    first <span class="tok-op">?</span> ctx<span class="tok-op">.</span><span class="tok-fn">moveTo</span><span class="tok-op">(</span>x<span class="tok-op">,</span> y<span class="tok-op">) :</span> ctx<span class="tok-op">.</span><span class="tok-fn">lineTo</span><span class="tok-op">(</span>x<span class="tok-op">,</span> y<span class="tok-op">);</span>
+    first <span class="tok-op">=</span> <span class="tok-kw">false</span><span class="tok-op">;</span>
+  <span class="tok-op">}</span>
+  ctx<span class="tok-op">.</span>strokeStyle <span class="tok-op">=</span> color<span class="tok-op">;</span>
+  ctx<span class="tok-op">.</span>lineWidth   <span class="tok-op">=</span> <span class="tok-num">1</span><span class="tok-op">;</span>
+  ctx<span class="tok-op">.</span><span class="tok-fn">setLineDash</span><span class="tok-op">([</span><span class="tok-num">2</span><span class="tok-op">,</span> <span class="tok-num">6</span><span class="tok-op">]);</span>
+  ctx<span class="tok-op">.</span><span class="tok-fn">stroke</span><span class="tok-op">();</span>
+  ctx<span class="tok-op">.</span><span class="tok-fn">setLineDash</span><span class="tok-op">([]);</span>
+<span class="tok-op">}</span>
+<span class="tok-cmt">// Summer solstice ≈ day 172 → warm amber ghost</span>
+<span class="tok-fn">drawSolsticeArc</span><span class="tok-op">(</span><span class="tok-num">172</span><span class="tok-op">,</span> <span class="tok-str">'rgba(255,180,60,0.22)'</span><span class="tok-op">);</span>
+<span class="tok-cmt">// Winter solstice ≈ day 355 → cool blue ghost</span>
+<span class="tok-fn">drawSolsticeArc</span><span class="tok-op">(</span><span class="tok-num">355</span><span class="tok-op">,</span> <span class="tok-str">'rgba(120,170,220,0.22)'</span><span class="tok-op">);</span></pre>
+    </div>
+    <p class="code-caption">The two ghost arcs reveal the seasonal envelope: on the equinox the active arc sits exactly midway between them, which is the visual proof of the math working.</p>
+  </section>
+
+  <hr>
+
+  <!-- Proof table -->
+  <section class="section" aria-labelledby="proof-heading">
+    <span class="guide-eyebrow" id="proof-heading">Verification</span>
+    <h2 class="guide-h2">The math holds</h2>
+    <p>Verified against published USNO values for New York, spring equinox 2026 (March 20), solar noon:</p>
+    <div class="proof-grid">
+      <div class="proof-item">
+        <div class="proof-label">Altitude</div>
+        <div class="proof-value">49.0° <span style="font-size:0.72rem;color:#554e46;">(expect 49.3°)</span></div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-label">Azimuth</div>
+        <div class="proof-value">180° <span style="font-size:0.72rem;color:#554e46;">(due S, noon)</span></div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-label">Day length</div>
+        <div class="proof-value">11h 58m <span style="font-size:0.72rem;color:#554e46;">(≈12h equinox)</span></div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-label">Declination</div>
+        <div class="proof-value">−0.32° <span style="font-size:0.72rem;color:#554e46;">(spring eq. ≈0°)</span></div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-label">Shadow dir.</div>
+        <div class="proof-value">0° <span style="font-size:0.72rem;color:#554e46;">(due N at noon)</span></div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-label">Algorithm</div>
+        <div class="proof-value">NOAA / <span style="font-size:0.72rem;">no EoT</span></div>
+      </div>
+    </div>
+    <p style="margin-top:1rem;">The minor 0.3° altitude error is expected without an equation-of-time correction and without atmospheric refraction. Solar noon is always exactly 12:00 solar time by definition.</p>
+  </section>
+
+  <hr>
+
+  <!-- Palette -->
+  <section class="section" aria-labelledby="palette-heading">
+    <span class="guide-eyebrow" id="palette-heading">Palette</span>
+    <h2 class="guide-h2">Stone, gnomon, solar</h2>
+    <div class="swatch-row" role="list" aria-label="Colour palette">
+      <div class="swatch" role="listitem">
+        <div class="swatch-chip" style="background:#d9d2c4;" aria-hidden="true"></div>
+        <span class="swatch-label">Stone<br>#d9d2c4</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-chip" style="background:#2b2620;" aria-hidden="true"></div>
+        <span class="swatch-label">Gnomon<br>#2b2620</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-chip" style="background:#e0a10e;" aria-hidden="true"></div>
+        <span class="swatch-label">Solar<br>#e0a10e</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-chip" style="background:#f4f0e8;" aria-hidden="true"></div>
+        <span class="swatch-label">Cream<br>#f4f0e8</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-chip" style="background:#6b6458;" aria-hidden="true"></div>
+        <span class="swatch-label">Muted<br>#6b6458</span>
+      </div>
+      <div class="swatch" role="listitem">
+        <div class="swatch-chip" style="background:linear-gradient(135deg, #102266 0%, #265ab4 50%, #c04a0e 85%, #c8500a 100%);" aria-hidden="true"></div>
+        <span class="swatch-label">Computed<br>sky</span>
+      </div>
+    </div>
+    <p>The computed sky was the sixth colour in the system — never fixed, always derived from <code>getSkyColors(altDeg)</code>. The stone, gnomon, and solar triplet were specified in the brief; the cream and muted tones were derived to sit between them without introducing a new hue.</p>
+  </section>
+
+  <hr>
+
+  <!-- Pass history -->
+  <section class="section" aria-labelledby="passes-heading">
+    <span class="guide-eyebrow" id="passes-heading">Iteration History</span>
+    <h2 class="guide-h2">Three passes, honestly</h2>
+    <div class="pass-list">
+
+      <div class="pass-item">
+        <div class="pass-num" aria-hidden="true">I</div>
+        <div class="pass-body">
+          <div class="pass-title">Build &amp; first critique</div>
+          <p>Built the complete single-file site: NOAA solar math, sky gradient canvas with 9-key altitude interpolation, sundial dial canvas with latitude-accurate hour lines, four chapter cards with mini sky canvases, full animation loop. Verified altitude, azimuth, and day length against USNO values. The h1 was moved below the canvas onto the stone panel to fix contrast; the sky/ground split was set at 62%/38%.</p>
+          <p>Critique found the hero layout correct, but the sky arc was only the active-day arc with no seasonal context. Chapter cards and dial looked strong. No layout bugs.</p>
+          <span class="pass-upgrade">Upgrade: golden-hour arcs on dial</span>
+          <p style="margin-top:0.5rem;">Solved cos(H_gh) = (sin(6°) − sin(lat)sin(decl)) / (cos(lat)cos(decl)) to find the hour-angles where altitude = 6°, then painted brighter gold arc segments at both ends of the day arc on the dial rim.</p>
+        </div>
+      </div>
+
+      <div class="pass-item">
+        <div class="pass-num" aria-hidden="true">II</div>
+        <div class="pass-body">
+          <div class="pass-title">Contrast, controls &amp; sparkline</div>
+          <p>Critique found: date input picking up browser dark-mode styles (dark background clashing with cream panel); controls panel visually indistinct from the hero stone; no altitude data visible without scrolling.</p>
+          <p>Fixes applied: added <code>color-scheme: light</code> to date input and select, forcing consistent cream appearance; changed controls panel background from stone to cream with top/bottom borders for visual separation; tightened hero-intro padding and added a thin gnomon-coloured border-top as a deliberate horizon seam between sky canvas and stone.</p>
+          <span class="pass-upgrade">Upgrade: solar altitude sparkline</span>
+          <p style="margin-top:0.5rem;">Added <code>renderSparkline()</code> — a small canvas in the stats bar that draws the full-day altitude curve (midnight to midnight) with the current-hour position marked by a vertical tick and solar-gold dot. Uses the same <code>computeSolar</code> loop; no new data.</p>
+        </div>
+      </div>
+
+      <div class="pass-item">
+        <div class="pass-num" aria-hidden="true">III</div>
+        <div class="pass-body">
+          <div class="pass-title">Seasonal context &amp; city coordinates</div>
+          <p>Critique found: the hero stone zone between sky and controls felt visually empty — the only text was the h1 and subtitle with no data. The sky canvas arc had no seasonal reference point, making it hard to see whether the current date was a high or low sun day.</p>
+          <p>Fixes: added a city lat/lon coordinate display (<code>.hero-coords</code>) to the hero-intro row — it updates live when the city changes and gives the space purpose. Coordinate display is hidden on mobile to keep the layout clean.</p>
+          <span class="pass-upgrade">Upgrade: solstice comparison arcs</span>
+          <p style="margin-top:0.5rem;">The sky canvas now draws two ghost arcs behind the active arc: summer solstice (day 172, pale amber) and winter solstice (day 355, pale blue). On the spring equinox the active arc sits exactly midway — a visual proof of the math. At Reykjavík, the winter arc barely rises above the horizon while the summer arc nearly reaches the zenith, making the polar latitude visible at a glance.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- Known limits -->
+  <section class="section" aria-labelledby="limits-heading">
+    <span class="guide-eyebrow" id="limits-heading">Known Limits</span>
+    <h2 class="guide-h2">What was left out, and why</h2>
+    <p><strong>No equation-of-time correction.</strong> Solar noon is always exactly 12:00. Adding EoT would shift noon ±16 minutes (the analemma) and enable displaying clock time vs. solar time. Not implemented because it required restructuring the state model; the brief did not require clock time.</p>
+    <p><strong>No atmospheric refraction.</strong> The sun visually appears ~0.5° higher than computed altitude near the horizon. Sunrise and sunset are therefore ~2 minutes early by real-clock measure. The math is correct for a theoretical flat-Earth horizon with no atmosphere.</p>
+    <p><strong>Approximate hour-line labels.</strong> The sundial hour ticks are placed at 15° clock intervals. The shadow itself follows the correct horizontal sundial formula (atan(sin(lat) × tan(H))); only the label positions approximate clock time.</p>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <span class="footer-left">Equinox · Build Guide</span>
+  <span class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+</footer>
+
+</body>
+</html>

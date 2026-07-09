@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kitefield — Build Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sky:    #d8e9f2;
+      --ink:    #21374a;
+      --ink-2:  #4e6a7e;
+      --accent: #e34234;
+      --bg:     #f7f2e9;
+      --rule:   rgba(33, 55, 74, 0.15);
+      --ff-d:   'Bricolage Grotesque', 'Arial Black', sans-serif;
+      --ff-b:   'Atkinson Hyperlegible', Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:   #111d28;
+        --ink:  #d0e4f0;
+        --ink-2:#7aa0bc;
+        --rule: rgba(216, 232, 240, 0.12);
+      }
+    }
+    :root[data-theme="light"] { --bg: #f7f2e9; --ink: #21374a; --ink-2: #4e6a7e; --rule: rgba(33,55,74,0.15); }
+    :root[data-theme="dark"]  { --bg: #111d28; --ink: #d0e4f0; --ink-2: #7aa0bc; --rule: rgba(216,232,240,0.12); }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--ff-b);
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+    }
+
+    /* ── Sky banner ── */
+    .guide-hero {
+      background: linear-gradient(180deg, #9cc8e4 0%, #b8d8ec 40%, #d8e9f2 70%, #eef6fa 100%);
+      padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 6vw, 5rem) clamp(2rem, 4vw, 3.5rem);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative sun glow */
+    .guide-hero::after {
+      content: '';
+      position: absolute;
+      top: -10%; right: -5%;
+      width: 55%; height: 80%;
+      background: radial-gradient(circle at 80% 15%, rgba(255,248,200,0.26) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .guide-hero-eyebrow {
+      font-family: var(--ff-b);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: 0.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .guide-hero h1 {
+      font-family: var(--ff-d);
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+
+    .guide-hero-sub {
+      font-family: var(--ff-b);
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--ink);
+      opacity: 0.65;
+      margin-top: 0.75rem;
+    }
+
+    /* ── Kite decoration in banner ── */
+    .kite-deco {
+      position: absolute;
+      top: 12%; right: 12%;
+      opacity: 0.22;
+    }
+
+    /* ── Main content ── */
+    .guide-body {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 6vw, 3rem);
+    }
+
+    /* ── Section blocks ── */
+    .guide-section {
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+    }
+
+    .guide-section + .guide-section {
+      border-top: 1px solid var(--rule);
+      padding-top: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    .section-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+
+    .guide-section h2 {
+      font-family: var(--ff-d);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+
+    .guide-section h3 {
+      font-family: var(--ff-d);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 1.75rem 0 0.5rem;
+    }
+
+    .guide-section p {
+      color: var(--ink-2, var(--ink));
+      margin-bottom: 1rem;
+    }
+
+    .guide-section p:last-child { margin-bottom: 0; }
+
+    /* Brief blockquote */
+    blockquote {
+      border-left: 3px solid var(--accent);
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: rgba(33, 55, 74, 0.04);
+      border-radius: 0 4px 4px 0;
+    }
+    blockquote p {
+      font-style: italic;
+      color: var(--ink);
+      opacity: 0.85;
+      margin-bottom: 0;
+    }
+
+    /* Code excerpt */
+    pre {
+      background: var(--ink);
+      color: #d8e9f2;
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+      overflow-x: auto;
+      font-family: 'Menlo', 'Consolas', monospace;
+      font-size: 0.84rem;
+      line-height: 1.6;
+      margin: 1.25rem 0;
+    }
+    code { font-family: inherit; }
+
+    .code-comment { color: #7aa0bc; }
+    .code-kw      { color: #f0a440; }
+    .code-fn      { color: #88d8a8; }
+    .code-str     { color: #f07060; }
+    .code-num     { color: #b898f0; }
+
+    /* Pass history table */
+    .pass-list {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .pass-item {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr;
+      gap: 0 1.25rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .pass-item:last-child { border-bottom: none; }
+
+    .pass-label {
+      font-family: var(--ff-d);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      padding-top: 0.1rem;
+    }
+
+    .pass-desc { font-size: 0.9375rem; color: var(--ink-2, var(--ink)); }
+    .pass-desc strong { color: var(--ink); }
+
+    /* ── Footer ── */
+    .guide-footer {
+      border-top: 1px solid var(--rule);
+      padding: 2rem clamp(1.5rem, 6vw, 3rem);
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .guide-footer a {
+      font-family: var(--ff-d);
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .guide-footer a:hover { color: var(--accent); }
+
+    .guide-footer-credit {
+      font-size: 0.8125rem;
+      color: var(--ink);
+      opacity: 0.45;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Banner ── -->
+  <header class="guide-hero">
+    <svg class="kite-deco" width="120" height="150" viewBox="0 0 120 150" fill="none" aria-hidden="true">
+      <polygon points="60,4 110,62 60,118 10,62" fill="#e34234" opacity="0.9"/>
+      <polygon points="60,4 110,62 60,62" fill="#ffffff" opacity="0.9"/>
+      <polygon points="60,62 110,62 60,118" fill="#ffffff" opacity="0.85"/>
+      <polygon points="60,4 10,62 60,62" fill="#e34234" opacity="0.85"/>
+      <line x1="60" y1="4" x2="60" y2="118" stroke="rgba(33,55,74,0.15)" stroke-width="1"/>
+      <line x1="10" y1="62" x2="110" y2="62" stroke="rgba(33,55,74,0.15)" stroke-width="1"/>
+      <line x1="60" y1="118" x2="52" y2="148" stroke="#7a6f5d" stroke-width="1.5" stroke-dasharray="3,3"/>
+    </svg>
+
+    <p class="guide-hero-eyebrow">Fable 25 Local · Build Guide</p>
+    <h1>Kitefield</h1>
+    <p class="guide-hero-sub">A kite festival in verlet rope and canvas sky</p>
+  </header>
+
+  <main class="guide-body">
+
+    <!-- ── Brief ── -->
+    <section class="guide-section">
+      <span class="section-eyebrow">The Brief</span>
+      <h2>What Was Asked</h2>
+
+      <blockquote>
+        <p>kitefield — a kite festival. The one daylight-and-wind site. Signature: verlet rope-and-cloth kites in a procedural sky — fly one with your pointer, wind gusts ripple tails and grass; the crowd of kites is autonomous. Palette: sky #d8e9f2, ink #21374a, kite red #e34234, string #7a6f5d. Type: Bricolage Grotesque + Atkinson Hyperlegible. Prove: soft-body physics with joy; a bright palette that still has hierarchy. Upgrade ideas: wind sock and forecast; kite designer (pick sail pattern); tangled-lines easter egg.</p>
+      </blockquote>
+
+      <p>The brief demanded physics that felt joyful — not technically correct for its own sake, but expressively correct. That meant solving why kites hang below their anchor (string gravity dominating kite lift) before worrying about anything visual.</p>
+    </section>
+
+    <!-- ── Signature technique ── -->
+    <section class="guide-section">
+      <span class="section-eyebrow">Signature Technique</span>
+      <h2>Near-weightless Verlet Strings</h2>
+
+      <p>The core physics insight: a standard verlet string particle applies full gravity to every segment, which drags the kite body below its anchor point. The fix was making string particles nearly weightless while giving the kite end full upward lift:</p>
+
+<pre><code><span class="code-comment">// Physics tuning: string is nearly weightless (blown by wind),</span>
+<span class="code-comment">// kite has strong lift</span>
+<span class="code-kw">const</span> STR_GRAVITY = GRAVITY * <span class="code-num">0.03</span>;  <span class="code-comment">// 6 px/s² — near-weightless string</span>
+<span class="code-kw">const</span> KITE_LIFT   = <span class="code-num">-620</span>;            <span class="code-comment">// px/s² upward</span>
+<span class="code-comment">// Net kite force: GRAVITY + KITE_LIFT = 200 - 620 = -420 upward</span>
+<span class="code-comment">// String total sag: 16 segs × 6 px/s² = 96 px/s² — kite (-420) overcomes it</span>
+
+<span class="code-comment">// Per-instance segs parameter gives natural altitude spread:</span>
+<span class="code-kw">const</span> crowd = [
+  { rx: <span class="code-num">0.03</span>, segs: <span class="code-num"> 9</span> },  <span class="code-comment">// low-flying near-left</span>
+  { rx: <span class="code-num">0.08</span>, segs: <span class="code-num">14</span> },  <span class="code-comment">// high flier</span>
+  { rx: <span class="code-num">0.22</span>, segs: <span class="code-num">17</span> },  <span class="code-comment">// very high</span>
+  <span class="code-comment">// shorter segs → lower kite; longer → higher</span>
+];</code></pre>
+
+      <h3>Bezier-Splined String Drawing (Pass 2 upgrade)</h3>
+      <p>String segments are verlet particles connected by distance constraints — so the raw path is a polyline through discrete points. Replacing <code>lineTo</code> with midpoint-averaged quadratic bezier curves makes the string read as a single continuous silk drape:</p>
+
+<pre><code><span class="code-comment">// Midpoint-averaged quadratic bezier: smooth through all verlet particles</span>
+ctx.<span class="code-fn">beginPath</span>();
+ctx.<span class="code-fn">moveTo</span>(<span class="code-kw">this</span>.sp[<span class="code-num">0</span>].x, <span class="code-kw">this</span>.sp[<span class="code-num">0</span>].y);
+<span class="code-kw">for</span> (<span class="code-kw">let</span> i = <span class="code-num">1</span>; i &lt; <span class="code-kw">this</span>.segs; i++) {
+  <span class="code-kw">const</span> mx = (<span class="code-kw">this</span>.sp[i].x + <span class="code-kw">this</span>.sp[i + <span class="code-num">1</span>].x) * <span class="code-num">0.5</span>;
+  <span class="code-kw">const</span> my = (<span class="code-kw">this</span>.sp[i].y + <span class="code-kw">this</span>.sp[i + <span class="code-num">1</span>].y) * <span class="code-num">0.5</span>;
+  ctx.<span class="code-fn">quadraticCurveTo</span>(<span class="code-kw">this</span>.sp[i].x, <span class="code-kw">this</span>.sp[i].y, mx, my);
+}
+ctx.<span class="code-fn">lineTo</span>(<span class="code-kw">this</span>.sp[<span class="code-kw">this</span>.segs].x, <span class="code-kw">this</span>.sp[<span class="code-kw">this</span>.segs].y);</code></pre>
+
+      <p>The same technique is applied to the kite tail ribbon for a fluid, fabric-like movement.</p>
+
+      <h3>Swallow Silhouettes (Pass 3 upgrade)</h3>
+      <p>Four stylised birds cross the sky at varied speeds and altitudes. Each is two quadratic bezier wing arcs with a gentle sinusoidal flap — the same bezier idiom as the strings, unified across the system:</p>
+
+<pre><code><span class="code-kw">function</span> <span class="code-fn">drawBird</span>(bx, by, span, wingT) {
+  <span class="code-kw">const</span> flap = Math.<span class="code-fn">sin</span>(wingT) * <span class="code-num">0.28</span>;
+  <span class="code-kw">const</span> liftL = flap * span * <span class="code-num">0.9</span>;
+  ctx.<span class="code-fn">beginPath</span>();
+  <span class="code-comment">// Left wing arc</span>
+  ctx.<span class="code-fn">moveTo</span>(bx, by);
+  ctx.<span class="code-fn">quadraticCurveTo</span>(bx - span * <span class="code-num">0.55</span>, by - span * <span class="code-num">0.3</span> - liftL, bx - span, by - liftL);
+  <span class="code-comment">// Right wing arc</span>
+  ctx.<span class="code-fn">moveTo</span>(bx, by);
+  ctx.<span class="code-fn">quadraticCurveTo</span>(bx + span * <span class="code-num">0.55</span>, by - span * <span class="code-num">0.3</span> - liftL, bx + span, by - liftL);
+  ctx.<span class="code-fn">stroke</span>();
+}</code></pre>
+    </section>
+
+    <!-- ── Pass history ── -->
+    <section class="guide-section">
+      <span class="section-eyebrow">Iteration History</span>
+      <h2>What Each Pass Actually Found</h2>
+
+      <ul class="pass-list">
+        <li class="pass-item">
+          <span class="pass-label">Pass 1</span>
+          <div class="pass-desc">
+            <strong>Initial build and physics fix.</strong> The root problem: all kites descended below the grass line because GRAVITY (200 px/s²) dominated the string chain. Fixed by per-segment STR_GRAVITY = GRAVITY × 0.03 for string particles and KITE_LIFT = −620 px/s² for the kite end. Per-instance <code>segs</code> parameter (8–17) gives natural altitude spread. Complexity upgrade: directional sun glow (radial gradient from upper-right). Also added: wind sock with Beaufort label, animated grass (200 cubic-bezier blades), 5 cumulus cloud clusters drifting with wind, responsive layout (wind sock hidden at W &lt; 520, title repositions on mobile).
+          </div>
+        </li>
+        <li class="pass-item">
+          <span class="pass-label">Pass 2</span>
+          <div class="pass-desc">
+            <strong>Bezier spline strings + wind calibration.</strong> Screenshot critique found: string polylines read as rigid ladder segments rather than continuous silk. Fix: midpoint-averaged quadratic bezier through all verlet particles for both string and tail. Wind base lowered from 72 → 50 px/s² so "Light Breeze" appears by default instead of nearly always "Moderate". Bow-tie tail ribbons widened at small kite scales (bowSize scales with bodyScale inverse). Zero console errors after changes.
+          </div>
+        </li>
+        <li class="pass-item">
+          <span class="pass-label">Pass 3</span>
+          <div class="pass-desc">
+            <strong>Swallow silhouettes + atmospheric life.</strong> Complexity upgrade: four small birds with sinusoidal wing-beat cross the sky at varied speeds and altitudes. Each is two quadratic bezier arcs — the same curve idiom as the strings, keeping the system visually unified. Birds reset off-screen left with new random altitude when they exit right. Applied to reduced-motion static frame via warmup loop. Zero console errors, zero page errors at all viewports.
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ── Known roughness ── -->
+    <section class="guide-section">
+      <span class="section-eyebrow">Honest Inventory</span>
+      <h2>What Remains Rough</h2>
+
+      <p>The string still has no true catenary sag — physics gives a reasonable approximation but a real mathematical catenary would add more elegant droop in calm conditions. The kite body is a rigid diamond; under wind pressure it would deform. The wind sock occasionally shows "Moderate" even at the lower base wind because oscillation and gust layers can push total wind force above the 55 px/s² threshold. None of these are release blockers, and fixing them risks making the simulation feel engineered rather than joyful.</p>
+
+      <p>Brief upgrades not built: kite designer (pick sail pattern), tangled-lines easter egg. Both need non-trivial interaction state machines that were de-scoped for single-agent budget.</p>
+    </section>
+
+  </main>
+
+  <footer class="guide-footer">
+    <a href="../">← Back to Kitefield</a>
+    <p class="guide-footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+  </footer>
+
+</body>
+</html>

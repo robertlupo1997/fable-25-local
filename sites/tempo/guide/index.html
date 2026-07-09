@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tempo — Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ---- Tokens (mirror main site) ---- */
+    :root {
+      --bone: #f1ede4;
+      --ink: #191714;
+      --ink-60: rgba(25,23,20,0.6);
+      --ink-30: rgba(25,23,20,0.3);
+      --ink-12: rgba(25,23,20,0.12);
+      --accent: #c73e1d;
+      --surface: #e9e4da;
+      --font-serif: 'Young Serif', Georgia, serif;
+      --font-sans: 'Rubik', system-ui, sans-serif;
+      --font-mono: 'Menlo', 'Consolas', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bone);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- Skip link ---- */
+    .skip-link {
+      position: absolute; top: -9999px; left: 1rem;
+      background: var(--ink); color: var(--bone);
+      padding: 0.4rem 1rem; border-radius: 0 0 6px 6px;
+      font-size: 0.875rem; z-index: 100; text-decoration: none;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ---- Header ---- */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--bone);
+      border-bottom: 1px solid var(--ink-12);
+    }
+    .header-inner {
+      max-width: 860px; margin: 0 auto;
+      padding: 0.9rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .wordmark {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+    .back-link {
+      font-size: 0.8125rem;
+      color: var(--ink-60);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink-30);
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .back-link:hover { color: var(--ink); border-color: var(--ink); }
+    .back-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+    /* ---- Main layout ---- */
+    main { max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+
+    /* ---- Hero ---- */
+    .guide-hero {
+      margin-bottom: 4rem;
+      border-bottom: 1px solid var(--ink-12);
+      padding-bottom: 3rem;
+    }
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .guide-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .guide-lede {
+      font-size: 1.0625rem;
+      color: var(--ink-60);
+      max-width: 52ch;
+    }
+
+    /* ---- Section headings ---- */
+    h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    h3 {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-60);
+      margin-bottom: 0.75rem;
+    }
+
+    /* ---- Sections ---- */
+    .guide-section {
+      margin-bottom: 3.5rem;
+    }
+
+    p {
+      font-size: 0.9375rem;
+      color: var(--ink-60);
+      max-width: 64ch;
+      margin-bottom: 1rem;
+    }
+    p:last-child { margin-bottom: 0; }
+
+    /* ---- Brief block ---- */
+    .brief-block {
+      background: var(--surface);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .brief-block p {
+      font-size: 0.9375rem;
+      color: var(--ink);
+      font-style: italic;
+      margin: 0;
+    }
+
+    /* ---- Code block ---- */
+    .code-wrap {
+      overflow-x: auto;
+      background: var(--ink);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    pre {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.65;
+      color: #e8e3d8;
+      white-space: pre;
+    }
+    .code-comment { color: rgba(232,227,216,0.4); }
+    .code-kw { color: #c4843a; }
+    .code-fn { color: #2aad80; }
+    .code-str { color: #7060d0; }
+    .code-num { color: #bf6820; }
+
+    /* ---- Pass history ---- */
+    .pass-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .pass-item {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 0 1.25rem;
+      align-items: start;
+    }
+    .pass-num {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--ink-30);
+      line-height: 1.4;
+      text-align: right;
+    }
+    .pass-body h4 {
+      font-family: var(--font-sans);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .pass-body p {
+      font-size: 0.875rem;
+      color: var(--ink-60);
+      max-width: none;
+    }
+    .pass-upgrade {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ---- Divider ---- */
+    hr {
+      border: none;
+      border-top: 1px solid var(--ink-12);
+      margin: 3rem 0;
+    }
+
+    /* ---- Footer ---- */
+    .site-footer {
+      border-top: 1px solid var(--ink-12);
+      padding: 1.75rem 1.5rem;
+    }
+    .footer-inner { max-width: 860px; margin: 0 auto; }
+    .credit {
+      font-size: 0.75rem;
+      color: var(--ink-30);
+      letter-spacing: 0.03em;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 540px) {
+      main { padding: 2.5rem 1rem 4rem; }
+      .guide-hero { margin-bottom: 2.5rem; }
+      .pass-item { grid-template-columns: 2rem 1fr; gap: 0 0.75rem; }
+      .pass-num { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="wordmark">Tempo</span>
+      <a class="back-link" href="../">← Back to observatory</a>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <section class="guide-hero">
+      <p class="eyebrow">Build guide</p>
+      <h1 class="guide-title">How Tempo was made</h1>
+      <p class="guide-lede">The brief, the core technique, and what five critique passes actually changed.</p>
+    </section>
+
+    <!-- The brief -->
+    <section class="guide-section">
+      <h2>The brief</h2>
+      <p>Wave 4, site 25. The exact words received:</p>
+      <div class="brief-block">
+        <p>"A polyrhythm observatory. Steve Reich as a website. Signature: N circles, N periods — phase patterns drawn as orbiting bodies whose alignments flash and click (WebAudio, muted until invited); the math of 3-against-4-against-5 made visible and audible; phasing pieces you can conduct. Palette: bone #f1ede4, ink #191714, OKLCH hue-wheel per voice, accent #c73e1d. Type: Young Serif + Rubik. Prove: math-music visualization with warmth — the finale is earned minimalism. Upgrade ideas: a phase-shift slider (Reich's trick); polygon-inscribed rhythm view; a coda that locks all voices into unison."</p>
+      </div>
+      <p>The directive was unusually concrete: a real composer, a real mathematical idea (phase music), and three specific upgrade paths. This shaped the architecture immediately.</p>
+    </section>
+
+    <!-- Signature technique -->
+    <section class="guide-section">
+      <h2>Signature technique</h2>
+      <h3>Orbit beat detection</h3>
+      <p>The core idea: each voice of N beats maps to N dots orbiting a ring at uniform angular velocity. A beat fires the moment a dot crosses the 12-o'clock position. The math is cleaner than it looks — one line of arithmetic per voice, sampled every animation frame:</p>
+      <div class="code-wrap">
+        <pre><span class="code-comment">// cycleProgress: 0..1, how far we are through the current cycle
+// n: number of beats in this voice (3, 4, 5, 6, or 7)
+// offset: phase offset in turns (0..1), controlled by Reich slider</span>
+
+<span class="code-kw">const</span> adjusted = ((cycleProgress + offset) % <span class="code-num">1</span> + <span class="code-num">1</span>) % <span class="code-num">1</span>;
+<span class="code-kw">const</span> beatCount = Math.<span class="code-fn">floor</span>(adjusted * n);
+
+<span class="code-comment">// beatCount is the index (0..n-1) of the currently "active" beat.
+// When it changes from the last stored value, a beat has fired.</span>
+
+<span class="code-kw">if</span> (!lastBeat.<span class="code-fn">has</span>(n) || lastBeat.<span class="code-fn">get</span>(n) !== beatCount) {
+  lastBeat.<span class="code-fn">set</span>(n, beatCount);
+  <span class="code-comment">// → trigger flash, ripple, WebAudio tone</span>
+}</pre>
+      </div>
+      <p>The double-mod <code>((x % 1) + 1) % 1</code> handles negative phase offsets cleanly. Each voice is independent: different N, same cycle clock, which is exactly what creates polyrhythm.</p>
+
+      <h3 style="margin-top:2rem;">Comet trails (Stage 2 upgrade)</h3>
+      <p>Each dot records its last 14 canvas positions in a circular buffer. On every frame, ghost dots are drawn at those positions with linearly increasing opacity from 0 → 35%, giving each orbiter a comet tail that makes angular velocity differences between voices immediately visible:</p>
+      <div class="code-wrap">
+        <pre><span class="code-kw">function</span> <span class="code-fn">recordTrail</span>(n, dotIdx, x, y) {
+  <span class="code-kw">const</span> buf = trails.<span class="code-fn">get</span>(n)?.[dotIdx] ?? [];
+  buf.<span class="code-fn">push</span>({ x, y });
+  <span class="code-kw">if</span> (buf.length > TRAIL_LEN) buf.<span class="code-fn">shift</span>();  <span class="code-comment">// oldest drops off</span>
+}
+
+<span class="code-kw">function</span> <span class="code-fn">drawTrail</span>(n, dotIdx, color) {
+  <span class="code-kw">const</span> buf = trails.<span class="code-fn">get</span>(n)?.[dotIdx];
+  <span class="code-kw">if</span> (!buf || buf.length < <span class="code-num">2</span>) <span class="code-kw">return</span>;
+  buf.<span class="code-fn">forEach</span>((pt, t) => {
+    <span class="code-kw">const</span> p = t / (buf.length - <span class="code-num">1</span>);  <span class="code-comment">// 0 = oldest ghost, 1 = tip</span>
+    ctx.globalAlpha = p * <span class="code-num">0.35</span>;
+    ctx.<span class="code-fn">arc</span>(pt.x, pt.y, W * <span class="code-num">0.007</span> * (<span class="code-num">0.3</span> + p * <span class="code-num">0.7</span>), <span class="code-num">0</span>, Math.PI * <span class="code-num">2</span>);
+    ctx.<span class="code-fn">fill</span>();
+  });
+}</pre>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- Pass history -->
+    <section class="guide-section">
+      <h2>What each pass found</h2>
+      <p>Five passes total — three in Stage 1, two in Stage 2. Each pass is a screenshot, a hostile critique, a round of fixes, and one complexity upgrade. This is the honest record.</p>
+
+      <ul class="pass-list" style="margin-top:2rem;">
+
+        <li class="pass-item">
+          <span class="pass-num">1</span>
+          <div class="pass-body">
+            <h4>Pass 1 — initial build</h4>
+            <p>Rings were too pale (opacity too low to read in ambient light). Dots were undersized — looked like specks rather than orbiting bodies. Voice labels were stacked above the rings and floated disconnected from their rings.</p>
+            <p>Fixed: ring opacity raised 28 points; dot size increased to W×0.017; labels repositioned to 9 o'clock on each ring's own radius.</p>
+            <span class="pass-upgrade">Upgrade: home-tick at 12 o'clock added to each ring</span>
+          </div>
+        </li>
+
+        <li class="pass-item">
+          <span class="pass-num">2</span>
+          <div class="pass-body">
+            <h4>Pass 2 — contrast + position</h4>
+            <p>Ring opacity still slightly low at +28. Dots still a touch small. Label stacking persisted. Outer ring radius capped too generously (0.44×W), crowding the label column.</p>
+            <p>Fixed: ring opacity raised to +45; dot size raised again; labels confirmed at 9 o'clock; maxR reduced from 0.44W to 0.40W so labels have breathing room.</p>
+            <span class="pass-upgrade">Upgrade: phase-shift slider (Reich's trick) added — full ±180° range</span>
+          </div>
+        </li>
+
+        <li class="pass-item">
+          <span class="pass-num">3</span>
+          <div class="pass-body">
+            <h4>Pass 3 — mobile + unison coda</h4>
+            <p>Canvas had no circular border — the visualization floated without containment. Mobile canvas had no size cap, running too large. Phase/unison offset calculations were inconsistent between draw and detect functions.</p>
+            <p>Fixed: box-shadow border-ring added to canvas; mobile cap at 340px; phase offset easing unified across draw/detect.</p>
+            <span class="pass-upgrade">Upgrade: polygon view (N-gon inscribed in each ring, connected cross-voice) + unison coda (4-second ease-out convergence with chord)</span>
+          </div>
+        </li>
+
+        <li class="pass-item">
+          <span class="pass-num">4</span>
+          <div class="pass-body">
+            <h4>Pass 4 — viewport height (Stage 2, Pass 1)</h4>
+            <p>At 1024×640 (the required desktop viewport), the canvas was 520px wide — the full height of the observatory section exceeded 640px, pushing the PLAY button, speed slider, and all voice controls entirely below the fold. Users had no affordance to interact.</p>
+            <p>Fixed: added <code>@media (max-height: 660px)</code> block that compresses canvas to min(290px, 55vw), reduces observatory padding and gaps, and scales the heading down. All controls now visible at 640px.</p>
+            <span class="pass-upgrade">Upgrade: comet trails — 14-position circular buffer per dot, fading ghost chain making velocity visible</span>
+          </div>
+        </li>
+
+        <li class="pass-item">
+          <span class="pass-num">5</span>
+          <div class="pass-body">
+            <h4>Pass 5 — polygon labels + beat annotations (Stage 2, Pass 2)</h4>
+            <p>Polygon view showed N-gon shapes but gave no indication of which vertex was which beat. Known weakness from Stage 1. Beat count was invisible — numbers visible only as labels at 9 o'clock, not during action.</p>
+            <p>Fixed: polygon view now draws beat-number labels at each vertex (dim for inactive, bright for current); added floating beat-number annotations that rise and fade from the 12 o'clock position on each ring when a beat fires, making the counting explicit.</p>
+            <span class="pass-upgrade">Upgrade: floating beat annotations — number rises 5% of W and fades over 500ms on every beat fire</span>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="credit">Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</p>
+    </div>
+  </footer>
+</body>
+</html>

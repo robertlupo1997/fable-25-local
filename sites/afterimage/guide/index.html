@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFTERIMAGE — Build Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --w: #f5f5f2;
+      --k: #111111;
+      --c: #00aeef;
+      --m: #ec008c;
+      --y: #ffe600;
+
+      --fs-xs:   clamp(0.6rem,  1.2vw, 0.72rem);
+      --fs-sm:   clamp(0.72rem, 1.5vw, 0.85rem);
+      --fs-base: clamp(0.85rem, 1.8vw, 1rem);
+      --fs-md:   clamp(1rem,    2.5vw, 1.2rem);
+      --fs-lg:   clamp(1.3rem,  3.5vw, 2rem);
+      --fs-xl:   clamp(2rem,    6vw,   4rem);
+      --fs-disp: clamp(3rem,    10vw,  7rem);
+
+      --gap: clamp(1.5rem, 4vw, 3.5rem);
+      --pad-x: clamp(1.5rem, 5vw, 5rem);
+      --pad-y: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--w);
+      color: var(--k);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: var(--fs-base);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* SKIP LINK */
+    .skip-link {
+      position: absolute; top: -9rem; left: 1rem;
+      background: var(--k); color: var(--w);
+      font-family: 'Space Mono', monospace; font-size: var(--fs-xs);
+      padding: 0.5em 1em; text-decoration: none; z-index: 9999;
+      transition: top 0.15s;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* HEADER */
+    .guide-header {
+      background: var(--k);
+      color: var(--w);
+      padding: var(--pad-y) var(--pad-x);
+      border-bottom: 3px solid var(--m);
+      position: relative;
+      overflow: hidden;
+    }
+    .guide-header::after {
+      content: 'G';
+      position: absolute;
+      right: -0.06em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: clamp(8rem, 30vw, 20rem);
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(245,245,242,0.05);
+      pointer-events: none;
+      line-height: 1;
+    }
+    .header-label {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.2em;
+      color: rgba(245,245,242,0.45);
+      margin-bottom: 1.25rem;
+    }
+    .guide-title {
+      font-size: var(--fs-disp);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .guide-title .cyan  { color: var(--c); text-shadow: 3px 1px 0 rgba(236,0,140,0.3); }
+    .guide-title .mag   { color: var(--m); text-shadow: -3px -1px 0 rgba(0,174,239,0.3); }
+    .guide-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-sm);
+      letter-spacing: 0.15em;
+      color: rgba(245,245,242,0.55);
+      margin-top: 1rem;
+    }
+
+    /* NAV */
+    .guide-nav {
+      background: var(--k);
+      border-bottom: 1px solid rgba(245,245,242,0.1);
+      padding: 0.9rem var(--pad-x);
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .guide-nav a {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.12em;
+      color: rgba(245,245,242,0.45);
+      text-decoration: none;
+      transition: color 0.12s;
+    }
+    .guide-nav a:hover,
+    .guide-nav a:focus-visible { color: var(--m); }
+
+    /* MAIN */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: var(--pad-y) var(--pad-x);
+    }
+
+    /* SECTIONS */
+    .guide-section {
+      margin-bottom: 4rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid rgba(17,17,17,0.1);
+    }
+    .guide-section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.2em;
+      color: var(--m);
+      margin-bottom: 0.75rem;
+    }
+    .section-head {
+      font-size: var(--fs-lg);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    p { margin-bottom: 1em; max-width: 60ch; }
+    p:last-child { margin-bottom: 0; }
+
+    /* BRIEF QUOTE */
+    .brief-quote {
+      background: var(--k);
+      color: var(--w);
+      padding: 2rem 2rem 2rem 2.5rem;
+      border-left: 4px solid var(--m);
+      margin: 2rem 0;
+      font-size: var(--fs-sm);
+      line-height: 1.75;
+    }
+    .brief-quote strong { color: var(--c); }
+    .brief-palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+    .swatch {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      padding: 0.3em 0.6em;
+      border: 1px solid rgba(245,245,242,0.12);
+    }
+    .sw-w { background: #f5f5f2; color: #111; }
+    .sw-k { background: #111111; color: #f5f5f2; }
+    .sw-c { background: #00aeef; color: #111; }
+    .sw-m { background: #ec008c; color: #fff; }
+    .sw-y { background: #ffe600; color: #111; }
+
+    /* CODE BLOCKS */
+    .code-label {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.18em;
+      color: var(--m);
+      margin-bottom: 0.5rem;
+    }
+    .code-block {
+      background: var(--k);
+      color: rgba(245,245,242,0.85);
+      padding: 1.5rem 1.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.58rem, 1.1vw, 0.72rem);
+      line-height: 1.7;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+    }
+    .code-block .cmt { color: rgba(245,245,242,0.38); }
+    .code-block .kw  { color: var(--c); }
+    .code-block .fn  { color: var(--y); }
+    .code-block .str { color: var(--m); }
+
+    /* PASS HISTORY */
+    .pass-card {
+      border: 1px solid rgba(17,17,17,0.12);
+      margin-bottom: 1.5rem;
+    }
+    .pass-head {
+      background: var(--k);
+      color: var(--w);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .pass-n {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.15em;
+      color: var(--m);
+      font-weight: 700;
+    }
+    .pass-title {
+      font-size: var(--fs-sm);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+    .pass-body {
+      padding: 1.25rem 1.5rem;
+    }
+    .pass-body ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .pass-body li {
+      font-size: var(--fs-sm);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+    .pass-body li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: rgba(17,17,17,0.3);
+    }
+    .pass-upgrade {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(236,0,140,0.06);
+      border-left: 3px solid var(--m);
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.05em;
+    }
+    .pass-upgrade strong { color: var(--m); }
+
+    /* FOOTER */
+    .guide-footer {
+      background: var(--k);
+      color: var(--w);
+      padding: 2rem var(--pad-x);
+      border-top: 3px solid var(--m);
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .footer-left span {
+      display: block;
+    }
+    .footer-title {
+      font-size: var(--fs-md);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .footer-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      color: rgba(245,245,242,0.4);
+      margin-top: 0.2rem;
+    }
+    .footer-credit {
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      color: rgba(245,245,242,0.35);
+    }
+    .footer-marks {
+      margin-top: 1.5rem;
+      max-width: 860px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      gap: 1rem;
+      font-size: 1.2rem;
+    }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: 'Space Mono', monospace;
+      font-size: var(--fs-xs);
+      letter-spacing: 0.12em;
+      color: var(--m);
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+    }
+    .back-link:hover, .back-link:focus-visible { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .guide-nav { gap: 1rem; }
+      .brief-palette { gap: 0.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="guide-header" role="banner">
+  <p class="header-label">BUILD GUIDE · FABLE 25 LOCAL · BRIEF N°24</p>
+  <h1 class="guide-title">
+    <span class="cyan">AFTER</span><span class="mag">IMAGE</span>
+  </h1>
+  <p class="guide-sub">A PHOTOCOPY ZINE ON SEEING — HOW IT WAS MADE</p>
+</header>
+
+<nav class="guide-nav" aria-label="Guide sections">
+  <a href="#brief">The Brief</a>
+  <a href="#technique">Signature Technique</a>
+  <a href="#passes">Pass History</a>
+  <a href="#index">← Back to Zine</a>
+</nav>
+
+<main id="main">
+  <a class="back-link" href="../">← AFTERIMAGE ZINE</a>
+
+  <!-- BRIEF -->
+  <section class="guide-section" id="brief" aria-labelledby="brief-head">
+    <p class="section-label">SECTION 01</p>
+    <h2 class="section-head" id="brief-head">The Brief</h2>
+    <p>Brief #24 of FABLE 25 LOCAL. The brief was received verbatim; no brief was added or modified.</p>
+
+    <blockquote class="brief-quote">
+      <strong>24. `afterimage` — a photocopy zine on seeing.</strong> Five spreads on perception, illustrated
+      by a live WebGL image-processing rig applied to procedurally generated "photographs."
+      Signature: post-processing as art direction — ordered dithering, CMYK halftone separation,
+      chromatic aberration, video-feedback tunnels, each spread one effect with its recipe.
+      Palette: zine white <code>#f5f5f2</code>, ink <code>#111111</code>, process magenta <code>#ec008c</code>,
+      cyan <code>#00aeef</code>, yellow <code>#ffe600</code>. Type: Space Grotesk + Space Mono.
+      Prove: shader post-processing taught like a zine, punk but precise.
+      Upgrade ideas: a copier "degrade" button (each press re-photocopies the page);
+      registration-drift on scroll; staple shadows.
+
+      <div class="brief-palette" aria-label="Brief palette swatches">
+        <span class="swatch sw-w">#F5F5F2</span>
+        <span class="swatch sw-k">#111111</span>
+        <span class="swatch sw-c">#00AEEF</span>
+        <span class="swatch sw-m">#EC008C</span>
+        <span class="swatch sw-y">#FFE600</span>
+      </div>
+    </blockquote>
+
+    <p>The brief's core tension: technical shader education delivered as a physical zine. Every spread had to work
+    as both a legible procedural "photograph" and a readable recipe for the effect. The aesthetic mandate —
+    "punk but precise" — meant embracing visible artifacts (strong chromatic fringing, dithered portraits)
+    rather than softening them.</p>
+  </section>
+
+  <!-- TECHNIQUE -->
+  <section class="guide-section" id="technique" aria-labelledby="tech-head">
+    <p class="section-label">SECTION 02</p>
+    <h2 class="section-head" id="tech-head">Signature Technique: Ping-Pong FBO Video Feedback</h2>
+
+    <p>The most structurally complex piece is Spread 04 — the video feedback tunnel. Real video feedback
+    (pointing a camera at its own monitor) requires a true memory between frames. A standard single-pass
+    WebGL2 renderer reads from the canvas it writes to — a hazard. The solution is a ping-pong FBO pair.</p>
+
+    <p>Two RGBA8 textures (A and B) and two framebuffer objects live in GPU memory. Each frame, the feedback
+    shader reads from the source texture and writes to the destination FBO — never the one it reads. Then a
+    blit shader copies the destination to the visible canvas. The source and destination swap every frame.</p>
+
+    <p class="code-label">SEED PASS — runs once at init, writes concentric rings + spokes into texA:</p>
+    <pre class="code-block"><span class="cmt">// FRAG_SEED — seeds the initial pattern into texA</span>
+<span class="kw">void</span> <span class="fn">main</span>(){
+  vec2 p = v_uv - 0.5;
+  <span class="kw">float</span> r = length(p);
+  <span class="kw">float</span> rings  = 0.5 + 0.5 * sin(r * 32.0);
+  <span class="kw">float</span> spokes = 0.5 + 0.5 * cos(atan(p.y, p.x) * 4.0);
+  <span class="kw">float</span> core   = smoothstep(0.1, 0.0, r);
+  <span class="kw">float</span> v = rings * 0.22 * smoothstep(0.5, 0.0, r)
+          + spokes * 0.12 * smoothstep(0.45, 0.18, r) + core;
+  fragColor = vec4(v * 0.25, v * 0.08, v, 1.0);
+}</pre>
+
+    <p class="code-label">FEEDBACK PASS — runs every frame, reads srcTex → writes dstFBO:</p>
+    <pre class="code-block"><span class="cmt">// FRAG_FEED — zoom × rotate × decay × inject new signal</span>
+<span class="kw">void</span> <span class="fn">main</span>(){
+  vec2 p = v_uv - 0.5;
+
+  <span class="cmt">// Shrink UV by 1/zoom so sampled image appears larger next frame</span>
+  <span class="kw">float</span> zoom = 1.0 / 1.019;
+  <span class="kw">float</span> ang  = 0.005; <span class="cmt">// radians per frame</span>
+  <span class="kw">float</span> cs = cos(ang), sn = sin(ang);
+  vec2 rp = vec2(cs*p.x - sn*p.y, sn*p.x + cs*p.y) * zoom;
+
+  vec4 prev  = texture(u_prev, clamp(rp + 0.5, 0.0, 1.0));
+  vec3 faded = prev.rgb * 0.962; <span class="cmt">// decay factor</span>
+
+  <span class="cmt">// Slow hue-drift tint keeps the tunnel colour from bleaching</span>
+  <span class="kw">float</span> th  = u_t * 0.25;
+  vec3 tint = vec3(0.97 + sin(th)*0.03,
+                   0.94 + cos(th*0.7)*0.04,
+                   0.985 + sin(th*0.5)*0.015);
+
+  <span class="cmt">// New signal: rotating spokes + central pulse at low amplitude</span>
+  <span class="kw">float</span> r2  = length(p);
+  <span class="kw">float</span> spk = (0.5 + 0.5*sin(atan(p.y,p.x)*3.0 + u_t*1.4))
+              * smoothstep(0.48, 0.28, r2) * smoothstep(0.08, 0.2, r2) * 0.06;
+  <span class="kw">float</span> pulse = smoothstep(0.05, 0.0, r2) * (0.5 + 0.5*sin(u_t*2.6)) * 0.1;
+
+  vec3 sig = vec3(spk*0.35, spk*0.1, spk)
+           + vec3(pulse*0.9, pulse*0.65, 0.0);
+
+  fragColor = vec4(clamp(faded * tint + sig, 0.0, 1.0), 1.0);
+}</pre>
+
+    <p class="code-label">SWAP LOGIC — JavaScript orchestration (from main.js):</p>
+    <pre class="code-block"><span class="cmt">// Each frame: read from srcTex, write to dstFBO, blit, swap</span>
+<span class="kw">const</span> srcTex = current === 0 ? texA : texB;
+<span class="kw">const</span> dstFBO = current === 0 ? fboB : fboA;
+<span class="kw">const</span> dstTex = current === 0 ? texB : texA;
+
+<span class="cmt">// Feedback pass: srcTex → dstFBO</span>
+gl.bindFramebuffer(gl.FRAMEBUFFER, dstFBO);
+gl.useProgram(progFeed);
+gl.bindTexture(gl.TEXTURE_2D, srcTex);
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+<span class="cmt">// Blit to canvas: dstTex → null framebuffer</span>
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+gl.useProgram(progBlit);
+gl.bindTexture(gl.TEXTURE_2D, dstTex);
+gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+current = 1 - current; <span class="cmt">// swap</span></pre>
+
+    <p>The result after ~120 frames: a psychedelic purple-magenta tunnel that develops like a long-exposure
+    photograph. The IntersectionObserver gates each renderer so the feedback loop only runs when its canvas
+    is visible — preventing the tunnel from "building" off-screen.</p>
+  </section>
+
+  <!-- PASS HISTORY -->
+  <section class="guide-section" id="passes" aria-labelledby="passes-head">
+    <p class="section-label">SECTION 03</p>
+    <h2 class="section-head" id="passes-head">Honest Per-Pass History</h2>
+
+    <div class="pass-card">
+      <div class="pass-head">
+        <span class="pass-n">PASS 01</span>
+        <span class="pass-title">BUILD + FIRST CRITIQUE</span>
+      </div>
+      <div class="pass-body">
+        <ul>
+          <li>Built all five WebGL spreads from scratch: dithering portrait, CMYK halftone mandala, chromatic aberration columns, video feedback ping-pong FBO, Sobel edge detection with glitch layer.</li>
+          <li>Zero console errors confirmed at desktop (1440×900) and mobile (390×844).</li>
+          <li>Found: dithering portrait is abstract — implied face shape rather than a clear portrait anchor. Left intentionally as procedural impression; too structural to fix mid-pass.</li>
+          <li>Found: aberration coefficient (0.22) is deliberately strong — reads as "punk" per the brief, not a mistake.</li>
+          <li>Found: feedback tunnel takes ~2s to build its characteristic bloom; static screenshots show early-stage purple glow rather than the full developed tunnel.</li>
+        </ul>
+        <div class="pass-upgrade">
+          <strong>UPGRADE:</strong> Degrade button on Spread 01 — increments <code>u_gen</code>
+          0→8, adding progressive Bayer noise to simulate successive photocopy generations.
+          Button label updates: GEN 1 → GEN N. Also added CMYK calibration strip below TOC
+          and CMYK misregistration text-shadow on cover title.
+        </div>
+      </div>
+    </div>
+
+    <div class="pass-card">
+      <div class="pass-head">
+        <span class="pass-n">PASS 02</span>
+        <span class="pass-title">EDITORIAL POLISH</span>
+      </div>
+      <div class="pass-body">
+        <ul>
+          <li>Found and fixed a CSS bug: <code>.s03 border-top { … }</code> was syntactically invalid (selector contained element name, not a property). Corrected to <code>.s03 { border-top-color: var(--m); }</code>. The magenta top-border on the chromatic aberration spread was never applying.</li>
+          <li>Cover right half: viewport dead zone at 1024px wide. Added ghost issue numeral "1" positioned absolutely at right edge — editorial treatment common in Wallpaper*, Monocle, zine covers. Stroke-only, 5.5% opacity so it reads as texture, not content.</li>
+          <li>"SCROLL TO ENTER" hint moved from left-aligned to center — better symmetry with the vertically-centred title block. Opacity lifted 30% → 45% for legibility.</li>
+        </ul>
+        <div class="pass-upgrade">
+          <strong>UPGRADE:</strong> Registration drift on scroll. As the user scrolls through
+          the cover, <code>--reg-drift</code> CSS custom property is updated (cubic-eased,
+          0→16px by cover exit). <code>.ct-after</code> translates right; <code>.ct-image</code>
+          translates left — the CMYK misregistration ghost amplifies as you "feed the paper
+          through the machine." Disabled under <code>prefers-reduced-motion</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="pass-card">
+      <div class="pass-head">
+        <span class="pass-n">PASS 03</span>
+        <span class="pass-title">MOTION + DEPTH</span>
+      </div>
+      <div class="pass-body">
+        <ul>
+          <li>Footer confirmed correct: "Designed &amp; built by Claude Fable 5 · local build · 2026" visible in white mono at 35% opacity — present and readable.</li>
+          <li>CMYK registration marks (⊕ in C/M/Y/K) render correctly in the footer.</li>
+          <li>Mobile body text: all five spreads reflow cleanly to single-column at 390px. Recipe blocks use <code>white-space: pre-wrap</code> on mobile to prevent overflow.</li>
+          <li>Recipe code block for spread 03 (<code>dist²</code>) renders correctly in Space Mono; no character encoding issues detected at either viewport.</li>
+        </ul>
+        <div class="pass-upgrade">
+          <strong>UPGRADE:</strong> Staggered scroll-in entry for all spread elements.
+          <code>IntersectionObserver</code> (threshold 0.07, root-margin -40px bottom)
+          adds <code>.in-view</code> to each <code>.spread</code> when it enters view.
+          CSS transitions: headings rise 1.6rem in 0.65s
+          (<code>cubic-bezier(0.25, 0, 0, 1)</code>); lede, body, recipe stagger at 60ms
+          intervals; canvas fades over 0.9s with 80ms delay. Spreads enter like a physical
+          zine page turning. Transitions suppressed entirely under
+          <code>prefers-reduced-motion</code>.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="guide-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <span class="footer-title">AFTERIMAGE — BUILD GUIDE</span>
+      <span class="footer-sub">Issue N°1 · Five Spreads on Perception</span>
+    </div>
+    <div>
+      <span class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+    </div>
+  </div>
+  <div class="footer-marks" aria-hidden="true">
+    <span style="color:#00aeef">⊕</span>
+    <span style="color:#ec008c">⊕</span>
+    <span style="color:#ffe600">⊕</span>
+    <span style="color:rgba(245,245,242,0.4)">⊕</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFTERIMAGE — A Photocopy Zine on Seeing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- COVER -->
+<header class="cover" role="banner">
+  <div class="cover-reg-marks" aria-hidden="true">
+    <span class="rm rm-tl"></span>
+    <span class="rm rm-tr"></span>
+    <span class="rm rm-bl"></span>
+    <span class="rm rm-br"></span>
+  </div>
+
+  <div class="cover-inner">
+    <div class="cover-meta">
+      <span class="cover-issue">ISSUE&nbsp;N&deg;1</span>
+      <span class="cover-dot" aria-hidden="true">·</span>
+      <span class="cover-year">2026</span>
+      <span class="cover-dot" aria-hidden="true">·</span>
+      <span class="cover-pages">FIVE SPREADS</span>
+    </div>
+
+    <h1 class="cover-title" aria-label="AFTERIMAGE">
+      <span class="ct-after">AFTER</span><span class="ct-image">IMAGE</span>
+    </h1>
+
+    <p class="cover-sub">A PHOTOCOPY ZINE ON SEEING</p>
+
+    <nav class="cover-toc" aria-label="Contents">
+      <div class="toc-row"><span class="toc-n">01</span><span class="toc-label">Ordered Dithering</span></div>
+      <div class="toc-row"><span class="toc-n">02</span><span class="toc-label">CMYK Halftone Separation</span></div>
+      <div class="toc-row"><span class="toc-n">03</span><span class="toc-label">Chromatic Aberration</span></div>
+      <div class="toc-row"><span class="toc-n">04</span><span class="toc-label">Video Feedback</span></div>
+      <div class="toc-row"><span class="toc-n">05</span><span class="toc-label">Edge Detection &amp; Glitch</span></div>
+    </nav>
+
+    <div class="cover-color-bar" aria-hidden="true">
+      <span class="cb-chip cb-c"></span>
+      <span class="cb-chip cb-m"></span>
+      <span class="cb-chip cb-y"></span>
+      <span class="cb-chip cb-k"></span>
+      <span class="cb-chip cb-cm"></span>
+      <span class="cb-chip cb-my"></span>
+      <span class="cb-chip cb-cy"></span>
+      <span class="cb-chip cb-w"></span>
+      <span class="cb-25c"></span>
+      <span class="cb-25m"></span>
+      <span class="cb-25y"></span>
+      <span class="cb-25k"></span>
+    </div>
+  </div>
+
+  <div class="cover-issue-num" aria-hidden="true">1</div>
+
+  <div class="cover-degrade-wrap" aria-hidden="true">
+    <canvas id="canvas-cover" aria-hidden="true"></canvas>
+  </div>
+
+  <p class="cover-scroll" aria-hidden="true">SCROLL TO ENTER ↓</p>
+</header>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- SPREAD 01: ORDERED DITHERING -->
+  <section class="spread s01" aria-labelledby="h01">
+    <div class="spread-num" aria-hidden="true">SPREAD 01 / 05</div>
+    <div class="spread-grid">
+      <div class="spread-vis">
+        <canvas id="c01" aria-hidden="true"></canvas>
+        <p class="vis-label">BAYER 4×4 · 1-BIT · LIVE</p>
+        <button class="degrade-btn" id="degrade-btn" type="button">⊕ PHOTOCOPY — <span id="gen-label">GEN 1</span></button>
+      </div>
+      <div class="spread-copy">
+        <h2 class="spread-head" id="h01">ORDERED<br>DITHERING</h2>
+        <p class="spread-lede">The eye invents gradients from grids.</p>
+        <div class="spread-body">
+          <p>Before digital screens learned to lie, every halftone was a negotiation. Print machines couldn't output grey — only ink or no ink, presence or absence. So they cheated, cleverly, by distributing black dots across a regular threshold matrix.</p>
+          <p>Ordered dithering uses a predetermined grid of thresholds applied at each pixel. The Bayer matrix — invented by Bryce Bayer at Kodak in 1973 — arranges these thresholds so that quantization error disperses with maximum spatial uniformity. Sixteen positions. Sixteen chances to be wrong in exactly the right way.</p>
+          <p>What you see is not grey. It is the suggestion of grey, produced by your visual cortex averaging a mosaic of binary decisions your brain is too slow to count individually.</p>
+        </div>
+        <div class="recipe">
+          <div class="recipe-hed">RECIPE</div>
+          <pre class="recipe-pre">BAYER 4×4 MATRIX:
+ 0  8  2 10
+12  4 14  6
+ 3 11  1  9
+15  7 13  5
+
+FOR EACH PIXEL (x, y):
+  L = luminance(source[x, y])
+  T = bayer[x mod 4][y mod 4] / 16
+  OUT = (L &gt; T) ? WHITE : BLACK
+
+RESULT: 1-bit. No grey. All grey.</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPREAD 02: CMYK HALFTONE -->
+  <section class="spread s02" aria-labelledby="h02">
+    <div class="spread-num" aria-hidden="true">SPREAD 02 / 05</div>
+    <div class="spread-grid spread-grid--flip">
+      <div class="spread-copy">
+        <h2 class="spread-head" id="h02">CMYK<br>HALFTONE</h2>
+        <p class="spread-lede">Four separations. One impossible image.</p>
+        <div class="spread-body">
+          <p>Commercial printing uses four inks: Cyan, Magenta, Yellow, and Key (black). Each is screened separately, rotated to a different angle so their dots don't stack. Cyan at 15°. Magenta at 75°. Yellow at 90°. Black at 45°. Align them. Misregister them slightly. Rosette patterns bloom.</p>
+          <p>The process color system assumes the eye will blend the dots into continuous tone. It was correct. The brain does the compositing. You supply the model, and the model supplies you in return.</p>
+          <p>This is why the zine looks different every time you copy it — each generation the halftone screen re-registers against the previous dots, and Moiré interference adds its own texture to whatever truth the image still holds.</p>
+        </div>
+        <div class="recipe">
+          <div class="recipe-hed">RECIPE</div>
+          <pre class="recipe-pre">RGB → CMY:
+  C = 1 − R
+  M = 1 − G
+  Y = 1 − B
+  K = min(C, M, Y)
+
+HALFTONE DOT (channel, angle θ):
+  uv_rot = rotate(uv, θ)
+  cell = fract(uv_rot × density) − 0.5
+  dot = length(cell) &lt; √channel × 0.5
+
+COMPOSITE: paper − C·cyan
+                 − M·magenta
+                 − Y·yellow
+                 − K·black</pre>
+        </div>
+      </div>
+      <div class="spread-vis">
+        <canvas id="c02" aria-hidden="true"></canvas>
+        <p class="vis-label">4 SEPARATIONS · ROSETTE · LIVE</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPREAD 03: CHROMATIC ABERRATION -->
+  <section class="spread s03" aria-labelledby="h03">
+    <div class="spread-num" aria-hidden="true">SPREAD 03 / 05</div>
+    <div class="spread-grid">
+      <div class="spread-vis">
+        <canvas id="c03" aria-hidden="true"></canvas>
+        <p class="vis-label">RADIAL LENS FRINGE · RGB SPLIT · LIVE</p>
+      </div>
+      <div class="spread-copy">
+        <h2 class="spread-head" id="h03">CHROMATIC<br>ABERRATION</h2>
+        <p class="spread-lede">Every lens forgets where it came from.</p>
+        <div class="spread-body">
+          <p>Glass bends different wavelengths of light by different amounts. Red refracts less than blue. Where the lens is thick — near the frame edges — dispersion accumulates. The image the lens forms for red is not quite the image it forms for blue. At the periphery, colours separate. Fringes appear.</p>
+          <p>Camera makers have fought this since Galileo. Achromatic doublets. Apochromats. Floating elements. Computational post-correction. But the ghost persists, and we have learned to read it as authenticity — proof that the photograph was taken through glass, by a machine, in a moment now gone.</p>
+          <p>This shader shifts each channel radially from centre — red outward, blue inward — by an amount that grows as the square of the distance from the image midpoint. Imperfect. Honest.</p>
+        </div>
+        <div class="recipe">
+          <div class="recipe-hed">RECIPE</div>
+          <pre class="recipe-pre">FOR EACH PIXEL (x, y):
+  dir = normalize(uv − centre)
+  dist = length(uv − centre)
+  str = dist² × aberrationScale
+
+  R = sample(uv + dir × str).r
+  G = sample(uv           ).g
+  B = sample(uv − dir × str).b
+
+  OUT = vec3(R, G, B)</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPREAD 04: VIDEO FEEDBACK -->
+  <section class="spread s04" aria-labelledby="h04">
+    <div class="spread-num" aria-hidden="true">SPREAD 04 / 05</div>
+    <div class="spread-grid spread-grid--flip">
+      <div class="spread-copy">
+        <h2 class="spread-head" id="h04">VIDEO<br>FEEDBACK</h2>
+        <p class="spread-lede">Point a camera at its own monitor.</p>
+        <div class="spread-body">
+          <p>In 1974, Steina and Woody Vasulka aimed a video camera at the television screen it was feeding. The result — a tunnel of recursive images, each delayed, each smaller — became foundational to video art. The machine dreaming of itself.</p>
+          <p>What unfolds is not a mirror. Each iteration adds the noise and bandwidth limits of the recording chain. Colours shift. Contrast clips. Geometry bends. The feedback loop is not stable — it is a dynamical system, sensitive to initial conditions, drifting toward strange attractors that look like mandalas and like nothing at all.</p>
+          <p>Here the "camera" and "monitor" share one framebuffer: each frame is rendered by slightly zooming, rotating, and tinting the previous frame, then compositing a faint new signal on top. The tunnel opens.</p>
+        </div>
+        <div class="recipe">
+          <div class="recipe-hed">RECIPE</div>
+          <pre class="recipe-pre">INIT: framebuffer A ← 0
+
+EACH FRAME:
+  B = sample(A, zoom 1.015)
+        rotated +0.3°/frame
+        × decay 0.97
+
+  B += new_signal(t) × 0.10
+
+  DISPLAY B
+  SWAP A ↔ B</pre>
+        </div>
+      </div>
+      <div class="spread-vis">
+        <canvas id="c04" aria-hidden="true"></canvas>
+        <p class="vis-label">PING-PONG FBO · INFINITE TUNNEL · LIVE</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPREAD 05: EDGE DETECTION -->
+  <section class="spread s05" aria-labelledby="h05">
+    <div class="spread-num" aria-hidden="true">SPREAD 05 / 05</div>
+    <div class="spread-grid">
+      <div class="spread-vis">
+        <canvas id="c05" aria-hidden="true"></canvas>
+        <p class="vis-label">SOBEL 3×3 · GLITCH LAYER · LIVE</p>
+      </div>
+      <div class="spread-copy">
+        <h2 class="spread-head" id="h05">EDGE<br>DETECTION</h2>
+        <p class="spread-lede">Only the borders were ever real.</p>
+        <div class="spread-body">
+          <p>Irwin Sobel's 1968 operator was designed for robot vision: give a machine a way to find where one thing ends and another begins. Two 3×3 kernels, one horizontal and one vertical, measure the luminance gradient across neighbouring pixels. Where the gradient is steep — where the image changes quickly — there is an edge.</p>
+          <p>What remains after edge detection is a phantom of the original: a skeleton of transitions, a diagram of where attention should go. Cognitive scientists argue this is closer to what the primary visual cortex actually encodes. You see edges first. The interior fills in after — a guess, an inference, an afterimage.</p>
+          <p>The glitch layer is procedural: scanlines that skip, bit-shift artifacts creeping from the left margin, horizontal tears drifting with time. Signal degradation as aesthetic choice.</p>
+        </div>
+        <div class="recipe">
+          <div class="recipe-hed">RECIPE</div>
+          <pre class="recipe-pre">SOBEL KERNELS:
+  Gx: [−1  0 +1 | −2  0 +2 | −1  0 +1]
+  Gy: [−1 −2 −1 |  0  0  0 | +1 +2 +1]
+
+FOR EACH PIXEL:
+  gx = convolve(luma, Gx, 3×3 window)
+  gy = convolve(luma, Gy, 3×3 window)
+  edge = √(gx² + gy²)
+
+GLITCH: jitter rows by sin(y×hash+t)
+        at stochastic row intervals</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <span class="footer-title">AFTERIMAGE</span>
+      <span class="footer-issue">Issue N&deg;1 · Five Spreads on Perception</span>
+    </div>
+    <div class="footer-right">
+      <span class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+    </div>
+  </div>
+  <div class="footer-reg" aria-hidden="true">
+    <span class="frm frm-c">⊕</span>
+    <span class="frm frm-m">⊕</span>
+    <span class="frm frm-y">⊕</span>
+    <span class="frm frm-k">⊕</span>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

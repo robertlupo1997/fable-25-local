@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNDERTOW — An Atlas of the Seafloor Cables</title>
+  <meta name="description" content="The internet's basement, visited. An atlas of the world's submarine cable network — four hundred cables, 1.4 million kilometres.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Overpass:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- ── HEADER ───────────────────────────────────────────────────────── -->
+  <header class="site-header" role="banner">
+    <span class="site-name">UNDERTOW</span>
+    <nav aria-label="Site sections">
+      <ul class="site-nav">
+        <li><a href="#network">Network</a></li>
+        <li><a href="#descent">Descent</a></li>
+        <li><a href="#incidents">Incidents</a></li>
+        <li><a href="#routes">Latency</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ── HERO ─────────────────────────────────────────────────────────── -->
+  <section id="hero" aria-label="Bathymetry map — global submarine cable network">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Depth Atlas &nbsp;·&nbsp; Edition IV</p>
+      <h1 class="hero-title">UNDERTOW</h1>
+      <p class="hero-sub">
+        Four hundred cables. 1.4 million kilometres. The infrastructure
+        the internet forgot to explain — resting on the abyssal plain,
+        held down by gravity and their own weight.
+      </p>
+      <div class="scroll-cue" aria-hidden="true">
+        <span class="scroll-cue-label">Scroll to descend</span>
+        <div class="scroll-cue-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MAIN CONTENT ──────────────────────────────────────────────────── -->
+  <main id="main">
+
+  <!-- ── NETWORK ───────────────────────────────────────────────────────── -->
+  <section id="network" aria-labelledby="network-h2">
+    <div class="section-inner">
+      <div class="section-head reveal">
+        <p class="overline">The Network</p>
+        <h2 id="network-h2">Four active systems, three oceans</h2>
+        <p class="section-lede">
+          Every data packet you send crosses at least one of these routes. They rest
+          on the abyssal plain six kilometres beneath the surface, armoured near shore
+          and bare fibre in the deep — where the pressure alone is enough to kill any
+          submersible not built for it.
+        </p>
+      </div>
+
+      <div class="cable-grid reveal">
+
+        <article class="cable-card" aria-label="ATLANTICA-7 cable">
+          <div class="cable-card-top">
+            <span class="cable-id">ATL-7</span>
+            <span class="cable-badge">ACTIVE</span>
+          </div>
+          <p class="cable-name">ATLANTICA-7</p>
+          <p class="cable-route-line">Lisbon → Cape Verde → Bermuda → Miami</p>
+          <ul class="cable-stats" aria-label="Cable statistics">
+            <li class="stat-item">
+              <span class="stat-label">Length</span>
+              <span class="stat-value">6,840 km</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Capacity</span>
+              <span class="stat-value">180 Tbps</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Commissioned</span>
+              <span class="stat-value">2019</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Max Depth</span>
+              <span class="stat-value">5,240 m</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="cable-card" aria-label="NORTHWAVE-1 cable">
+          <div class="cable-card-top">
+            <span class="cable-id">NW-1</span>
+            <span class="cable-badge">ACTIVE</span>
+          </div>
+          <p class="cable-name">NORTHWAVE-1</p>
+          <p class="cable-route-line">London → Reykjavík → Halifax → New York</p>
+          <ul class="cable-stats" aria-label="Cable statistics">
+            <li class="stat-item">
+              <span class="stat-label">Length</span>
+              <span class="stat-value">8,120 km</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Capacity</span>
+              <span class="stat-value">120 Tbps</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Commissioned</span>
+              <span class="stat-value">2016</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Max Depth</span>
+              <span class="stat-value">3,890 m</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="cable-card" aria-label="TRANSPACIFIC-9 cable">
+          <div class="cable-card-top">
+            <span class="cable-id">NPAC-9</span>
+            <span class="cable-badge">ACTIVE</span>
+          </div>
+          <p class="cable-name">TRANSPACIFIC-9</p>
+          <p class="cable-route-line">Okinawa → Guam → Hawai'i → Los Angeles</p>
+          <ul class="cable-stats" aria-label="Cable statistics">
+            <li class="stat-item">
+              <span class="stat-label">Length</span>
+              <span class="stat-value">11,200 km</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Capacity</span>
+              <span class="stat-value">240 Tbps</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Commissioned</span>
+              <span class="stat-value">2021</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Max Depth</span>
+              <span class="stat-value">7,840 m</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="cable-card" aria-label="SEALINK-2 cable">
+          <div class="cable-card-top">
+            <span class="cable-id">SL-2</span>
+            <span class="cable-badge">ACTIVE</span>
+          </div>
+          <p class="cable-name">SEALINK-2</p>
+          <p class="cable-route-line">Mumbai → Maldives → Colombo → Singapore</p>
+          <ul class="cable-stats" aria-label="Cable statistics">
+            <li class="stat-item">
+              <span class="stat-label">Length</span>
+              <span class="stat-value">4,380 km</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Capacity</span>
+              <span class="stat-value">96 Tbps</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Commissioned</span>
+              <span class="stat-value">2018</span>
+            </li>
+            <li class="stat-item">
+              <span class="stat-label">Max Depth</span>
+              <span class="stat-value">3,160 m</span>
+            </li>
+          </ul>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DESCENT ───────────────────────────────────────────────────────── -->
+  <section id="descent" aria-label="Cross-section descent from landing station to abyssal plain">
+    <div class="descent-sticky">
+      <canvas id="descent-canvas" aria-hidden="true"></canvas>
+
+      <!-- Depth / Pressure HUD -->
+      <div class="descent-hud" aria-live="polite" aria-label="Current depth and zone">
+        <div class="hud-top">
+          <div class="hud-depth-block">
+            <span class="hud-label">Current Depth</span>
+            <p class="hud-depth-val">
+              <span id="depth-value">0</span><span class="hud-unit">m</span>
+            </p>
+          </div>
+
+          <div class="pressure-block">
+            <span class="hud-label">Pressure</span>
+            <div class="gauge-row">
+              <div class="gauge-track" aria-hidden="true">
+                <div id="gauge-fill"></div>
+              </div>
+              <div class="pressure-readout">
+                <p class="hud-label">atm</p>
+                <p class="hud-pressure-val"><span id="pressure-value">1</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-mid"></div>
+
+        <div class="hud-bottom">
+          <div class="zone-block">
+            <p class="hud-label">Zone</p>
+            <p id="zone-name">Epipelagic</p>
+            <p id="zone-note">Sunlight Zone</p>
+          </div>
+          <div class="temp-block">
+            <span class="hud-label">Water Temp</span>
+            <p class="hud-temp-val"><span id="temp-value">24</span><span class="hud-unit-sm">°C</span></p>
+          </div>
+          <p class="hud-cable-label">ATLANTICA-7<br>SEGMENT B-4</p>
+        </div>
+      </div>
+
+      <!-- Scroll-keyed narrative panels -->
+      <aside class="descent-narration" aria-label="Descent narrative">
+        <div class="narration-block active" data-start="0" data-end="0.26">
+          <h3>Landing Station</h3>
+          <p>The cable exits the conduit beneath a parking lot in Lisbon. From here it descends the continental shelf at 8°. Within six kilometres, the seabed is 200 metres below you.</p>
+        </div>
+        <div class="narration-block" data-start="0.26" data-end="0.64">
+          <h3>Twilight Boundary</h3>
+          <p>At 1,000 metres, no sunlight has reached the sediment. The polyethylene sheathing is rated to 8,000 atm. Crossing the Charlie-Gibbs Fracture Zone now — a 350-kilometre gash splitting the Atlantic floor.</p>
+        </div>
+        <div class="narration-block" data-start="0.64" data-end="1.01">
+          <h3>Abyssal Plain</h3>
+          <p>The floor levels to within 40 centimetres per kilometre. It is the flattest terrain on Earth. The cable rests unsupported on 65 million years of compressed foraminifera. Nothing will disturb it here.</p>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ── INCIDENTS ─────────────────────────────────────────────────────── -->
+  <section id="incidents" aria-labelledby="incidents-h2">
+    <div class="section-inner">
+      <div class="section-head reveal">
+        <p class="overline">Field Incident Registry</p>
+        <h2 id="incidents-h2">Damage, by cause</h2>
+        <p class="section-lede">
+          Since 1858, submarine cables have been cut, crushed, bitten, dragged,
+          and buried. Most repairs take three weeks. The ocean does not acknowledge
+          urgency. Sharks, in particular, are drawn to the electromagnetic field
+          generated by the power conductor — a side effect the industry noted,
+          then quietly stopped publicising.
+        </p>
+      </div>
+
+      <div class="table-wrap reveal" role="region" aria-label="Incident log">
+        <table>
+          <caption class="sr-only">Submarine cable field incident log</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Cable</th>
+              <th scope="col">Location</th>
+              <th scope="col">Cause</th>
+              <th scope="col">Depth</th>
+              <th scope="col">Downtime</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2024-03-14</td>
+              <td class="td-cable">ATLANTICA-7</td>
+              <td>34.2°N 38.8°W</td>
+              <td>Shark bite — copper sheath breached</td>
+              <td>1,240 m</td>
+              <td>18 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2023-11-02</td>
+              <td class="td-cable">NORTHWAVE-1</td>
+              <td>62.1°N 14.6°W</td>
+              <td>Anchor drag — deep-sea trawler</td>
+              <td>380 m</td>
+              <td>24 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2023-07-19</td>
+              <td class="td-cable">TRANSPACIFIC-9</td>
+              <td>14.5°N 145.0°E</td>
+              <td>Hydrothermal vent microshift</td>
+              <td>2,860 m</td>
+              <td>41 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2022-09-30</td>
+              <td class="td-cable">SEALINK-2</td>
+              <td>7.8°N 77.5°E</td>
+              <td>Shark bite — electromagnetic attraction</td>
+              <td>620 m</td>
+              <td>22 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2022-04-11</td>
+              <td class="td-cable">ATLANTICA-7</td>
+              <td>27.6°N 26.1°W</td>
+              <td>Seismic event M4.2 — sediment shift</td>
+              <td>3,100 m</td>
+              <td>53 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2021-12-08</td>
+              <td class="td-cable">NORTHWAVE-1</td>
+              <td>58.4°N 24.2°W</td>
+              <td>Longline fishing entanglement</td>
+              <td>210 m</td>
+              <td>31 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2021-06-15</td>
+              <td class="td-cable">TRANSPACIFIC-9</td>
+              <td>19.8°N 165.4°E</td>
+              <td>Submarine landslide — cable buried</td>
+              <td>5,440 m</td>
+              <td>67 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2020-10-22</td>
+              <td class="td-cable">SEALINK-2</td>
+              <td>12.4°N 53.8°E</td>
+              <td>Anchor drag — container vessel</td>
+              <td>140 m</td>
+              <td>16 days</td>
+              <td class="td-status-ok">REPAIRED</td>
+            </tr>
+            <tr>
+              <td>2020-03-07</td>
+              <td class="td-cable">ATLANTICA-7</td>
+              <td>29.1°N 31.5°W</td>
+              <td>Shark bite — repeater housing</td>
+              <td>880 m</td>
+              <td>27 days</td>
+              <td class="td-status-watch">MONITORING</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LATENCY ────────────────────────────────────────────────────────── -->
+  <section id="routes" aria-labelledby="routes-h2">
+    <div class="section-inner">
+      <div class="section-head reveal">
+        <p class="overline">Measured Latency</p>
+        <h2 id="routes-h2">Terminus to terminus</h2>
+        <p class="section-lede">
+          Light in glass travels at roughly 200,000 km/s — about two-thirds the
+          speed of light in vacuum. The distance does the rest.
+          Transatlantic: 68 ms round-trip.
+          Transpacific: 135 ms.
+          The ocean is not the bottleneck.
+        </p>
+      </div>
+
+      <div class="table-wrap reveal" role="region" aria-label="Latency table">
+        <table>
+          <caption class="sr-only">Submarine cable latency measurements, terminus to terminus</caption>
+          <thead>
+            <tr>
+              <th scope="col">Origin</th>
+              <th scope="col">Destination</th>
+              <th scope="col">Cable</th>
+              <th scope="col">One-Way Latency</th>
+              <th scope="col">Throughput</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-origin">Lisbon</td>
+              <td>Miami</td>
+              <td class="td-cable-small">ATLANTICA-7</td>
+              <td class="latency-val">38 ms</td>
+              <td>180 Tbps</td>
+            </tr>
+            <tr>
+              <td class="td-origin">London</td>
+              <td>New York</td>
+              <td class="td-cable-small">NORTHWAVE-1</td>
+              <td class="latency-val">31 ms</td>
+              <td>120 Tbps</td>
+            </tr>
+            <tr>
+              <td class="td-origin">Tokyo</td>
+              <td>Los Angeles</td>
+              <td class="td-cable-small">TRANSPACIFIC-9</td>
+              <td class="latency-val">67 ms</td>
+              <td>240 Tbps</td>
+            </tr>
+            <tr>
+              <td class="td-origin">Mumbai</td>
+              <td>Singapore</td>
+              <td class="td-cable-small">SEALINK-2</td>
+              <td class="latency-val">24 ms</td>
+              <td>96 Tbps</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ── FOOTER ────────────────────────────────────────────────────────── -->
+  <footer role="contentinfo">
+    <p class="footer-brand">UNDERTOW</p>
+    <div class="footer-right">
+      <p class="footer-desc">Depth Atlas No. 14 &mdash; Submarine Cable Network Survey, Edition IV</p>
+      <p class="footer-credit">Designed &amp; built by Claude Fable 5 &nbsp;&middot;&nbsp; local build &nbsp;&middot;&nbsp; 2026</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

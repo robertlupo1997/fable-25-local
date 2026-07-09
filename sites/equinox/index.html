@@ -1,0 +1,1620 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equinox — A Solar Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* ─── Tokens ─────────────────────────────────────────────────── */
+:root {
+  --stone:       #d9d2c4;
+  --stone-mid:   #c8c0af;
+  --stone-dark:  #b0a898;
+  --stone-deep:  #968e80;
+  --gnomon:      #2b2620;
+  --gnomon-70:   rgba(43,38,32,0.70);
+  --gnomon-30:   rgba(43,38,32,0.30);
+  --gnomon-15:   rgba(43,38,32,0.15);
+  --solar:       #e0a10e;
+  --solar-pale:  #f0c84a;
+  --solar-glow:  rgba(224,161,14,0.20);
+  --cream:       #f4f0e8;
+  --text:        #2b2620;
+  --text-muted:  #554e46;
+
+  --ff-display: 'Marcellus', Georgia, serif;
+  --ff-body:    'Outfit', system-ui, sans-serif;
+
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-inout:  cubic-bezier(0.4, 0, 0.2, 1);
+
+  --sky-h: 56vh;
+  --space:  1rem;
+}
+
+/* ─── Skip link ─────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--gnomon);
+  color: var(--cream);
+  padding: 0.5rem 1rem;
+  font-family: var(--ff-body);
+  z-index: 9999;
+  border-radius: 0 0 4px 4px;
+}
+.skip-link:focus { top: 0; }
+
+/* ─── Header ─────────────────────────────────────────────────── */
+header {
+  position: relative;
+  z-index: 10;
+  background: var(--gnomon);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.site-title {
+  font-family: var(--ff-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.25em;
+  color: var(--stone);
+  text-transform: uppercase;
+}
+.site-tagline {
+  font-family: var(--ff-body);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--stone-deep);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ─── Sky canvas ─────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  height: var(--sky-h);
+  overflow: hidden;
+  background: #0a0e1e;
+}
+#sky-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Hero intro (below sky, on stone) ────────────────────────── */
+.hero-intro {
+  background: var(--stone);
+  padding: 1.25rem 2rem 0.75rem;
+  border-bottom: none;
+  max-width: 100%;
+  border-top: 3px solid rgba(43,38,32,0.18);
+}
+.hero-intro-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.hero-intro h1 {
+  font-family: var(--ff-display);
+  font-size: clamp(1.85rem, 4vw, 2.9rem);
+  color: var(--text);
+  line-height: 1.1;
+  flex-shrink: 0;
+}
+.hero-intro p {
+  font-family: var(--ff-body);
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-bottom: 0.1rem;
+}
+.hero-coords {
+  font-family: var(--ff-body);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+  white-space: nowrap;
+  align-self: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Controls panel ─────────────────────────────────────────── */
+.controls-panel {
+  background: var(--cream);
+  border-top: 1px solid var(--stone-mid);
+  border-bottom: 1px solid var(--stone-mid);
+  padding: 1.5rem 2rem;
+}
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: flex-end;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 160px;
+}
+.ctrl-group label {
+  font-family: var(--ff-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+select, input[type="date"] {
+  font-family: var(--ff-body);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text);
+  background: var(--cream);
+  border: 1px solid var(--stone-dark);
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  color-scheme: light;
+  transition: border-color 0.18s var(--ease-inout), box-shadow 0.18s var(--ease-inout);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%236b6458'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+select:focus, input[type="date"]:focus {
+  outline: 2px solid var(--solar);
+  outline-offset: 1px;
+  border-color: var(--solar);
+}
+
+/* Time slider */
+.time-ctrl { flex: 2; min-width: 220px; }
+.time-header { display: flex; justify-content: space-between; align-items: baseline; }
+.time-value {
+  font-family: var(--ff-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+}
+input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--stone-mid);
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--solar);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+  cursor: grab;
+  transition: transform 0.15s var(--ease-spring), box-shadow 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.25);
+  box-shadow: 0 2px 12px rgba(224,161,14,0.45);
+}
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--solar);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%; border: none;
+  background: var(--solar);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.25);
+  cursor: grab;
+}
+
+.play-btn {
+  font-family: var(--ff-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  background: var(--gnomon);
+  border: none;
+  border-radius: 3px;
+  padding: 0.52rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s var(--ease-spring);
+  flex-shrink: 0;
+  align-self: flex-end;
+  margin-bottom: 0;
+}
+.play-btn:hover { background: #3d3530; }
+.play-btn:focus-visible { outline: 2px solid var(--solar); outline-offset: 2px; }
+.play-btn:active { transform: scale(0.96); }
+
+/* ─── Stats bar ─────────────────────────────────────────────── */
+.stats-bar {
+  background: var(--stone);
+  border-bottom: 1px solid var(--stone-mid);
+  padding: 0.9rem 2rem 1.1rem;
+}
+.stats-inner {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-top: 1px solid var(--gnomon-15);
+  padding-top: 0.9rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.stat {
+  flex: 1;
+  min-width: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0 1.25rem 0 0;
+  border-right: 1px solid var(--gnomon-15);
+}
+.stat:last-child { border-right: none; }
+.stat-label {
+  font-family: var(--ff-body);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.stat-value {
+  font-family: var(--ff-body);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.stat-value.solar-active { color: #6a4e00; } /* dark amber — 5.17:1 on --stone, WCAG AA */
+.stat-sparkline { flex: 2; min-width: 160px; }
+.spark-canvas   { display: block; width: 100%; height: 38px; }
+
+/* ─── Main content ─────────────────────────────────────────── */
+main { background: var(--stone); }
+
+/* ─── Dial section ───────────────────────────────────────────── */
+.dial-section {
+  background: var(--stone);
+  padding: 3rem 2rem;
+  border-bottom: 1px solid var(--stone-mid);
+}
+.dial-inner {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.dial-wrap {
+  flex-shrink: 0;
+  position: relative;
+}
+#dial-canvas {
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 4px 32px rgba(43,38,32,0.12), 0 1px 4px rgba(43,38,32,0.08);
+}
+.dial-info {
+  flex: 1;
+}
+.dial-info-title {
+  font-family: var(--ff-display);
+  font-size: 1.6rem;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+.dial-info p {
+  font-family: var(--ff-body);
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+.solar-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.fact-label {
+  font-family: var(--ff-body);
+  font-size: 0.63rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.fact-value {
+  font-family: var(--ff-body);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Chapters ───────────────────────────────────────────────── */
+.chapters {
+  padding: 3.5rem 2rem 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.chapters-header {
+  margin-bottom: 2.5rem;
+}
+.chapters-header h2 {
+  font-family: var(--ff-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.chapters-header p {
+  font-family: var(--ff-body);
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  max-width: 480px;
+  line-height: 1.7;
+}
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+.chapter-card {
+  background: var(--cream);
+  border: 1px solid var(--stone-mid);
+  border-radius: 4px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.22s var(--ease-out), border-color 0.22s;
+}
+.chapter-card:hover {
+  box-shadow: 0 6px 24px rgba(43,38,32,0.10);
+  border-color: var(--stone-dark);
+}
+.chapter-num {
+  font-family: var(--ff-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.chapter-card h3 {
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+.chapter-date {
+  font-family: var(--ff-body);
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+.chapter-mini-sky {
+  width: 100%;
+  height: 80px;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+.chapter-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+.chapter-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.chapter-stat-label {
+  font-family: var(--ff-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.chapter-stat-value {
+  font-family: var(--ff-body);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.chapter-decl {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  font-family: var(--ff-body);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--text-muted);
+}
+
+/* Chapter sky mini-canvases */
+.chapter-sky-canvas { display: block; width: 100%; height: 100%; }
+
+/* ─── Footer ─────────────────────────────────────────────────── */
+footer {
+  background: var(--gnomon);
+  padding: 2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.footer-left {
+  font-family: var(--ff-display);
+  font-size: 0.95rem;
+  color: var(--stone-mid);
+  letter-spacing: 0.05em;
+}
+.footer-credit {
+  font-family: var(--ff-body);
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--stone-deep);
+  letter-spacing: 0.08em;
+}
+
+/* ─── Dial legend ────────────────────────────────────────────── */
+.dial-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 0.85rem;
+}
+.dl-item {
+  font-family: var(--ff-body);
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.dl-swatch {
+  display: inline-block;
+  width: 22px;
+  height: 5px;
+  border-radius: 3px;
+}
+.dl-swatch--day  { background: rgba(224,161,14,0.38); }
+.dl-swatch--gold { background: rgba(224,161,14,0.80); }
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  :root { --sky-h: 44vh; }
+  header { padding: 1rem 1.25rem; }
+  .hero-intro { padding: 1.25rem 1.25rem 0.4rem; }
+  .hero-intro-inner { gap: 0.5rem; flex-direction: column; }
+  .hero-coords { display: none; }
+  .hero-intro h1 { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+  .controls-panel, .stats-bar { padding: 1.25rem; }
+  .controls-row { gap: 0.75rem 1rem; }
+  .ctrl-group { min-width: 130px; }
+  .time-ctrl { min-width: 100%; order: 3; }
+  .play-btn { order: 4; align-self: flex-start; }
+  .stat { min-width: 90px; padding-right: 1rem; }
+  .stat-value { font-size: 0.92rem; }
+  .stat-sparkline { min-width: 140px; }
+  .dial-section { padding: 2rem 1.25rem; }
+  .dial-inner { flex-direction: column; gap: 2rem; align-items: center; }
+  .dial-info-title { font-size: 1.35rem; }
+  .chapters { padding: 2.5rem 1.25rem 3rem; }
+  .chapter-grid { grid-template-columns: 1fr; }
+  footer { padding: 1.5rem 1.25rem; flex-direction: column; gap: 0.4rem; }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<header>
+  <span class="site-title">Equinox</span>
+  <span class="site-tagline">Astronomy in stone &amp; light</span>
+</header>
+
+<div class="hero" role="banner">
+  <canvas id="sky-canvas" aria-hidden="true"></canvas>
+</div>
+<div class="hero-intro">
+  <div class="hero-intro-inner">
+    <h1>A Solar Garden</h1>
+    <p>Gnomon shadows · true solar position · real astronomy</p>
+    <span class="hero-coords" id="hero-coords" aria-label="City coordinates">40.71° N · 74.01° W</span>
+  </div>
+</div>
+
+<div class="controls-panel" role="region" aria-label="Solar controls">
+  <div class="controls-row">
+    <div class="ctrl-group">
+      <label for="city-select">City</label>
+      <select id="city-select" aria-label="Select city"></select>
+    </div>
+    <div class="ctrl-group">
+      <label for="date-input">Date</label>
+      <input type="date" id="date-input" min="2000-01-01" max="2050-12-31" aria-label="Select date">
+    </div>
+    <div class="ctrl-group time-ctrl">
+      <label for="hour-slider">
+        <span class="time-header">
+          <span>Solar Time</span>
+          <span class="time-value" id="time-display">12:00</span>
+        </span>
+      </label>
+      <input type="range" id="hour-slider" min="0" max="24" step="0.05"
+             value="12" aria-label="Solar time" aria-valuenow="12" aria-valuetext="12:00">
+    </div>
+    <button class="play-btn" id="play-btn" aria-label="Play day animation" aria-pressed="false">
+      ▶ Play
+    </button>
+  </div>
+</div>
+
+<div class="stats-bar" role="region" aria-label="Solar statistics" aria-live="polite">
+  <div class="stats-inner">
+    <div class="stat">
+      <span class="stat-label">Sunrise</span>
+      <span class="stat-value" id="stat-sunrise">—</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Solar Noon</span>
+      <span class="stat-value" id="stat-noon">12:00</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Sunset</span>
+      <span class="stat-value" id="stat-sunset">—</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Day Length</span>
+      <span class="stat-value" id="stat-daylength">—</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Altitude</span>
+      <span class="stat-value" id="stat-altitude">—</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Azimuth</span>
+      <span class="stat-value" id="stat-azimuth">—</span>
+    </div>
+    <div class="stat stat-sparkline">
+      <span class="stat-label">Today's arc</span>
+      <canvas id="spark-canvas" class="spark-canvas" aria-hidden="true"></canvas>
+    </div>
+  </div>
+</div>
+
+<main id="main-content">
+
+  <div class="dial-section" role="region" aria-label="Sundial visualization">
+    <div class="dial-inner">
+      <div class="dial-wrap">
+        <canvas id="dial-canvas" aria-hidden="true" width="320" height="320"></canvas>
+        <div class="dial-legend" aria-hidden="true">
+          <span class="dl-item"><span class="dl-swatch dl-swatch--day"></span>Day</span>
+          <span class="dl-item"><span class="dl-swatch dl-swatch--gold"></span>Golden hour</span>
+        </div>
+      </div>
+      <div class="dial-info">
+        <h2 class="dial-info-title">The gnomon casts its truth</h2>
+        <p>A horizontal sundial knows nothing of clocks. It reads only the position of the sun — declination, hour angle, the tilt of Earth's axis translated to stone. The shadow follows solar time; noon is always when the sun is highest, wherever you stand.</p>
+        <div class="solar-facts">
+          <div class="fact">
+            <span class="fact-label">Declination</span>
+            <span class="fact-value" id="fact-decl">—</span>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Hour Angle</span>
+            <span class="fact-value" id="fact-ha">—</span>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Shadow Length</span>
+            <span class="fact-value" id="fact-shadow">—</span>
+          </div>
+          <div class="fact">
+            <span class="fact-label">Shadow Direction</span>
+            <span class="fact-value" id="fact-shadowdir">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="chapters" aria-label="The four moments of the solar year">
+    <div class="chapters-header">
+      <h2>Four moments of light</h2>
+      <p>The equinoxes and solstices mark the cardinal chapters of Earth's orbit — when the relationship between axis and sun reaches its most precise expression. Day length for the selected city, computed at solar noon.</p>
+    </div>
+    <div class="chapter-grid" id="chapter-grid">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="footer-left">Equinox · treylupo.com</span>
+  <span class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   EQUINOX — A Solar Garden
+   Real solar position algorithm: declination, hour angle,
+   altitude/azimuth, sunrise/sunset, horizontal sundial geometry.
+═══════════════════════════════════════════════════════════════ */
+
+const RAD = Math.PI / 180;
+const DEG = 180 / Math.PI;
+const TAU = 2 * Math.PI;
+
+const prefersReducedMotion = window.matchMedia(
+  '(prefers-reduced-motion: reduce)'
+).matches;
+
+/* ─── City list ─────────────────────────────────────────────── */
+const CITIES = [
+  { name: 'New York',      lat:  40.71, lon: -74.01 },
+  { name: 'London',        lat:  51.51, lon:  -0.13 },
+  { name: 'Reykjavík',     lat:  64.13, lon: -21.94 },
+  { name: 'Oslo',          lat:  59.91, lon:  10.75 },
+  { name: 'Cairo',         lat:  30.04, lon:  31.24 },
+  { name: 'Mexico City',   lat:  19.43, lon: -99.13 },
+  { name: 'Nairobi',       lat:  -1.29, lon:  36.82 },
+  { name: 'Singapore',     lat:   1.35, lon: 103.82 },
+  { name: 'Tokyo',         lat:  35.68, lon: 139.69 },
+  { name: 'Cape Town',     lat: -33.93, lon:  18.42 },
+  { name: 'Sydney',        lat: -33.87, lon: 151.21 },
+  { name: 'Buenos Aires',  lat: -34.60, lon: -58.40 },
+];
+
+/* ─── Chapter definitions (2026 approximate dates) ──────────── */
+const CHAPTERS = [
+  { key: 'spring-equinox', num: 'I',   name: 'Spring Equinox',   date: '2026-03-20', declLabel: '0°' },
+  { key: 'summer-solstice', num: 'II',  name: 'Summer Solstice',  date: '2026-06-21', declLabel: '+23.4°' },
+  { key: 'autumn-equinox', num: 'III', name: 'Autumn Equinox',   date: '2026-09-23', declLabel: '0°' },
+  { key: 'winter-solstice', num: 'IV',  name: 'Winter Solstice',  date: '2026-12-21', declLabel: '−23.4°' },
+];
+
+/* ─── Solar Math ─────────────────────────────────────────────── */
+function getDayOfYear(date) {
+  const jan1 = new Date(date.getFullYear(), 0, 1);
+  return Math.floor((date - jan1) / 86400000) + 1;
+}
+
+function solarDeclination(dayOfYear) {
+  // NOAA algorithm — accurate to ~0.5°
+  const d = dayOfYear;
+  const g = (357.529 + 0.98560028 * d) * RAD;
+  const q = (280.459 + 0.98564736 * d) * RAD;
+  const L = q + (1.9148 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * RAD;
+  const e = 23.439 * RAD;
+  return Math.asin(Math.max(-1, Math.min(1, Math.sin(e) * Math.sin(L))));
+}
+
+function computeSolar(lat_deg, doy, solarHour) {
+  // solarHour: true solar time 0–24, noon = 12
+  const lat  = lat_deg * RAD;
+  const decl = solarDeclination(doy);
+  const H    = (solarHour - 12) * 15 * RAD; // hour angle (negative morning)
+
+  const sinLat  = Math.sin(lat),   cosLat  = Math.cos(lat);
+  const sinDecl = Math.sin(decl),  cosDecl = Math.cos(decl);
+  const cosH    = Math.cos(H),     sinH    = Math.sin(H);
+
+  // Altitude
+  const sinAlt = sinLat * sinDecl + cosLat * cosDecl * cosH;
+  const alt    = Math.asin(Math.max(-1, Math.min(1, sinAlt)));
+  const cosAlt = Math.cos(alt);
+
+  // Azimuth — east/north components → atan2 (0=N, π/2=E, π=S, 3π/2=W)
+  const east  = sinH * cosDecl;
+  const north = sinDecl * cosLat - cosDecl * cosH * sinLat;
+  const az    = Math.atan2(east, north);            // -π to π
+  const azDeg = ((az * DEG) + 360) % 360;           // 0-360
+
+  // Sunrise / sunset hour angle
+  const cosH0 = -Math.tan(lat) * Math.tan(decl);
+  let srHour, ssHour, dayLen;
+  if (cosH0 >= 1) {                   // polar night
+    srHour = 12; ssHour = 12; dayLen = 0;
+  } else if (cosH0 <= -1) {           // midnight sun
+    srHour = 0;  ssHour = 24; dayLen = 24;
+  } else {
+    const H0h = Math.acos(cosH0) * DEG / 15;
+    srHour    = 12 - H0h;
+    ssHour    = 12 + H0h;
+    dayLen    = 2 * H0h;
+  }
+
+  // Shadow (opposite azimuth, length normalized to gnomon height 1)
+  const shadowAz  = az + Math.PI;     // radians, 0–2π after mod
+  const shadowLen = alt > 0.005
+    ? Math.min(1 / Math.tan(alt), 30)  // cap at 30× gnomon height
+    : Infinity;
+
+  return {
+    alt,  altDeg: alt * DEG,
+    az,   azDeg,
+    H,    haDeg: H * DEG,
+    decl, declDeg: decl * DEG,
+    shadowAz, shadowLen,
+    srHour, ssHour, dayLen,
+    isDay: alt > 0,
+  };
+}
+
+/* ─── Sky colours ────────────────────────────────────────────── */
+function lc(h1, h2, t) {
+  // lerp two hex colours
+  t = Math.max(0, Math.min(1, t));
+  const p = c => parseInt(c, 16);
+  const r1=p(h1.slice(1,3)), g1=p(h1.slice(3,5)), b1=p(h1.slice(5,7));
+  const r2=p(h2.slice(1,3)), g2=p(h2.slice(3,5)), b2=p(h2.slice(5,7));
+  const rr = Math.round(r1+(r2-r1)*t);
+  const gg = Math.round(g1+(g2-g1)*t);
+  const bb = Math.round(b1+(b2-b1)*t);
+  return `rgb(${rr},${gg},${bb})`;
+}
+
+// Keyed by solar altitude (deg):
+// [zenith, mid-sky, horizon-line, horizon-glow]
+const SKY_KEY = [
+  { a: -18, z:'#030509', m:'#050a12', h:'#08101e', g:'#08101e' },
+  { a: -12, z:'#060a18', m:'#0a1025', h:'#0d1530', g:'#101828' },
+  { a:  -6, z:'#0c1228', m:'#141c40', h:'#1e2860', g:'#201e4e' },
+  { a:   0, z:'#111c3a', m:'#1e3080', h:'#c04a0e', g:'#c8500a' },
+  { a:   4, z:'#162050', m:'#2858c0', h:'#d09020', g:'#d8b030' },
+  { a:  10, z:'#1e3070', m:'#3068c8', h:'#b8c8e0', g:null      },
+  { a:  25, z:'#1c3580', m:'#3070cc', h:'#9ab8d8', g:null      },
+  { a:  45, z:'#1a3278', m:'#2e6cc0', h:'#88b0d5', g:null      },
+  { a:  90, z:'#102266', m:'#265ab4', h:'#78a8cc', g:null      },
+];
+
+function getSkyColors(altDeg) {
+  let lo = SKY_KEY[0], hi = SKY_KEY[SKY_KEY.length-1];
+  for (let i = 0; i < SKY_KEY.length-1; i++) {
+    if (altDeg <= SKY_KEY[i+1].a) { lo = SKY_KEY[i]; hi = SKY_KEY[i+1]; break; }
+  }
+  const t = lo.a === hi.a ? 0 : (altDeg - lo.a) / (hi.a - lo.a);
+  return {
+    zenith:  lc(lo.z, hi.z, t),
+    mid:     lc(lo.m, hi.m, t),
+    horizon: lc(lo.h, hi.h, t),
+    glow:    (lo.g && hi.g) ? lc(lo.g, hi.g, t) : null,
+    isNight: altDeg < -8,
+  };
+}
+
+/* ─── Sky-canvas projection ──────────────────────────────────── */
+// We always look toward the equator: N.Hemi → face south (center az=180°),
+// S.Hemi → face north (center az=0°).
+function getSkyProjection(solar, city, horizonY, W, skyH) {
+  const lookAz = city.lat >= 0 ? 180 : 0;  // degrees
+  let  dAz = solar.azDeg - lookAz;
+  if (dAz >  180) dAz -= 360;
+  if (dAz < -180) dAz += 360;
+  const cx = W / 2;
+  const x  = cx + (dAz / 72) * cx * 0.9;  // ±72° fills the frame nicely
+  const y  = horizonY - Math.sin(solar.alt) * skyH * 0.92;
+  return { x, y };
+}
+
+/* ─── Pseudo-random stars ────────────────────────────────────── */
+let _stars = null;
+function getStars(n) {
+  if (_stars) return _stars;
+  _stars = [];
+  let s = 42;
+  const rng = () => { s=(s*1664525+1013904223)&0xFFFFFFFF; return (s>>>0)/0xFFFFFFFF; };
+  for (let i = 0; i < n; i++) _stars.push({ x: rng(), y: rng(), r: rng()*0.7+0.3, bri: rng() });
+  return _stars;
+}
+
+/* ─── Render sky canvas ──────────────────────────────────────── */
+function renderSky(canvas, solar, city, doy, solarHour) {
+  const ctx  = canvas.getContext('2d');
+  const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+  const W    = canvas.clientWidth;
+  const H    = canvas.clientHeight;
+  if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) {
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.scale(dpr, dpr);
+  }
+  ctx.clearRect(0, 0, W, H);
+
+  const horizonY = H * 0.62;
+  const skyH     = horizonY;
+  const cx       = W / 2;
+  const col      = getSkyColors(solar.altDeg);
+
+  // Sky gradient
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
+  skyGrad.addColorStop(0,    col.zenith);
+  skyGrad.addColorStop(0.5,  col.mid);
+  skyGrad.addColorStop(0.85, col.horizon);
+  skyGrad.addColorStop(1,    col.horizon);
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, horizonY);
+
+  // Horizon glow
+  if (col.glow) {
+    const hGlow = ctx.createLinearGradient(0, horizonY - skyH*0.35, 0, horizonY + skyH*0.18);
+    hGlow.addColorStop(0, 'rgba(0,0,0,0)');
+    hGlow.addColorStop(0.6, col.glow + 'bb');
+    hGlow.addColorStop(1,   col.glow + 'cc');
+    ctx.fillStyle = hGlow;
+    ctx.fillRect(0, horizonY - skyH*0.35, W, skyH*0.53);
+  }
+
+  // Stars (night only)
+  if (col.isNight || solar.altDeg < -3) {
+    const fade = Math.min(1, (-solar.altDeg - 3) / 8);
+    const stars = getStars(180);
+    for (const st of stars) {
+      const sx = st.x * W;
+      const sy = st.y * horizonY * 0.95;
+      ctx.beginPath();
+      ctx.arc(sx, sy, st.r, 0, TAU);
+      ctx.fillStyle = `rgba(210,225,240,${(0.25 + st.bri * 0.6) * fade})`;
+      ctx.fill();
+    }
+  }
+
+  // Complexity upgrade (Pass 3): Solstice comparison arcs
+  // Show where the sun arc sits on summer & winter solstice for this city.
+  // Uses the same computeSolar math — no data files.
+  function drawSolsticeArc(solsticeDoy, color) {
+    const solRef = computeSolar(city.lat, solsticeDoy, 12);
+    if (solRef.dayLen < 0.2) return; // polar night — nothing to draw
+    ctx.beginPath();
+    let firstSol = true;
+    const step = 0.3;
+    for (let h = solRef.srHour; h <= solRef.ssHour + step/2; h += step) {
+      const sc = computeSolar(city.lat, solsticeDoy, Math.min(h, solRef.ssHour));
+      if (!sc.isDay) continue;
+      const { x, y } = getSkyProjection(sc, city, horizonY, W, skyH);
+      if (firstSol) { ctx.moveTo(x, y); firstSol = false; } else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([2, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // Summer solstice ~June 21 = day 172, warm amber ghost
+  drawSolsticeArc(172, 'rgba(255,180,60,0.22)');
+  // Winter solstice ~Dec 21 = day 355, cool blue ghost
+  drawSolsticeArc(355, 'rgba(120,170,220,0.22)');
+
+  // Sun arc (path from sunrise to sunset)
+  if (solar.dayLen > 0.2) {
+    ctx.beginPath();
+    let firstArc = true;
+    const arcStep = 0.2;
+    for (let h = solar.srHour; h <= solar.ssHour + arcStep/2; h += arcStep) {
+      const sc = computeSolar(city.lat, doy, Math.min(h, solar.ssHour));
+      if (!sc.isDay) continue;
+      const { x, y } = getSkyProjection(sc, city, horizonY, W, skyH);
+      if (firstArc) { ctx.moveTo(x, y); firstArc = false; }
+      else           ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = solar.altDeg < 5
+      ? 'rgba(224,161,14,0.55)'
+      : 'rgba(224,161,14,0.30)';
+    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([3, 5]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Sun orb
+  if (solar.altDeg > -8) {
+    const { x, y } = getSkyProjection(solar, city, horizonY, W, skyH);
+    const vis = Math.min(1, (solar.altDeg + 8) / 8);
+
+    // Corona glow
+    const coronaR = solar.altDeg < 6 ? 52 : 36;
+    const corona = ctx.createRadialGradient(x, y, 0, x, y, coronaR);
+    const baseAlpha = solar.altDeg < 2 ? 0.8 : 0.55;
+    corona.addColorStop(0,   `rgba(255,220,100,${baseAlpha * vis})`);
+    corona.addColorStop(0.3, `rgba(255,160,50,${0.35 * vis})`);
+    corona.addColorStop(0.65,`rgba(255,100,20,${0.12 * vis})`);
+    corona.addColorStop(1,   'rgba(255,80,0,0)');
+    ctx.fillStyle = corona;
+    ctx.beginPath();
+    ctx.arc(x, y, coronaR, 0, TAU);
+    ctx.fill();
+
+    // Sun disc
+    const discR = solar.altDeg < 5 ? 14 : 10;
+    const discColor = solar.altDeg < 4 ? '#ff8818' : '#fff8d0';
+    ctx.beginPath();
+    ctx.arc(x, y, discR, 0, TAU);
+    ctx.fillStyle = discColor;
+    ctx.fill();
+  }
+
+  // Ground panel
+  const groundGrad = ctx.createLinearGradient(0, horizonY, 0, H);
+  groundGrad.addColorStop(0,   '#bfb8a8');
+  groundGrad.addColorStop(0.5, '#ccc5b5');
+  groundGrad.addColorStop(1,   '#d9d2c4');
+  ctx.fillStyle = groundGrad;
+  ctx.fillRect(0, horizonY, W, H - horizonY);
+
+  // Horizon line
+  ctx.strokeStyle = 'rgba(43,38,32,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, horizonY);
+  ctx.lineTo(W, horizonY);
+  ctx.stroke();
+}
+
+/* ─── Render dial canvas ─────────────────────────────────────── */
+function renderDial(canvas, solar, city, doy) {
+  const ctx  = canvas.getContext('2d');
+  const dpr  = Math.min(window.devicePixelRatio || 1, 2);
+  const side = canvas.clientWidth || 320;
+  if (canvas.width !== Math.round(side * dpr)) {
+    canvas.width  = Math.round(side * dpr);
+    canvas.height = Math.round(side * dpr);
+    ctx.scale(dpr, dpr);
+  }
+
+  const W  = side, H = side;
+  const cx = W / 2, cy = H / 2;
+  const R  = Math.min(cx, cy) - 4;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Stone base circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, TAU);
+  ctx.fillStyle = '#d4cdc0';
+  ctx.fill();
+
+  // Subtle radial highlight
+  const stoneHi = ctx.createRadialGradient(cx - R*0.28, cy - R*0.28, 0, cx, cy, R);
+  stoneHi.addColorStop(0, 'rgba(255,255,255,0.18)');
+  stoneHi.addColorStop(1, 'rgba(0,0,0,0.06)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, TAU);
+  ctx.fillStyle = stoneHi;
+  ctx.fill();
+
+  // Dial ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, TAU);
+  ctx.strokeStyle = 'rgba(43,38,32,0.20)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Day arc (shows daylight band around rim)
+  if (solar.dayLen > 0.2 && solar.dayLen < 23.8) {
+    const riseAng = ((solar.srHour - 12) * 15) * RAD - Math.PI/2;
+    const setAng  = ((solar.ssHour  - 12) * 15) * RAD - Math.PI/2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R - 2, riseAng, setAng);
+    ctx.strokeStyle = 'rgba(224,161,14,0.35)';
+    ctx.lineWidth = 7;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.lineCap = 'butt';
+
+    // ── Upgrade: golden-hour bands ─────────────────────────────
+    // Sun is in golden hour when 0° < altitude < ~6°. Find the
+    // hour-angle offset where that happens and paint thin arcs.
+    // We brute-force in 2-min steps from rise/set inward ~2h.
+    const gh = 6 * RAD; // 6° altitude = golden-hour ceiling
+    const lat = city.lat * RAD;
+    const decl = solar.decl;
+    // Hour at which sun hits gh altitude (morning):
+    // sin(gh) = sin(lat)sin(decl) + cos(lat)cos(decl)cos(H) → solve H
+    const cosHgh = (Math.sin(gh) - Math.sin(lat)*Math.sin(decl))
+                 / (Math.cos(lat)*Math.cos(decl));
+    if (Math.abs(cosHgh) <= 1) {
+      const H0gh  = Math.acos(Math.max(-1,Math.min(1,cosHgh))); // radians
+      const ghHrs = H0gh * DEG / 15; // hours from noon
+      const morningGhEnd   = 12 - ghHrs; // hour when golden ends in morning
+      const eveningGhStart = 12 + ghHrs; // hour when golden starts in evening
+
+      // Morning golden: srHour → morningGhEnd
+      if (morningGhEnd > solar.srHour) {
+        const a1 = ((solar.srHour     - 12) * 15) * RAD - Math.PI/2;
+        const a2 = ((morningGhEnd     - 12) * 15) * RAD - Math.PI/2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 2, a1, a2);
+        ctx.strokeStyle = 'rgba(224,161,14,0.75)';
+        ctx.lineWidth = 7;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+      }
+      // Evening golden: eveningGhStart → ssHour
+      if (eveningGhStart < solar.ssHour) {
+        const a1 = ((eveningGhStart - 12) * 15) * RAD - Math.PI/2;
+        const a2 = ((solar.ssHour   - 12) * 15) * RAD - Math.PI/2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 2, a1, a2);
+        ctx.strokeStyle = 'rgba(224,161,14,0.75)';
+        ctx.lineWidth = 7;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+      }
+    }
+  }
+
+  // Latitude-accurate hour lines (horizontal sundial formula)
+  // hour_line_angle = atan(sin(lat) × tan(H)) where H = hour_offset × 15°
+  const lat = city.lat * RAD;
+  const sinLat = Math.sin(lat);
+
+  for (let hr = -6; hr <= 6; hr++) {
+    if (hr === 0) continue; // noon line drawn separately
+    const H_deg = hr * 15;
+    const lineAng = Math.atan(sinLat * Math.tan(H_deg * RAD));
+    // Sign: negative hrs (morning) → west side (right of noon for SH)
+    // For SH we look north so flip
+    const flip = city.lat < 0 ? -1 : 1;
+    const ang  = -Math.PI/2 + lineAng * flip + (city.lat < 0 ? Math.PI : 0);
+    // The actual angle on dial (0 = north at top)
+    const da = hr > 0
+      ? lineAng * (city.lat >= 0 ? -1 : 1)
+      : -lineAng * (city.lat >= 0 ? -1 : 1);
+
+    // Simpler: just place hour ticks at true 15° intervals on the outer ring
+    // and draw hour lines from gnomon to them using the correct formula
+    const tickAng = (hr * 15 - (city.lat >= 0 ? 0 : 180)) * RAD - Math.PI/2;
+    const tx1 = cx + Math.cos(tickAng) * R * 0.96;
+    const ty1 = cy + Math.sin(tickAng) * R * 0.96;
+    const tx2 = cx + Math.cos(tickAng) * R;
+    const ty2 = cy + Math.sin(tickAng) * R;
+    ctx.strokeStyle = Math.abs(hr) % 3 === 0
+      ? 'rgba(43,38,32,0.55)'
+      : 'rgba(43,38,32,0.25)';
+    ctx.lineWidth = Math.abs(hr) % 3 === 0 ? 1.5 : 1;
+    ctx.beginPath();
+    ctx.moveTo(tx1, ty1); ctx.lineTo(tx2, ty2);
+    ctx.stroke();
+
+    // Hour label (every 3 hours)
+    if (Math.abs(hr) % 3 === 0) {
+      const lblR = R * 0.78;
+      const lx   = cx + Math.cos(tickAng) * lblR;
+      const ly   = cy + Math.sin(tickAng) * lblR;
+      const hour12 = ((12 + hr) + 24) % 24;
+      ctx.fillStyle = 'rgba(43,38,32,0.50)';
+      ctx.font = `400 ${R*0.08}px 'Outfit',sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(hour12 === 0 ? '0' : hour12, lx, ly);
+    }
+  }
+
+  // Noon line
+  const noonAng = city.lat >= 0 ? -Math.PI/2 : Math.PI/2;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + Math.cos(noonAng)*R*0.85, cy + Math.sin(noonAng)*R*0.85);
+  ctx.strokeStyle = 'rgba(43,38,32,0.30)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Cardinal labels
+  const cardinals = [
+    ['N',  0     * RAD - Math.PI/2],
+    ['E',  90    * RAD - Math.PI/2],
+    ['S',  180   * RAD - Math.PI/2],
+    ['W',  270   * RAD - Math.PI/2],
+  ];
+  ctx.font = `600 ${R*0.075}px 'Outfit',sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (const [lbl, ang] of cardinals) {
+    const lx = cx + Math.cos(ang) * R * 0.62;
+    const ly = cy + Math.sin(ang) * R * 0.62;
+    ctx.fillStyle = 'rgba(43,38,32,0.40)';
+    ctx.fillText(lbl, lx, ly);
+  }
+
+  // Shadow (only when sun is above horizon)
+  if (solar.isDay && isFinite(solar.shadowLen)) {
+    const maxShadow = R * 0.72;
+    const shadowScale = Math.min(solar.shadowLen / 8, 1); // 8× gnomon = full radius
+    const shadowDist  = maxShadow * shadowScale + (1 - shadowScale) * R * 0.72;
+    const clampedLen  = Math.min(solar.shadowLen / 8 * maxShadow, maxShadow);
+
+    // Shadow azimuth on dial (north = top, clockwise)
+    // shadowAz is radians from north, clockwise
+    // On canvas: 0=top (-π/2), π/2=right, π=bottom, 3π/2=left
+    const shadowAzNorm = ((solar.shadowAz % TAU) + TAU) % TAU;
+    const dialAng      = shadowAzNorm - Math.PI/2;
+
+    // Shadow gradient (dark near gnomon, fades)
+    const sx = cx + Math.cos(dialAng) * clampedLen;
+    const sy = cy + Math.sin(dialAng) * clampedLen;
+    const shadowGrad = ctx.createLinearGradient(cx, cy, sx, sy);
+    shadowGrad.addColorStop(0,   'rgba(43,38,32,0.75)');
+    shadowGrad.addColorStop(0.7, 'rgba(43,38,32,0.40)');
+    shadowGrad.addColorStop(1,   'rgba(43,38,32,0.00)');
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(sx, sy);
+    ctx.strokeStyle = shadowGrad;
+    ctx.lineWidth = 3.5;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.lineCap = 'butt';
+  }
+
+  // Gnomon (central point)
+  ctx.beginPath();
+  ctx.arc(cx, cy, 5, 0, TAU);
+  ctx.fillStyle = '#2b2620';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 3, 0, TAU);
+  ctx.fillStyle = '#e0a10e';
+  ctx.fill();
+}
+
+/* ─── Mini sky for chapter cards ─────────────────────────────── */
+function renderMiniSky(canvas, solar, city, doy) {
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const W   = canvas.clientWidth || 240;
+  const H   = canvas.clientHeight || 80;
+  if (canvas.width !== Math.round(W*dpr)) {
+    canvas.width  = Math.round(W*dpr);
+    canvas.height = Math.round(H*dpr);
+    ctx.scale(dpr, dpr);
+  }
+  ctx.clearRect(0,0,W,H);
+  const horizonY = H * 0.70;
+  const col = getSkyColors(solar.altDeg);
+  const g   = ctx.createLinearGradient(0,0,0,horizonY);
+  g.addColorStop(0,   col.zenith);
+  g.addColorStop(0.6, col.mid);
+  g.addColorStop(1,   col.horizon);
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,W,horizonY);
+  // Ground strip
+  const gnd = ctx.createLinearGradient(0,horizonY,0,H);
+  gnd.addColorStop(0,'#c0b8a8'); gnd.addColorStop(1,'#d9d2c4');
+  ctx.fillStyle = gnd;
+  ctx.fillRect(0,horizonY,W,H-horizonY);
+  // Sun arc
+  if (solar.dayLen > 0.5 && city && doy) {
+    ctx.beginPath();
+    let first = true;
+    const lookAz = city.lat >= 0 ? 180 : 0;
+    for (let h = solar.srHour; h <= solar.ssHour; h += 0.5) {
+      const s = computeSolar(city.lat, doy, Math.min(h, solar.ssHour));
+      if (!s.isDay) continue;
+      let dAz = s.azDeg - lookAz;
+      if (dAz >  180) dAz -= 360;
+      if (dAz < -180) dAz += 360;
+      const sx = W/2 + (dAz / 90) * W * 0.45;
+      const sy = horizonY - Math.sin(s.alt) * horizonY * 0.90;
+      if (first) { ctx.moveTo(sx, sy); first = false; } else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = 'rgba(224,161,14,0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([2,4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // Noon sun
+  if (solar.isDay) {
+    const sunY = horizonY - Math.sin(solar.alt) * horizonY * 0.90;
+    const sunX = W / 2;
+    const glow = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 18);
+    glow.addColorStop(0, 'rgba(255,210,80,0.85)');
+    glow.addColorStop(0.4,'rgba(255,160,40,0.35)');
+    glow.addColorStop(1,  'rgba(255,80,0,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, 18, 0, TAU);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(sunX, sunY, 5, 0, TAU);
+    ctx.fillStyle = solar.altDeg > 20 ? '#fff8d0' : '#ff8820';
+    ctx.fill();
+  }
+}
+
+/* ─── Format helpers ─────────────────────────────────────────── */
+function fmtHour(h) {
+  if (!isFinite(h)) return '—';
+  const hh  = Math.floor(((h % 24) + 24) % 24);
+  const mm  = Math.round((h - Math.floor(h)) * 60);
+  const mms = mm === 60 ? '00' : String(mm).padStart(2, '0');
+  const hhh = mm === 60 ? hh + 1 : hh;
+  return `${hhh}:${mms}`;
+}
+function fmtDeg(d, decimals=1) {
+  return d.toFixed(decimals) + '°';
+}
+function fmtDayLen(h) {
+  if (!isFinite(h)) return '—';
+  const hh = Math.floor(h);
+  const mm = Math.round((h - hh) * 60);
+  return `${hh}h ${mm}m`;
+}
+
+/* ─── Altitude sparkline ─────────────────────────────────────── */
+// Draws a filled altitude curve for the whole day with current-hour marker.
+// Uses only computeSolar — no data files.
+function renderSparkline(canvas, city, doy, currentHour) {
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W   = canvas.clientWidth  || 160;
+  const H   = canvas.clientHeight || 38;
+  if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) {
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.scale(dpr, dpr);
+  }
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = 3;
+  const pw  = W - pad * 2;
+  const ph  = H - pad * 2;
+
+  // Find max altitude for vertical scale
+  let maxAlt = 5;
+  for (let h = 0; h <= 24; h += 0.5) {
+    const s = computeSolar(city.lat, doy, h);
+    if (s.altDeg > maxAlt) maxAlt = s.altDeg;
+  }
+
+  // Build altitude path (only above horizon for fill)
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + ph); // start at baseline left
+  let prevAbove = false;
+  for (let h = 0; h <= 24; h += 0.15) {
+    const s    = computeSolar(city.lat, doy, h);
+    const x    = pad + (h / 24) * pw;
+    const norm = Math.max(0, s.altDeg) / maxAlt;
+    const y    = pad + ph - norm * ph;
+    if (h === 0) { ctx.lineTo(x, y); prevAbove = s.isDay; continue; }
+    ctx.lineTo(x, y);
+    prevAbove = s.isDay;
+  }
+  ctx.lineTo(pad + pw, pad + ph); // end at baseline right
+  ctx.closePath();
+
+  const fillGrad = ctx.createLinearGradient(0, pad, 0, pad + ph);
+  fillGrad.addColorStop(0,   'rgba(224,161,14,0.55)');
+  fillGrad.addColorStop(0.6, 'rgba(224,161,14,0.20)');
+  fillGrad.addColorStop(1,   'rgba(224,161,14,0.05)');
+  ctx.fillStyle = fillGrad;
+  ctx.fill();
+
+  // Baseline
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + ph);
+  ctx.lineTo(pad + pw, pad + ph);
+  ctx.strokeStyle = 'rgba(43,38,32,0.18)';
+  ctx.lineWidth   = 1;
+  ctx.stroke();
+
+  // Curve outline
+  ctx.beginPath();
+  let first = true;
+  for (let h = 0; h <= 24; h += 0.15) {
+    const s    = computeSolar(city.lat, doy, h);
+    const x    = pad + (h / 24) * pw;
+    const norm = Math.max(0, s.altDeg) / maxAlt;
+    const y    = pad + ph - norm * ph;
+    if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = 'rgba(224,161,14,0.70)';
+  ctx.lineWidth   = 1.2;
+  ctx.stroke();
+
+  // Current-hour vertical marker
+  const sx    = pad + (currentHour / 24) * pw;
+  const cSol  = computeSolar(city.lat, doy, currentHour);
+  const norm  = Math.max(0, cSol.altDeg) / maxAlt;
+  const sy    = pad + ph - norm * ph;
+  ctx.beginPath();
+  ctx.moveTo(sx, pad + ph);
+  ctx.lineTo(sx, sy);
+  ctx.strokeStyle = 'rgba(43,38,32,0.30)';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([2, 2]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Sun dot at current position (only when above horizon)
+  if (cSol.isDay) {
+    ctx.beginPath();
+    ctx.arc(sx, sy, 3, 0, TAU);
+    ctx.fillStyle = '#e0a10e';
+    ctx.fill();
+  }
+}
+
+/* ─── UI population ──────────────────────────────────────────── */
+function populateCitySelect() {
+  const sel = document.getElementById('city-select');
+  CITIES.forEach((c, i) => {
+    const opt      = document.createElement('option');
+    opt.value      = i;
+    opt.textContent = c.name;
+    sel.appendChild(opt);
+  });
+}
+
+function buildChapterGrid(city) {
+  const grid = document.getElementById('chapter-grid');
+  grid.innerHTML = '';
+
+  const chapterSkyCanvases = [];
+
+  CHAPTERS.forEach((ch) => {
+    const d   = new Date(ch.date + 'T12:00:00Z');
+    const doy = getDayOfYear(d);
+    const sol = computeSolar(city.lat, doy, 12); // noon
+
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    card.innerHTML = `
+      <div class="chapter-num">Chapter ${ch.num}</div>
+      <h3>${ch.name}</h3>
+      <div class="chapter-date">${ch.date} · declination ${ch.declLabel}</div>
+      <div class="chapter-mini-sky">
+        <canvas class="chapter-sky-canvas" aria-hidden="true"></canvas>
+      </div>
+      <div class="chapter-stats">
+        <div class="chapter-stat">
+          <span class="chapter-stat-label">Day length</span>
+          <span class="chapter-stat-value">${fmtDayLen(sol.dayLen)}</span>
+        </div>
+        <div class="chapter-stat">
+          <span class="chapter-stat-label">Noon altitude</span>
+          <span class="chapter-stat-value">${fmtDeg(sol.altDeg)}</span>
+        </div>
+        <div class="chapter-stat">
+          <span class="chapter-stat-label">Sunrise</span>
+          <span class="chapter-stat-value">${fmtHour(sol.srHour)}</span>
+        </div>
+        <div class="chapter-stat">
+          <span class="chapter-stat-label">Sunset</span>
+          <span class="chapter-stat-value">${fmtHour(sol.ssHour)}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    chapterSkyCanvases.push({ canvas: card.querySelector('.chapter-sky-canvas'), solar: sol, doy });
+  });
+
+  // Render mini skies after layout
+  requestAnimationFrame(() => {
+    chapterSkyCanvases.forEach(({ canvas, solar, doy }) => renderMiniSky(canvas, solar, city, doy));
+  });
+}
+
+/* ─── State & update ─────────────────────────────────────────── */
+const state = {
+  cityIdx:    0,
+  date:       new Date('2026-03-20T00:00:00'),
+  solarHour:  12.0,
+  playing:    false,
+  lastRAF:    null,
+};
+
+let dirty = true;
+let rafId = null;
+
+function updateCoords(city) {
+  const latDir = city.lat >= 0 ? 'N' : 'S';
+  const lonDir = city.lon >= 0 ? 'E' : 'W';
+  const latAbs = Math.abs(city.lat).toFixed(2);
+  const lonAbs = Math.abs(city.lon).toFixed(2);
+  const el = document.getElementById('hero-coords');
+  if (el) el.textContent = `${latAbs}° ${latDir} · ${lonAbs}° ${lonDir}`;
+}
+
+function updateStats(solar) {
+  document.getElementById('stat-sunrise').textContent  = fmtHour(solar.srHour);
+  document.getElementById('stat-noon').textContent     = '12:00';
+  document.getElementById('stat-sunset').textContent   = fmtHour(solar.ssHour);
+  document.getElementById('stat-daylength').textContent= fmtDayLen(solar.dayLen);
+  const altEl = document.getElementById('stat-altitude');
+  altEl.textContent = fmtDeg(solar.altDeg);
+  altEl.className   = 'stat-value' + (solar.isDay ? ' solar-active' : '');
+  document.getElementById('stat-azimuth').textContent  = fmtDeg(solar.azDeg, 1);
+
+  document.getElementById('fact-decl').textContent     = fmtDeg(solar.declDeg, 2);
+  document.getElementById('fact-ha').textContent       = fmtDeg(solar.haDeg, 1);
+  document.getElementById('fact-shadow').textContent   = solar.isDay
+    ? (isFinite(solar.shadowLen) ? solar.shadowLen.toFixed(1) + '× height' : '—')
+    : '—';
+  const shDir = solar.isDay ? fmtDeg(((solar.shadowAz * DEG) % 360 + 360) % 360, 0) : '—';
+  document.getElementById('fact-shadowdir').textContent = shDir;
+}
+
+function updateTimeDisplay(h) {
+  document.getElementById('time-display').textContent = fmtHour(h);
+  const slider = document.getElementById('hour-slider');
+  slider.setAttribute('aria-valuenow', h.toFixed(2));
+  slider.setAttribute('aria-valuetext', fmtHour(h));
+}
+
+function tick(now) {
+  rafId = requestAnimationFrame(tick);
+  if (document.hidden) return;
+
+  // Advance animation
+  if (state.playing && !prefersReducedMotion) {
+    const dt = state.lastRAF ? (now - state.lastRAF) / 1000 : 0;
+    state.solarHour += dt * 1.0; // 1 solar hour per real second
+    if (state.solarHour > 24) state.solarHour = 0;
+    document.getElementById('hour-slider').value = state.solarHour;
+    updateTimeDisplay(state.solarHour);
+    dirty = true;
+  }
+  state.lastRAF = now;
+
+  if (!dirty) return;
+  dirty = false;
+
+  const city  = CITIES[state.cityIdx];
+  const doy   = getDayOfYear(state.date);
+  const solar = computeSolar(city.lat, doy, state.solarHour);
+
+  updateStats(solar);
+  renderSky(document.getElementById('sky-canvas'), solar, city, doy, state.solarHour);
+  renderDial(document.getElementById('dial-canvas'), solar, city, doy);
+  renderSparkline(document.getElementById('spark-canvas'), city, doy, state.solarHour);
+}
+
+function markDirty() { dirty = true; }
+
+/* ─── Event handlers ─────────────────────────────────────────── */
+document.getElementById('city-select').addEventListener('change', e => {
+  state.cityIdx = parseInt(e.target.value);
+  updateCoords(CITIES[state.cityIdx]);
+  buildChapterGrid(CITIES[state.cityIdx]);
+  markDirty();
+});
+
+document.getElementById('date-input').addEventListener('change', e => {
+  const d = new Date(e.target.value + 'T00:00:00');
+  if (!isNaN(d)) { state.date = d; markDirty(); }
+});
+
+document.getElementById('hour-slider').addEventListener('input', e => {
+  state.solarHour = parseFloat(e.target.value);
+  updateTimeDisplay(state.solarHour);
+  markDirty();
+});
+
+document.getElementById('play-btn').addEventListener('click', () => {
+  state.playing = !state.playing;
+  state.lastRAF = null;
+  const btn = document.getElementById('play-btn');
+  btn.textContent      = state.playing ? '⏸ Pause' : '▶ Play';
+  btn.setAttribute('aria-pressed', state.playing);
+  btn.setAttribute('aria-label', state.playing ? 'Pause day animation' : 'Play day animation');
+});
+
+/* Visibility pause */
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && state.playing) state.lastRAF = null;
+});
+
+/* Resize redraws */
+const ro = new ResizeObserver(() => markDirty());
+ro.observe(document.getElementById('sky-canvas'));
+
+/* ─── Initialise ─────────────────────────────────────────────── */
+function init() {
+  // Populate city dropdown
+  populateCitySelect();
+
+  // Set date input to spring equinox 2026
+  const di = document.getElementById('date-input');
+  di.value = '2026-03-20';
+
+  // Set slider
+  document.getElementById('hour-slider').value = 12;
+  updateTimeDisplay(12);
+
+  // Build chapters
+  updateCoords(CITIES[0]);
+  buildChapterGrid(CITIES[0]);
+
+  // If reduced motion, start at golden hour (low sun, beautiful static scene)
+  if (prefersReducedMotion) {
+    state.solarHour = 7.5;
+    document.getElementById('hour-slider').value = 7.5;
+    updateTimeDisplay(7.5);
+    document.getElementById('play-btn').disabled = true;
+    document.getElementById('play-btn').setAttribute('aria-disabled', 'true');
+    document.getElementById('play-btn').title = 'Animation disabled (prefers-reduced-motion)';
+  }
+
+  // Start render loop
+  rafId = requestAnimationFrame(tick);
+}
+
+init();
+</script>
+</body>
+</html>
