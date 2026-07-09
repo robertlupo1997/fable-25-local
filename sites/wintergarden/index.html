@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wintergarden Conservatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Mulish:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dusk:  #0f1712;
+  --leaf:  #7fbf7a;
+  --bloom: #e77fb3;
+  --brass: #b59a5a;
+  --brass-l: #d4be8a;
+  --cream: #e8e0d0;
+  --text:  #bfcfb8;
+  --text-d:#7a9870;
+  --bg2:   #111a13;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dusk);color:var(--text);font-family:'Mulish',system-ui,sans-serif;font-weight:300;overflow-x:hidden;line-height:1}
+
+.skip{position:absolute;left:-999em;top:0;padding:.5rem 1rem;background:var(--brass);color:var(--dusk);font-weight:700;z-index:999}
+.skip:focus{left:0}
+
+/* ── HEADER ── */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(15,23,18,.95) 30%,rgba(15,23,18,0))}
+h1{font-family:'Gloock',Georgia,serif;font-weight:400;font-size:1.3rem;color:var(--cream);letter-spacing:.02em;line-height:1}
+.h1-sub{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:400;margin-left:.5rem;vertical-align:.15em}
+.hdrbtns{display:flex;gap:.75rem;align-items:center}
+.btn{background:none;border:1px solid rgba(181,154,90,.35);color:var(--brass-l);padding:.38rem .85rem;font-family:'Mulish',sans-serif;font-size:.72rem;font-weight:400;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:border-color .18s,background .18s;display:flex;align-items:center;gap:.4rem}
+.btn:hover,.btn:focus-visible{border-color:var(--brass);background:rgba(181,154,90,.1);outline:2px solid var(--brass);outline-offset:2px}
+.btn[aria-pressed="true"]{border-color:var(--leaf);color:var(--leaf)}
+
+/* ── STAGE ── */
+.stage{position:relative;width:100%;height:100vh;overflow:hidden}
+#garden{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+.glass-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.glass-overlay svg{width:100%;height:100%}
+
+/* ── HERO TEXT ── */
+.garden-hero{position:absolute;top:30%;left:8%;transform:translateY(-50%);z-index:10;max-width:420px}
+
+/* ── PLANT LABELS ── */
+.plant-labels{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9}
+.plant-label{position:absolute;bottom:4.5%;transform:translateX(-50%);background:rgba(10,18,12,.82);border:1px solid rgba(181,154,90,.28);padding:.22rem .6rem;font-size:.62rem;font-style:italic;color:rgba(212,190,138,.75);white-space:nowrap;border-radius:1px;opacity:0;transition:opacity 700ms ease;letter-spacing:.03em}
+.plant-label.show{opacity:1}
+.gid{display:flex;align-items:baseline;gap:.6rem;margin-bottom:.9rem}
+.gid-label{font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:400}
+.gid-num{font-family:'Gloock',serif;font-size:.9rem;color:var(--brass-l)}
+.hero-h{font-family:'Gloock',Georgia,serif;font-size:clamp(2.3rem,4.6vw,3.6rem);font-weight:400;line-height:1.11;color:var(--cream);text-shadow:0 2px 24px rgba(15,23,18,.85);margin-bottom:1rem}
+.hero-p{font-size:.875rem;line-height:1.65;color:var(--text-d);font-weight:300;max-width:34ch;text-shadow:0 1px 10px rgba(15,23,18,.9)}
+
+/* growing status pill */
+.grow-status{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.2rem;padding:.28rem .75rem;border:1px solid rgba(127,191,122,.25);background:rgba(15,23,18,.6);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--leaf);border-radius:20px}
+.grow-dot{width:5px;height:5px;border-radius:50%;background:var(--leaf);animation:pulse 1.4s ease-in-out infinite}
+.grow-status.done .grow-dot{animation:none;background:var(--brass)}
+.grow-status.done{color:var(--brass);border-color:rgba(181,154,90,.25)}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* scroll hint */
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:10;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-d);text-align:center;animation:sfade 2.5s ease-in-out infinite alternate}
+@keyframes sfade{from{opacity:.25}to{opacity:.65}}
+.scroll-hint svg{display:block;margin:.4rem auto 0;opacity:.5}
+
+/* ── SECTIONS ── */
+.section-inner{max-width:880px;margin:0 auto;padding:5rem 3rem}
+h2{font-family:'Gloock',Georgia,serif;font-size:clamp(1.7rem,2.8vw,2.4rem);font-weight:400;color:var(--cream);line-height:1.1}
+
+/* ── LOG ── */
+.log-section{background:var(--bg2);border-top:1px solid rgba(181,154,90,.13)}
+.log-meta{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);margin-top:.3rem;margin-bottom:3rem;font-weight:400}
+.spec-list{display:grid;gap:0}
+.spec-entry{display:grid;grid-template-columns:2.5rem 1fr;gap:0 1.25rem;padding:1.75rem 0;border-bottom:1px solid rgba(181,154,90,.1);align-items:start}
+.spec-num{font-family:'Gloock',serif;font-size:2rem;font-weight:400;color:rgba(181,154,90,.3);line-height:1;padding-top:.15rem}
+.spec-body{}
+.spec-sci{font-family:'Gloock',serif;font-size:1.05rem;font-style:italic;color:var(--cream);display:block;margin-bottom:.18rem}
+.spec-common{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:.6rem}
+.spec-swatch{width:8px;height:8px;border-radius:50%;display:inline-block}
+.spec-desc{font-size:.82rem;line-height:1.65;color:var(--text);font-weight:300;margin-top:.65rem;max-width:60ch}
+.spec-stats{display:flex;gap:1.5rem;margin-top:.5rem;font-size:.68rem;color:var(--text-d);letter-spacing:.06em}
+.log-fn{margin-top:2rem;padding-top:1rem;border-top:1px solid rgba(181,154,90,.1);font-size:.7rem;font-style:italic;color:var(--text-d);line-height:1.6}
+
+/* ── ABOUT ── */
+.about-section{background:var(--dusk);border-top:1px solid rgba(181,154,90,.1)}
+.about-lead{font-family:'Gloock',serif;font-size:clamp(.95rem,1.8vw,1.15rem);line-height:1.75;color:var(--text);margin-bottom:1.5rem}
+.about-body p{font-size:.875rem;line-height:1.8;color:var(--text-d);margin-bottom:.9rem;max-width:64ch}
+.cult-note{margin-top:3rem;padding:1.5rem 1.75rem;border:1px solid rgba(181,154,90,.18);border-left:3px solid var(--brass);background:rgba(181,154,90,.035)}
+.cult-note h3{font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;color:var(--brass);margin-bottom:.7rem;font-weight:600}
+.cult-note p{font-size:.8rem;line-height:1.75;color:var(--text-d)}
+code{font-size:.78rem;color:var(--leaf);background:rgba(127,191,122,.1);padding:.1em .3em;border-radius:2px}
+
+/* ── FOOTER ── */
+.site-footer{border-top:1px solid rgba(181,154,90,.12);padding:2rem 3rem;text-align:center;font-size:.7rem;color:var(--text-d);letter-spacing:.08em}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  .scroll-hint,.grow-dot{animation:none!important}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* ── MOBILE ── */
+@media(max-width:640px){
+  .stage{height:65vh}
+  .site-header{padding:.85rem 1.25rem}
+  .h1-sub{display:none}
+  .garden-hero{left:5%;right:5%;max-width:none;top:18%;transform:none}
+  .hero-h{font-size:1.75rem;line-height:1.15}
+  .hero-p{display:none}
+  .grow-status{margin-top:.75rem}
+  .section-inner{padding:3rem 1.5rem}
+  .spec-entry{grid-template-columns:2rem 1fr;gap:0 .75rem}
+  .spec-num{font-size:1.5rem}
+  .scroll-hint{display:none}
+  .hdrbtns .btn span.btn-label{display:none}
+  .plant-label{display:none}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+
+<header class="site-header" role="banner">
+  <div>
+    <h1>Wintergarden <span class="h1-sub">Conservatory</span></h1>
+  </div>
+  <nav class="hdrbtns" aria-label="Garden controls">
+    <button class="btn" id="audio-btn" aria-pressed="false" aria-label="Enable garden chimes">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M2 4.5h1.5l2.5-2.5v8L3.5 7.5H2a.5.5 0 01-.5-.5v-2A.5.5 0 012 4.5z" fill="currentColor"/>
+        <path d="M8 4a2.5 2.5 0 010 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+        <path d="M9.5 2.5a5 5 0 010 7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".5"/>
+      </svg>
+      <span class="btn-label">Chimes</span>
+    </button>
+    <button class="btn" id="regrow-btn" aria-label="Grow a new garden">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M6 1v2M6 9v2M1 6h2M9 6h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="1.1"/>
+      </svg>
+      <span class="btn-label">New Garden</span>
+    </button>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="stage" aria-label="Generative botanical garden">
+    <canvas id="garden" aria-hidden="true"></canvas>
+    <canvas id="particle-canvas" aria-hidden="true" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></canvas>
+    <div class="glass-overlay" aria-hidden="true" id="glass-overlay"></div>
+    <div class="plant-labels" id="plant-labels" aria-hidden="true"></div>
+
+    <div class="garden-hero">
+      <div class="gid">
+        <span class="gid-label">Garden</span>
+        <span class="gid-num">#<span id="seed-disp">—</span></span>
+      </div>
+      <p class="hero-h">Every visit<br>grows a new world.</p>
+      <p class="hero-p">A unique garden assembled from botanical grammars, grown stem&nbsp;by&nbsp;stem in real time.</p>
+      <div class="grow-status" id="grow-status" role="status" aria-live="polite">
+        <span class="grow-dot"></span>
+        <span id="grow-label">Growing…</span>
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      Scroll to the log
+      <svg width="12" height="14" viewBox="0 0 12 14" fill="none"><path d="M6 1v10M2 8l4 4 4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <section class="log-section" id="log" aria-labelledby="log-hd">
+    <div class="section-inner">
+      <h2 id="log-hd">Gardener's Log</h2>
+      <p class="log-meta">Observations — Garden #<span id="log-seed">—</span></p>
+      <div class="spec-list" id="spec-list" aria-live="polite"></div>
+      <p class="log-fn">Scientific names generated to Linnaean binomial standard from morphological parameters. Specimens classified by the Wintergarden taxonomic registry v2.3.</p>
+    </div>
+  </section>
+
+  <section class="about-section" aria-labelledby="about-hd">
+    <div class="section-inner">
+      <h2 id="about-hd">The Conservatory</h2>
+      <p class="about-lead" style="margin-top:1.25rem">Founded in the tradition of the great Victorian glasshouses, the Wintergarden Conservatory maintains a living collection no two visitors will see alike.</p>
+      <div class="about-body">
+        <p>Each garden is seeded by a unique number — a stochastic grammar that encodes the branching logic of living plants. Stems extend branch by branch in real time, governed by axiomatic rules: the fern unfurls by repeated bifurcation; the hibiscus builds alternating lateral branches, saving its bloom for the final recursion; the reed climbs nearly straight, its leaves unwrapping at each node.</p>
+        <p>These are not photographs or pre-rendered scenes. They are performed, each time, for you.</p>
+      </div>
+      <div class="cult-note">
+        <h3>Cultivation Method</h3>
+        <p>Recursive stochastic L-systems at depth 4–5, parameterised by species-specific grammars. Each stem is a <code>quadraticCurveTo</code> bezier on HTML canvas with tapered <code>lineWidth</code> — the base carries full caliper; each generation thins by a fixed factor. Leaves are filled bezier paths rotated to the branch angle. Blooms are elliptical petals arranged radially with per-petal PRNG jitter. Chimes: pentatonic sine oscillators in the Web Audio API, muted until invited.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026
+</footer>
+
+<script>
+'use strict';
+// ════════════════════════════════════════════
+// SEEDED PRNG — mulberry32
+// ════════════════════════════════════════════
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function seedHash(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return h >>> 0;
+}
+
+// ════════════════════════════════════════════
+// SPECIES
+// ════════════════════════════════════════════
+const SPECIES = [
+  {
+    id:'fern', name:'Maidenhair Fern', sci:'Adiantum',
+    desc:'Delicate fan-shaped pinnae on wire-thin dark rachises. Flourishes in the humid east wing, where condensation beads on the glazing at dusk.',
+    maxD:5, startLen:125, maxW:2.5, lenF:0.62, angleVar:0.15, leafProb:0.85,
+    leafSz:16, leafRx:0.7, leafRy:0.8,
+    stemCol:'#527a42', leafCol:'#7fbf7a',
+    bloomCol:null, bloomSz:0, bloomN:0,
+    branches(d,p){ return 2; },
+    angles:[-Math.PI/5.5, Math.PI/5.5],
+  },
+  {
+    id:'hibiscus', name:'Glasshouse Hibiscus', sci:'Hibiscus',
+    desc:'Robust upright habit with large five-petalled flowers at each terminal branch. Requires twice-weekly watering and full exposure to the south glazing.',
+    maxD:4, startLen:165, maxW:6.5, lenF:0.68, angleVar:0.12, leafProb:0.5,
+    leafSz:34, leafRx:0.4, leafRy:1.2,
+    stemCol:'#3d5020', leafCol:'#5da450',
+    bloomCol:'#e77fb3', bloomSz:22, bloomN:5,
+    branches(d,p){ return d>2?2:(p()>.4?2:3); },
+    angles:[-Math.PI/5, Math.PI/5],
+  },
+  {
+    id:'jasmine', name:'Evening Star Jasmine', sci:'Jasminum',
+    desc:'Twining stems that follow the brass trellis upward, starred with pale blossoms. Scent strongest in the hour before the glasshouse is locked.',
+    maxD:4, startLen:155, maxW:3.2, lenF:0.70, angleVar:0.2, leafProb:0.55,
+    leafSz:22, leafRx:0.35, leafRy:0.9,
+    stemCol:'#4e7540', leafCol:'#6bbf6a',
+    bloomCol:'#f0c8e0', bloomSz:14, bloomN:5,
+    branches(d,p){ return p()>.25?2:3; },
+    angles:[-Math.PI/4.5, Math.PI/4.5, -Math.PI/9],
+  },
+  {
+    id:'reed', name:'Wintergarden Reed', sci:'Arundo',
+    desc:'Graceful culms reaching for the glazing bars. Each leaf unwraps from the node in sequence, one per week through the winter growing season.',
+    maxD:4, startLen:132, maxW:5.0, lenF:0.84, angleVar:0.06, leafProb:0.42,
+    leafSz:52, leafRx:0.12, leafRy:1.6,
+    stemCol:'#617a32', leafCol:'#9dbf60',
+    bloomCol:null, bloomSz:0, bloomN:0,
+    branches(d,p){ return d>3?1:(d>1?2:1); },
+    angles:[0, Math.PI/14, -Math.PI/14],
+  },
+];
+
+// ════════════════════════════════════════════
+// NAMING
+// ════════════════════════════════════════════
+const EPITHETS=[
+  'glassii','winterense','conservatorii','vespertinum','viridiana',
+  'gloockii','fabulosum','lucidum','pallidus','elegans',
+  'fragrans','tenuis','novum','splendidus','minutus',
+];
+const NOTES=[
+  'Height {h} cm · {s} stems','{s} culms · ht. {h} cm',
+  'Est. ht. {h} cm · {s} basal shoots','{s} stems · approx. {h} cm',
+];
+function specName(genus, p){ return genus+' '+EPITHETS[Math.floor(p()*EPITHETS.length)]; }
+
+// ════════════════════════════════════════════
+// DRAW-COMMAND GENERATOR
+// ════════════════════════════════════════════
+function generatePlant(sx, sy, spIdx, p, hScale) {
+  hScale = hScale||1;
+  const sp = SPECIES[spIdx];
+  const baseLen = sp.startLen * hScale;
+  const leafSz  = sp.leafSz  * hScale;
+  const maxW    = sp.maxW    * Math.sqrt(hScale);
+  const bloomSz = sp.bloomSz * hScale;
+  const cmds = [];
+
+  function rec(x,y,ang,len,d) {
+    // Phototropism: gentle pull upward
+    const a2 = ang + ((-Math.PI/2)-ang)*0.08;
+    const jMag = len*0.16*(p()-0.5);
+    const perp = a2+Math.PI/2;
+    const ex = x+Math.cos(a2)*len;
+    const ey = y+Math.sin(a2)*len;
+    const cpx = (x+ex)/2+Math.cos(perp)*jMag;
+    const cpy = (y+ey)/2+Math.sin(perp)*jMag;
+    const w = Math.max(0.4, maxW*(d/sp.maxD));
+
+    cmds.push({t:'s', x1:x,y1:y, cpx,cpy, x2:ex,y2:ey, col:sp.stemCol, w});
+
+    // Leaf on segment (not at root or tip)
+    if (d>0 && d<sp.maxD && p()<sp.leafProb) {
+      const side = p()>.5?1:-1;
+      const la = a2+side*(Math.PI/4+p()*Math.PI/8);
+      const t = 0.25+p()*0.5;
+      cmds.push({t:'l',
+        x:x+(ex-x)*t, y:y+(ey-y)*t,
+        ang:la, sz:leafSz*(0.3+(d/sp.maxD)*0.7)*(0.8+p()*.4),
+        col:sp.leafCol, rx:sp.leafRx, ry:sp.leafRy
+      });
+    }
+
+    if (d===0) {
+      // Tip: bloom or leaf
+      if (sp.bloomCol && p()<0.65) {
+        cmds.push({t:'b', x:ex,y:ey, col:sp.bloomCol, sz:bloomSz*(0.8+p()*.4), n:sp.bloomN, seed:Math.floor(p()*65536)});
+      } else {
+        cmds.push({t:'l', x:ex,y:ey, ang:a2, sz:leafSz*(0.9+p()*.35), col:sp.leafCol, rx:sp.leafRx, ry:sp.leafRy});
+      }
+      return;
+    }
+
+    const nb = sp.branches(d,p);
+    const angles = sp.angles;
+    for (let i=0;i<nb;i++) {
+      const ba = angles[i%angles.length];
+      const jt = (p()-0.5)*2*sp.angleVar;
+      const nl = len*sp.lenF*(0.87+p()*.26);
+      rec(ex,ey, a2+ba+jt, nl, d-1);
+    }
+  }
+
+  rec(sx, sy, -Math.PI/2, baseLen, sp.maxD);
+  return {spIdx, cmds};
+}
+
+// ════════════════════════════════════════════
+// CANVAS RENDERER
+// ════════════════════════════════════════════
+function execCmd(ctx, cmd) {
+  switch(cmd.t) {
+    case 's': {
+      ctx.beginPath();
+      ctx.moveTo(cmd.x1,cmd.y1);
+      ctx.quadraticCurveTo(cmd.cpx,cmd.cpy,cmd.x2,cmd.y2);
+      ctx.strokeStyle=cmd.col;
+      ctx.lineWidth=cmd.w;
+      ctx.lineCap='round';
+      ctx.lineJoin='round';
+      ctx.stroke();
+      break;
+    }
+    case 'l': {
+      ctx.save();
+      ctx.translate(cmd.x,cmd.y);
+      ctx.rotate(cmd.ang);
+      const s=cmd.sz, rx=cmd.rx||0.4, ry=cmd.ry||1.0;
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.bezierCurveTo(-s*rx,-s*ry*0.3, -s*rx*0.8,-s*ry, 0,-s*ry);
+      ctx.bezierCurveTo( s*rx*0.8,-s*ry,  s*rx,-s*ry*0.3, 0,0);
+      ctx.fillStyle=cmd.col;
+      ctx.globalAlpha=0.78;
+      ctx.fill();
+      // midrib
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.lineTo(0,-s*ry*0.85);
+      ctx.strokeStyle='rgba(0,0,0,.18)';
+      ctx.lineWidth=0.6;
+      ctx.globalAlpha=1;
+      ctx.stroke();
+      ctx.restore();
+      break;
+    }
+    case 'b': {
+      const rng=mulberry32(cmd.seed||0);
+      ctx.save();
+      ctx.translate(cmd.x,cmd.y);
+      for(let i=0;i<cmd.n;i++){
+        const ang=(i/cmd.n)*Math.PI*2+rng()*0.25;
+        const dist=cmd.sz*.42*(0.85+rng()*.3);
+        ctx.save();
+        ctx.rotate(ang);
+        ctx.translate(0,-dist);
+        ctx.beginPath();
+        ctx.ellipse(0,0,cmd.sz*.3,cmd.sz*.52,0,0,Math.PI*2);
+        ctx.fillStyle=cmd.col;
+        ctx.globalAlpha=0.83;
+        ctx.fill();
+        ctx.restore();
+      }
+      // stamen
+      ctx.beginPath();
+      ctx.arc(0,0,cmd.sz*.2,0,Math.PI*2);
+      ctx.fillStyle='#f5e04a';
+      ctx.globalAlpha=0.9;
+      ctx.fill();
+      ctx.restore();
+      ctx.globalAlpha=1;
+      break;
+    }
+  }
+}
+
+function drawBackground(ctx, W, H) {
+  // Dark dusk fill
+  ctx.fillStyle='#0f1712';
+  ctx.fillRect(0,0,W,H);
+  // Ground shadow
+  const g=ctx.createLinearGradient(0,H*0.72,0,H);
+  g.addColorStop(0,'rgba(5,12,7,0)');
+  g.addColorStop(1,'rgba(5,12,7,.95)');
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,W,H);
+  // Top light (simulated light through glass roof)
+  const tg=ctx.createRadialGradient(W/2,0,0,W/2,0,H*.8);
+  tg.addColorStop(0,'rgba(40,80,40,.12)');
+  tg.addColorStop(0.4,'rgba(20,50,25,.04)');
+  tg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=tg;
+  ctx.fillRect(0,0,W,H);
+  // Edge vignette for depth
+  const ev=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,Math.max(W,H)*0.85);
+  ev.addColorStop(0,'rgba(0,0,0,0)');
+  ev.addColorStop(1,'rgba(0,0,0,.45)');
+  ctx.fillStyle=ev;
+  ctx.fillRect(0,0,W,H);
+  // Soil bed at bottom
+  const soil=ctx.createLinearGradient(0,H*0.92,0,H);
+  soil.addColorStop(0,'rgba(20,35,18,0)');
+  soil.addColorStop(0.3,'rgba(14,24,12,.7)');
+  soil.addColorStop(1,'rgba(8,15,8,1)');
+  ctx.fillStyle=soil;
+  ctx.fillRect(0,0,W,H);
+  // Soil line
+  ctx.beginPath();
+  ctx.moveTo(0,H*0.965);
+  ctx.lineTo(W,H*0.965);
+  ctx.strokeStyle='rgba(80,110,60,.25)';
+  ctx.lineWidth=1;
+  ctx.stroke();
+}
+
+// ════════════════════════════════════════════
+// GLASS PANE OVERLAY
+// ════════════════════════════════════════════
+function buildGlassOverlay(W, H) {
+  const el = document.getElementById('glass-overlay');
+  const colW = Math.round(W / Math.ceil(W/220));
+  const rowH = Math.round(H / Math.ceil(H/190));
+  const cols = Math.ceil(W/colW);
+  const rows = Math.ceil(H/rowH);
+
+  let lines = '';
+  // Vertical mullions
+  for(let c=1;c<cols;c++){
+    const x=c*colW;
+    lines+=`<line x1="${x}" y1="0" x2="${x}" y2="${H}"/>`;
+    // rivet dots
+    for(let r=0;r<=rows;r++) lines+=`<circle cx="${x}" cy="${r*rowH}" r="2.5"/>`;
+  }
+  // Horizontal rails
+  for(let r=1;r<rows;r++){
+    const y=r*rowH;
+    lines+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}"/>`;
+  }
+  // Arched ridge at top
+  const archW=colW, archH=rowH*0.45;
+  for(let c=0;c<cols;c++){
+    const ax=c*colW, bx=(c+1)*colW;
+    const mx=(ax+bx)/2;
+    lines+=`<path d="M${ax},${rowH} Q${mx},${rowH-archH} ${bx},${rowH}"/>`;
+  }
+  // Border frame
+  lines+=`<rect x="1" y="1" width="${W-2}" height="${H-2}" rx="0"/>`;
+
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#b59a5a" stroke-width="1" fill="none" opacity="0.13">${lines}</g>
+    <g fill="#b59a5a" opacity="0.18">${lines.match(/<circle[^>]+>/g)||''}</g>
+  </svg>`;
+}
+
+// ════════════════════════════════════════════
+// GARDENER'S LOG
+// ════════════════════════════════════════════
+function buildLog(plants, seed) {
+  const lp = mulberry32(seedHash('log'+seed));
+  const list = document.getElementById('spec-list');
+  list.innerHTML='';
+  document.getElementById('log-seed').textContent=String(seed).padStart(5,'0');
+
+  plants.forEach((pl,i)=>{
+    const sp=SPECIES[pl.spIdx];
+    const sci=specName(sp.sci, lp);
+    const h=45+Math.floor(lp()*70);
+    const s=1+Math.floor(lp()*4);
+    const noteT=NOTES[Math.floor(lp()*NOTES.length)];
+    const note=noteT.replace('{h}',h).replace('{s}',s);
+
+    const swatch=sp.bloomCol||sp.leafCol;
+    const el=document.createElement('div');
+    el.className='spec-entry';
+    el.setAttribute('role','listitem');
+    el.innerHTML=`
+      <div class="spec-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="spec-body">
+        <em class="spec-sci">${sci}</em>
+        <span class="spec-common"><span class="spec-swatch" style="background:${swatch}" aria-hidden="true"></span>${sp.name}</span>
+        <p class="spec-desc">${sp.desc}</p>
+        <div class="spec-stats"><span>${note}</span><span>Family: ${sp.id.charAt(0).toUpperCase()+sp.id.slice(1)}aceae</span></div>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+// ════════════════════════════════════════════
+// AUDIO
+// ════════════════════════════════════════════
+const PENTA=[261.63,293.66,329.63,392,440,523.25,587.33];
+let actx=null, audioOn=false, lastChime=0;
+
+function getAudio(){
+  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended') actx.resume();
+  return actx;
+}
+
+function chime(){
+  if(!audioOn) return;
+  const now=Date.now(); if(now-lastChime<350) return; lastChime=now;
+  const ac=getAudio();
+  const t=ac.currentTime;
+  const freq=PENTA[Math.floor(Math.random()*PENTA.length)]*(Math.random()>.5?2:1);
+  const osc=ac.createOscillator();
+  const gain=ac.createGain();
+  const filt=ac.createBiquadFilter();
+  filt.type='lowpass'; filt.frequency.value=3500; filt.Q.value=0.5;
+  osc.type='sine';
+  osc.frequency.setValueAtTime(freq,t);
+  gain.gain.setValueAtTime(.001,t);
+  gain.gain.linearRampToValueAtTime(.1,t+.025);
+  gain.gain.exponentialRampToValueAtTime(.001,t+1.8);
+  osc.connect(filt); filt.connect(gain); gain.connect(ac.destination);
+  osc.start(t); osc.stop(t+2);
+}
+
+// ════════════════════════════════════════════
+// MAIN GARDEN SYSTEM
+// ════════════════════════════════════════════
+let canvas, ctx, W, H, dpr;
+let allCmds=[], cmdIdx=0, rafId=null;
+let currentSeed=null;
+const REDUCED=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+function initCanvas(){
+  canvas=document.getElementById('garden');
+  ctx=canvas.getContext('2d');
+  sizeCanvas();
+}
+
+function sizeCanvas(){
+  const stage=document.querySelector('.stage');
+  W=stage.clientWidth; H=stage.clientHeight;
+  dpr=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(dpr,dpr);
+}
+
+function grow(seed){
+  if(rafId){cancelAnimationFrame(rafId);rafId=null;}
+  if(particleRaf){cancelAnimationFrame(particleRaf);particleRaf=null;}
+  particles.length=0;
+  if(pCtx) pCtx.clearRect(0,0,W,H);
+  currentSeed=seed||Math.floor(Math.random()*99999);
+  const p=mulberry32(seedHash(String(currentSeed)));
+
+  document.getElementById('seed-disp').textContent=String(currentSeed).padStart(5,'0');
+  const gs=document.getElementById('grow-status');
+  const gl=document.getElementById('grow-label');
+  gs.classList.remove('done');
+  gl.textContent='Growing…';
+
+  sizeCanvas();
+  drawBackground(ctx,W,H);
+  buildGlassOverlay(W,H);
+
+  // Scale factor based on canvas height (designed at 900px)
+  const hScale = Math.max(H/900, 0.7);
+
+  // Determine number of plants: 3-5
+  const nPlants=3+Math.floor(p()*(W<500?1:2));
+  const margin=W*.09;
+  const span=W-margin*2;
+  const plants=[];
+  const plantXs=[];
+  allCmds=[];
+  cmdIdx=0;
+
+  for(let i=0;i<nPlants;i++){
+    const rawX=margin+span*(i+0.5)/nPlants+(p()-0.5)*span/nPlants*0.35;
+    // Keep within viewport
+    const x=Math.max(margin*0.5, Math.min(W-margin*0.5, rawX));
+    plantXs.push(x);
+    const spIdx=Math.floor(p()*SPECIES.length);
+    const pl=generatePlant(x, H*0.96, spIdx, p, hScale);
+    plants.push(pl);
+    allCmds.push(...pl.cmds);
+  }
+
+  buildLog(plants, currentSeed);
+
+  // Clear plant labels (will be re-added when growth completes)
+  document.getElementById('plant-labels').innerHTML='';
+
+  if(REDUCED){
+    for(const c of allCmds) execCmd(ctx,c);
+    gs.classList.add('done'); gl.textContent='Complete';
+    showPlantLabels(plants, plantXs);
+    return;
+  }
+
+  // Animate: target ~10s growth
+  const fps=60, dur=10000;
+  const perFrame=Math.max(1,Math.ceil(allCmds.length/(dur/1000*fps)));
+  let chimeCounter=0;
+
+  function frame(){
+    if(document.hidden){rafId=requestAnimationFrame(frame);return;}
+    const end=Math.min(cmdIdx+perFrame,allCmds.length);
+    for(let i=cmdIdx;i<end;i++){
+      execCmd(ctx,allCmds[i]);
+      if(allCmds[i].t==='b'&&audioOn){chime();}
+      else if(allCmds[i].t==='s'){chimeCounter++;if(chimeCounter%120===0) chime();}
+    }
+    cmdIdx=end;
+    if(cmdIdx<allCmds.length){
+      rafId=requestAnimationFrame(frame);
+    } else {
+      rafId=null;
+      gs.classList.add('done'); gl.textContent='Complete';
+      showPlantLabels(plants, plantXs);
+    }
+  }
+  rafId=requestAnimationFrame(frame);
+}
+
+function showPlantLabels(plants, xs) {
+  const lp=mulberry32(seedHash('lbl'+currentSeed));
+  const container=document.getElementById('plant-labels');
+  container.innerHTML='';
+  plants.forEach((pl,i)=>{
+    const sp=SPECIES[pl.spIdx];
+    const sci=specName(sp.sci, lp);
+    const el=document.createElement('div');
+    el.className='plant-label';
+    el.textContent=sci;
+    el.style.left=xs[i]+'px';
+    container.appendChild(el);
+    setTimeout(()=>el.classList.add('show'), 300+i*200);
+  });
+  if(!REDUCED) startParticles(plants, xs);
+}
+
+// ════════════════════════════════════════════
+// AMBIENT PARTICLES (pollen / dust motes)
+// ════════════════════════════════════════════
+let particleRaf=null, pCtx=null;
+const particles=[];
+
+function initParticleCanvas(){
+  const pc=document.getElementById('particle-canvas');
+  pc.width=W*dpr; pc.height=H*dpr;
+  pc.style.width=W+'px'; pc.style.height=H+'px';
+  pCtx=pc.getContext('2d');
+  pCtx.setTransform(1,0,0,1,0,0);
+  pCtx.scale(dpr,dpr);
+}
+
+function startParticles(plants, xs) {
+  if(particleRaf) cancelAnimationFrame(particleRaf);
+  particles.length=0;
+  initParticleCanvas();
+  const pp=mulberry32(seedHash('pts'+currentSeed));
+
+  // Seed particles near each plant
+  plants.forEach((pl,i)=>{
+    const sp=SPECIES[pl.spIdx];
+    const col=sp.bloomCol||sp.leafCol;
+    const n=8+Math.floor(pp()*6);
+    for(let j=0;j<n;j++){
+      particles.push({
+        x: xs[i]+(pp()-0.5)*80,
+        y: H*0.5+pp()*H*0.4,
+        vx: (pp()-0.5)*0.35,
+        vy: -(0.2+pp()*0.45),
+        r: 0.8+pp()*1.6,
+        col,
+        a: 0.12+pp()*0.28,
+        life: 1,
+      });
+    }
+  });
+
+  function ptFrame(){
+    if(document.hidden){particleRaf=requestAnimationFrame(ptFrame);return;}
+    pCtx.clearRect(0,0,W,H);
+    particles.forEach(pt=>{
+      pt.x+=pt.vx+(Math.sin(Date.now()*0.0004+pt.y*0.03)*0.25);
+      pt.y+=pt.vy;
+      if(pt.y<-10||pt.y>H+10){
+        // Respawn
+        const idx=Math.floor(Math.random()*xs.length);
+        pt.x=xs[idx]+(Math.random()-0.5)*70;
+        pt.y=H*0.88+Math.random()*H*0.08;
+        pt.vx=(Math.random()-0.5)*0.35;
+        pt.vy=-(0.2+Math.random()*0.45);
+        pt.a=0.12+Math.random()*0.22;
+      }
+      pCtx.beginPath();
+      pCtx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);
+      pCtx.fillStyle=pt.col;
+      pCtx.globalAlpha=pt.a;
+      pCtx.fill();
+    });
+    pCtx.globalAlpha=1;
+    particleRaf=requestAnimationFrame(ptFrame);
+  }
+  particleRaf=requestAnimationFrame(ptFrame);
+}
+
+// ════════════════════════════════════════════
+// INIT & EVENTS
+// ════════════════════════════════════════════
+function init(){
+  initCanvas();
+  // Seed from URL hash or random
+  const hashSeedVal=parseInt(location.hash.slice(1))||null;
+  grow(hashSeedVal);
+
+  document.getElementById('regrow-btn').addEventListener('click',()=>{
+    const s=Math.floor(Math.random()*99999);
+    location.hash=s;
+    grow(s);
+  });
+
+  document.getElementById('audio-btn').addEventListener('click',function(){
+    audioOn=!audioOn;
+    this.setAttribute('aria-pressed',String(audioOn));
+    if(audioOn) getAudio();
+    const lbl=this.querySelector('.btn-label');
+    if(lbl) lbl.textContent=audioOn?'Chimes on':'Chimes';
+  });
+
+  window.addEventListener('resize',()=>{
+    sizeCanvas();
+    drawBackground(ctx,W,H);
+    buildGlassOverlay(W,H);
+    // Redraw all completed commands
+    const done=Math.min(cmdIdx,allCmds.length);
+    for(let i=0;i<done;i++) execCmd(ctx,allCmds[i]);
+  });
+
+  window.addEventListener('hashchange',()=>{
+    const s=parseInt(location.hash.slice(1));
+    if(s&&s!==currentSeed) grow(s);
+  });
+}
+
+document.fonts.ready.then(init).catch(()=>init());
+</script>
+</body>
+</html>

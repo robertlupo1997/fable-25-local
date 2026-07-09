@@ -480,11 +480,12 @@ main { position: relative; }
 .entrance__title {
   font-family: 'Newsreader', serif;
   font-style: italic; font-weight: 300;
-  font-size: clamp(3rem, 9vw, 9rem);
+  font-size: clamp(2rem, 9vw, 9rem);
   line-height: 0.96; letter-spacing: -0.025em;
   color: var(--ink);
   margin-bottom: 1.5rem;
   overflow-wrap: break-word;
+  word-break: break-word;
 }
 .entrance__sub {
   font-family: 'Familjen Grotesk', sans-serif;
@@ -598,7 +599,107 @@ main { position: relative; }
   color: var(--ink-faint);
 }
 
-/* ---- 10. Reduced Motion ---- */
+/* ---- 10. Room credit line (gate: every room must carry the credit) ---- */
+.room__credit {
+  flex-basis: 100%;
+  text-align: center;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--room-text-sec);
+  padding-top: var(--sp-sm);
+  border-top: 1px solid var(--room-border);
+}
+
+/* ---- 11. OKLCH Spectrum Strip (signature upgrade: luminance range from pigment hue) ---- */
+.room__spectrum {
+  margin: var(--sp-md) 0 var(--sp-lg);
+}
+.room__spectrum-bar {
+  height: 48px; border-radius: 4px;
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),
+              inset 0 -1px 0 rgba(0,0,0,0.10);
+}
+.room__spectrum-meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 0.5rem;
+  font-family: 'Familjen Grotesk', sans-serif;
+  font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--room-text-sec);
+}
+.room__spectrum-label { font-weight: 600; color: var(--room-accent); }
+
+/* Per-room spectrum gradients — derived OKLCH luminance ranges */
+.room--ultramarine .room__spectrum-bar {
+  background: linear-gradient(to right,
+    oklch(0.10 0.12 264),
+    oklch(0.22 0.20 264),
+    oklch(0.37 0.22 264),
+    oklch(0.52 0.18 264),
+    oklch(0.68 0.10 264),
+    oklch(0.84 0.05 264),
+    oklch(0.96 0.018 264)
+  );
+}
+.room--vermilion .room__spectrum-bar {
+  background: linear-gradient(to right,
+    oklch(0.10 0.09 27),
+    oklch(0.22 0.17 27),
+    oklch(0.38 0.22 27),
+    oklch(0.51 0.23 27),
+    oklch(0.66 0.16 27),
+    oklch(0.82 0.08 27),
+    oklch(0.96 0.02 27)
+  );
+}
+.room--viridian .room__spectrum-bar {
+  background: linear-gradient(to right,
+    oklch(0.10 0.07 163),
+    oklch(0.22 0.10 163),
+    oklch(0.35 0.12 163),
+    oklch(0.47 0.12 163),
+    oklch(0.62 0.08 163),
+    oklch(0.80 0.04 163),
+    oklch(0.96 0.01 163)
+  );
+}
+.room--ochre .room__spectrum-bar {
+  background: linear-gradient(to right,
+    oklch(0.10 0.06 65),
+    oklch(0.24 0.10 65),
+    oklch(0.40 0.14 65),
+    oklch(0.62 0.15 65),
+    oklch(0.76 0.11 65),
+    oklch(0.88 0.05 65),
+    oklch(0.96 0.015 65)
+  );
+}
+.room--tyrian .room__spectrum-bar {
+  background: linear-gradient(to right,
+    oklch(0.08 0.08 336),
+    oklch(0.16 0.14 336),
+    oklch(0.25 0.17 336),
+    oklch(0.38 0.14 336),
+    oklch(0.55 0.09 336),
+    oklch(0.76 0.04 336),
+    oklch(0.96 0.01 336)
+  );
+}
+.room--leadwhite .room__spectrum-bar {
+  background: linear-gradient(to right,
+    oklch(0.20 0.002 85),
+    oklch(0.40 0.003 85),
+    oklch(0.60 0.003 85),
+    oklch(0.78 0.003 85),
+    oklch(0.90 0.003 85),
+    oklch(0.96 0.003 85),
+    oklch(1.00 0.000 85)
+  );
+}
+
+/* ---- 12. Reduced Motion ---- */
 @media (prefers-reduced-motion: reduce) {
   #dissolve,
   .room-card__fill,
@@ -608,5 +709,5 @@ main { position: relative; }
   .room-card:hover .room-card__fill { transform: none; }
 }
 
-/* ---- 11. Focus ---- */
+/* ---- 13. Focus ---- */
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }

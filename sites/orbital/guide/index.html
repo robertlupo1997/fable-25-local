@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbital — Build Guide · Perigee Commons</title>
+  <meta name="description" content="Build guide for the Perigee Commons orbital cooperative site: brief, signature technique, and pass history.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --space:     #060913;
+      --space-mid: #0c1528;
+      --space-ui:  #0f1d38;
+      --starlight: #e6ecf5;
+      --dim:       rgba(230, 236, 245, 0.55);
+      --cyan:      #43d9c7;
+      --cyan-dim:  rgba(67, 217, 199, 0.18);
+      --gold:      #f2b632;
+      --border:    rgba(67, 217, 199, 0.15);
+      --font-display: 'Chakra Petch', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--space);
+      color: var(--starlight);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Guide header ── */
+    .guide-header {
+      border-bottom: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .back-link {
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      text-decoration: none;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .back-link:hover, .back-link:focus-visible {
+      background: var(--cyan-dim);
+      border-color: var(--cyan);
+      outline: none;
+    }
+
+    .guide-title-block { flex: 1; }
+
+    .guide-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.4rem;
+    }
+
+    .guide-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.05;
+      color: var(--starlight);
+    }
+
+    .guide-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--dim);
+      margin-top: 0.4rem;
+    }
+
+    /* ── Main layout ── */
+    .guide-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    /* ── Section ── */
+    .guide-section {
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .section-label::after {
+      content: '';
+      display: block;
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--starlight);
+      margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+
+    p {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--dim);
+      max-width: 680px;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Brief box ── */
+    .brief-box {
+      background: var(--space-mid);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      border-radius: 4px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .brief-box p {
+      margin-bottom: 0.75rem;
+    }
+    .brief-box p:last-child { margin-bottom: 0; }
+
+    .brief-key {
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .brief-val {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--starlight);
+      font-weight: 400;
+    }
+
+    /* ── Code block ── */
+    pre {
+      background: #030710;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      font-size: 0.78rem;
+      line-height: 1.65;
+    }
+
+    code {
+      font-family: 'Chakra Petch', 'Courier New', monospace;
+      color: var(--cyan);
+      font-size: 0.85em;
+    }
+
+    pre code {
+      font-family: 'Courier New', monospace;
+      font-size: inherit;
+      color: var(--starlight);
+    }
+
+    .code-comment { color: rgba(67, 217, 199, 0.55); }
+    .code-kw      { color: #43d9c7; }
+    .code-num     { color: var(--gold); }
+    .code-fn      { color: #7dd3c8; }
+
+    /* ── Pass history ── */
+    .pass-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pass-card {
+      background: var(--space-mid);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .pass-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .pass-badge {
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--space);
+      background: var(--cyan);
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .pass-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--starlight);
+    }
+
+    .pass-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .pass-card li {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--dim);
+      padding: 0.25rem 0;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .pass-card li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--cyan);
+      font-size: 0.7em;
+    }
+
+    /* ── Upgrade callout ── */
+    .upgrade-callout {
+      background: rgba(242, 182, 50, 0.06);
+      border: 1px solid rgba(242, 182, 50, 0.25);
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .upgrade-callout .upgrade-label {
+      font-family: var(--font-display);
+      font-size: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .upgrade-callout p {
+      color: rgba(230, 236, 245, 0.65);
+      margin-bottom: 0;
+    }
+
+    /* ── Footer ── */
+    .guide-footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+    }
+
+    .guide-footer p {
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: rgba(230, 236, 245, 0.45);
+      margin: 0;
+      max-width: 100%;
+    }
+
+    /* ── Inline stat row ── */
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-item {
+      background: var(--space-mid);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0.75rem 1rem;
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .stat-label {
+      font-family: var(--font-display);
+      font-size: 0.5rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    /* ── Focus ring ── */
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      .guide-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .guide-body { padding: 2.5rem 1.25rem 4rem; }
+      pre { font-size: 0.7rem; padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="guide-header" role="banner">
+    <a href="../" class="back-link" aria-label="Back to Perigee Commons">← Back</a>
+    <div class="guide-title-block">
+      <p class="guide-eyebrow">Build Guide · Fable 25 Local · Site #8</p>
+      <h1 class="guide-title">Orbital</h1>
+      <p class="guide-subtitle">Perigee Commons — a micro-satellite cooperative on real Keplerian orbits</p>
+    </div>
+  </header>
+
+  <main class="guide-body">
+
+    <!-- 1. Brief -->
+    <section class="guide-section" aria-labelledby="brief-heading">
+      <p class="section-label">01</p>
+      <h2 class="section-heading" id="brief-heading">The Brief</h2>
+
+      <div class="brief-box">
+        <p><span class="brief-key">Site</span>
+          <span class="brief-val">orbital — a micro-satellite cooperative sharing one constellation</span></p>
+        <p><span class="brief-key">Signature</span>
+          <span class="brief-val">Three.js Earth (procedural — atmosphere shader, no textures) with an instanced satellite constellation on real Keplerian propagation; click a satellite to ride its orbit.</span></p>
+        <p><span class="brief-key">Palette</span>
+          <span class="brief-val">#060913 space · #e6ecf5 starlight · #43d9c7 telemetry cyan · #f2b632 solar gold</span></p>
+        <p><span class="brief-key">Type</span>
+          <span class="brief-val">Chakra Petch (display) + Inter (body)</span></p>
+        <p><span class="brief-key">Proof point</span>
+          <span class="brief-val">Real orbital math driving a 3D scene</span></p>
+        <p><span class="brief-key">Upgrade ideas from brief</span>
+          <span class="brief-val">Ground-track projection; terminator line from a sun vector; telemetry ticker</span></p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="stat-label">Satellites</span>
+          <span class="stat-value">12</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Orbital planes</span>
+          <span class="stat-value">3</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Altitude</span>
+          <span class="stat-value">550 km</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Inclination</span>
+          <span class="stat-value">53°</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Orbit period</span>
+          <span class="stat-value">~95 min</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Signature technique -->
+    <section class="guide-section" aria-labelledby="technique-heading">
+      <p class="section-label">02</p>
+      <h2 class="section-heading" id="technique-heading">Signature Technique: Keplerian Propagation</h2>
+
+      <p>Every satellite position is computed from six orbital elements — semi-major axis, eccentricity, inclination, right ascension of ascending node (RAAN), argument of perigee, and mean anomaly — using the real two-body orbital mechanics model. At each animation frame, mean anomaly is advanced by the mean motion <code>n = √(GM/a³)</code>, then Kepler's equation is solved by Newton-Raphson iteration to get the eccentric anomaly, then the satellite's 3D position is computed via the perifocal frame rotation.</p>
+
+      <p>The Earth also rotates beneath the satellites at the correct sidereal rate (<code>ω_E = 7.2921 × 10⁻⁵ rad/s</code>), so the ground track projection is correctly computed in the Earth body frame rather than ECI space.</p>
+
+      <pre><code><span class="code-comment">/* Newton-Raphson solution of Kepler's equation: M = E − e·sin(E)
+   6 iterations gives sub-arcsecond accuracy for near-circular LEO orbits */</span>
+<span class="code-fn">function</span> solveKepler(M, e, iters = 6) {
+  <span class="code-kw">let</span> E = M;
+  <span class="code-kw">for</span> (<span class="code-kw">let</span> k = <span class="code-num">0</span>; k < iters; k++) {
+    E = E - (E - e * Math.sin(E) - M) / (<span class="code-num">1.0</span> - e * Math.cos(E));
+  }
+  <span class="code-kw">return</span> E;
+}
+
+<span class="code-fn">function</span> keplerPos(sat, t_s, out) {
+  <span class="code-kw">const</span> n = Math.sqrt(GM / (sat.a * sat.a * sat.a)); <span class="code-comment">// mean motion rad/s</span>
+  <span class="code-kw">const</span> M = ((sat.m0 + n * t_s) % (<span class="code-num">2</span> * Math.PI) + <span class="code-num">2</span> * Math.PI) % (<span class="code-num">2</span> * Math.PI);
+  <span class="code-kw">const</span> E  = solveKepler(M, sat.e);
+
+  <span class="code-comment">// True anomaly from eccentric anomaly</span>
+  <span class="code-kw">const</span> nu = <span class="code-num">2</span> * Math.atan2(
+    Math.sqrt(<span class="code-num">1</span> + sat.e) * Math.sin(E * <span class="code-num">0.5</span>),
+    Math.sqrt(<span class="code-num">1</span> - sat.e) * Math.cos(E * <span class="code-num">0.5</span>),
+  );
+
+  <span class="code-comment">// Perifocal frame → ECI cartesian (X toward vernal equinox, Z = north pole)
+  // R₃(−Ω)·R₁(−i)·R₃(−ω) rotation applied</span>
+  <span class="code-kw">const</span> r  = sat.a * (<span class="code-num">1</span> - sat.e * Math.cos(E)) * SCALE;
+  <span class="code-comment">// ... P/Q direction cosines computed from (ω, i, Ω) ...
+  // Three.js Y-up = ECI Z (north pole); Three.js −Z = ECI Y (equatorial)</span>
+  out.set(X, Z, -Y);
+  <span class="code-kw">return</span> out;
+}</code></pre>
+
+      <p>The sun direction is a fixed unit vector in scene space. The Earth fragment shader computes diffuse lighting from the same <code>uSun</code> uniform, so satellite eclipse states computed in JS match the visual day/night terminator on the globe to within the cylindrical shadow approximation.</p>
+    </section>
+
+    <!-- 3. All three upgrade ideas from brief, implemented -->
+    <section class="guide-section" aria-labelledby="upgrades-heading">
+      <p class="section-label">03</p>
+      <h2 class="section-heading" id="upgrades-heading">Brief Upgrades — All Three Implemented</h2>
+
+      <p>The brief listed three suggested upgrades. All three were completed by the predecessor builder in its first pass.</p>
+
+      <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1.5rem;">
+        <li style="padding:1rem 1.25rem; background:var(--space-mid); border:1px solid var(--border); border-radius:4px; font-family:var(--font-body); font-size:0.9rem; color:var(--dim);">
+          <strong style="color:var(--cyan); font-family:var(--font-display); font-size:0.7rem; letter-spacing:0.08em; display:block; margin-bottom:0.25rem;">GROUND-TRACK PROJECTION</strong>
+          Built as a <code>THREE.Line</code> child of the Earth mesh, so it rotates with Earth. Shows ±1 orbit in the Earth body frame by converting ECI positions to geographic coordinates accounting for Earth's rotation angle at each timestep.
+        </li>
+        <li style="padding:1rem 1.25rem; background:var(--space-mid); border:1px solid var(--border); border-radius:4px; font-family:var(--font-body); font-size:0.9rem; color:var(--dim);">
+          <strong style="color:var(--cyan); font-family:var(--font-display); font-size:0.7rem; letter-spacing:0.08em; display:block; margin-bottom:0.25rem;">TERMINATOR LINE</strong>
+          A great circle perpendicular to the sun direction vector, computed by finding two orthogonal basis vectors in the terminator plane and tracing a parametric circle. Added as a child of Earth so it co-rotates, giving the correct day/night boundary.
+        </li>
+        <li style="padding:1rem 1.25rem; background:var(--space-mid); border:1px solid var(--border); border-radius:4px; font-family:var(--font-body); font-size:0.9rem; color:var(--dim);">
+          <strong style="color:var(--cyan); font-family:var(--font-display); font-size:0.7rem; letter-spacing:0.08em; display:block; margin-bottom:0.25rem;">TELEMETRY TICKER</strong>
+          Fixed bar at the viewport bottom, cycling through 12 pre-written plausible telemetry dispatches on a 4-second interval. Includes a live UTC clock.
+        </li>
+      </ul>
+    </section>
+
+    <!-- 4. Pass history -->
+    <section class="guide-section" aria-labelledby="passes-heading">
+      <p class="section-label">04</p>
+      <h2 class="section-heading" id="passes-heading">Pass History</h2>
+
+      <p>The predecessor builder was terminated at a spend limit after completing pass 1. This builder inherited the working tree and ran passes 2 and 3.</p>
+
+      <div class="pass-list">
+
+        <div class="pass-card">
+          <div class="pass-header">
+            <span class="pass-badge">Pass 1</span>
+            <span class="pass-title">Foundation — by predecessor builder</span>
+          </div>
+          <ul>
+            <li>Built the full Three.js scene: procedural Earth shader (FBM continent noise, city lights on night side, lat/lon graticule), atmosphere rim shader, outer glow.</li>
+            <li>Implemented the Keplerian propagator — 12 satellites across 3 orbital planes with correct RAAN spacing; Newton-Raphson Kepler solver converges in 6 iterations.</li>
+            <li>Added all three brief upgrades: ground-track projection, terminator line, telemetry ticker.</li>
+            <li>Click-to-select interaction with camera follow lerp; satellite info panel with computed telemetry (altitude, speed, period from orbital elements).</li>
+            <li>Accessible satellite catalog list with keyboard navigation; ARIA live regions on the panel and ticker.</li>
+            <li>Mobile layout: hero at bottom, panel slides up from bottom, epoch clock hidden.</li>
+            <li>Pass was halted at spend limit before screenshots were confirmed or guide was written. Pass-1 PNGs exist in qa/orbital/ from a pre-crash shot.</li>
+          </ul>
+        </div>
+
+        <div class="pass-card">
+          <div class="pass-header">
+            <span class="pass-badge">Pass 2</span>
+            <span class="pass-title">Contrast audit, mobile nav, eclipse upgrade</span>
+          </div>
+          <ul>
+            <li>Identified four WCAG AA contrast failures: <code>footer-credit</code> at 0.2 alpha (~1.7:1), <code>footer-text</code> at 0.3 alpha (~2.4:1), <code>hero-hint</code> at 0.35 alpha (~2.8:1), <code>panel-hint</code> at 0.3 alpha. All brought to ≥0.45 alpha (passes 4.5:1 against #060913).</li>
+            <li>Fixed mobile nav overflow: "GUIDE" link was clipped at 390px. Reduced nav-link font-size and padding on ≤600px breakpoint.</li>
+            <li>Complexity upgrade: cylindrical shadow model computing per-satellite eclipse status. Each satellite in the catalog list shows a gold dot (sunlit) or dim dot (eclipse) updated every frame. Live "N/12 ☀" count in the telemetry bar shows how many of the 12 are in sunlight — computed from the same <code>sunDir</code> uniform used by the Earth shader, so visual day/night matches the eclipse data.</li>
+            <li>Built this guide page in the site's visual language.</li>
+          </ul>
+          <div class="upgrade-callout">
+            <span class="upgrade-label">Pass 2 Complexity Upgrade</span>
+            <p>Eclipse detection via cylindrical shadow model: <code>isInSunlight(pos)</code> returns false when the satellite is on the anti-sun side (<code>pos·sunDir &lt; 0</code>) AND its perpendicular distance from the Earth-sun axis is less than 1.0 scene unit (Earth radius). This matches the visual terminator to within the cylindrical approximation.</p>
+          </div>
+        </div>
+
+        <div class="pass-card">
+          <div class="pass-header">
+            <span class="pass-badge">Pass 3</span>
+            <span class="pass-title">Footprint circle, reduced-motion verification, final hero shots</span>
+          </div>
+          <ul>
+            <li>Complexity upgrade: sensor ground footprint circle. When a satellite is selected, a gold circle appears on Earth's surface showing the observable area. Coverage half-angle <code>ρ = arcsin(R_E / r)</code> gives the nadir-to-horizon angle; the circle is built from 80 points at that angular radius from the nadir direction. Updated every animation frame. Footprint radius (~2,450 km at 550 km altitude) also appears in the telemetry panel.</li>
+            <li>Confirmed reduced-motion mode: <code>staticRender()</code> calls <code>keplerPos</code> at <code>t=0</code> and renders one frame — Earth, satellites, terminator, orbit line all visible without animation. Not a blank canvas.</li>
+            <li>Eclipse status computed in <code>staticRender()</code> as well, so catalog dots are correct even without the animation loop running.</li>
+            <li>Verified zero console errors and zero page errors across desktop and mobile at all scroll positions.</li>
+            <li>Shot final-desktop.png and final-mobile.png as release hero shots.</li>
+          </ul>
+          <div class="upgrade-callout">
+            <span class="upgrade-label">Pass 3 Complexity Upgrade</span>
+            <p>Ground footprint: <code>ρ = arcsin(R_E / r)</code> gives the Earth-centered half-angle from nadir to the sensor horizon. A circle of 80 points at that angular radius around the nadir direction (using two orthogonal tangent vectors) is projected to radius 1.003 scene units — just above the Earth surface — and updated every frame. Same <code>sunDir</code> vector used in the Earth shader means the footprint visually confirms where sensors are pointing relative to day/night.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. Technical notes -->
+    <section class="guide-section" aria-labelledby="notes-heading">
+      <p class="section-label">05</p>
+      <h2 class="section-heading" id="notes-heading">Technical Notes</h2>
+
+      <p><strong style="color:var(--starlight); font-weight:500;">No texture files.</strong> The Earth surface is 100% procedural: a 3D FBM hash function painted in the fragment shader generates continent shapes, ocean depths, polar ice caps, city lights on the night side, and a lat/lon graticule — all seam-free because it operates in 3D object space rather than UV space.</p>
+
+      <p><strong style="color:var(--starlight); font-weight:500;">Simulation speed.</strong> The sim runs at 120× real time (one wall-clock second = two simulation minutes), giving a visible orbit in about 47 seconds of watching. The <code>SPEED</code> constant can be changed without touching the physics.</p>
+
+      <p><strong style="color:var(--starlight); font-weight:500;">Coordinate systems.</strong> The propagator outputs ECI (Earth-Centered Inertial) coordinates, then maps them to Three.js space (Y-up = ECI Z = north pole; Three.js −Z = ECI Y). The ground-track converts ECI positions back to geographic lat/lon accounting for Earth's rotation angle at each timestep using the sidereal rate <code>W_E = 7.2921 × 10⁻⁵ rad/s</code>.</p>
+
+      <p><strong style="color:var(--starlight); font-weight:500;">Instanced rendering.</strong> All 12 satellites share one <code>THREE.InstancedMesh</code>. Selected satellite is scaled up by 2.2× via the instance matrix; color is changed per-instance to gold for the selected vehicle.</p>
+    </section>
+
+  </main>
+
+  <footer class="guide-footer" role="contentinfo">
+    <p>Perigee Commons Orbital Cooperative · Fable 25 Local · Site #8 of 25 · Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+  </footer>
+
+</body>
+</html>

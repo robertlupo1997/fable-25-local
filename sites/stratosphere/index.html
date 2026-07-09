@@ -42,6 +42,10 @@
       <span class="hud-value" id="hud-rho">1.2250</span>
       <span class="hud-unit">kg/m³</span>
     </div>
+    <div class="hud-row">
+      <span class="hud-label">MET</span>
+      <span class="hud-value hud-met" id="hud-met">T+00:00:00</span>
+    </div>
     <div class="hud-sep" aria-hidden="true"></div>
     <div class="hud-phase" id="hud-phase" aria-live="polite">GROUND</div>
   </aside>
@@ -56,6 +60,7 @@
       <span class="alt-scale-marker" style="top:18%" aria-label="32 km">32 km</span>
       <span class="alt-scale-marker" style="top:0%" aria-label="39 km">39 km</span>
       <div class="alt-scale-cursor" aria-hidden="true"></div>
+      <div class="balloon-marker" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -63,7 +68,7 @@
   <main id="main">
 
     <!-- Hero / Launch -->
-    <header class="hero" role="banner">
+    <header class="hero" role="banner" data-scroll-in="0" data-scroll-out="800">
       <div class="hero-mission-id">Mission HAPS-7 · Kiruna, Sweden · 67°N 21°E · 0600 UTC</div>
       <h1 class="hero-title">Scroll to<br>39 kilometres.</h1>
       <p class="hero-subtitle">

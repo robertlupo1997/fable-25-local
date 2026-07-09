@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guide — Chromatarium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=Familjen+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    :root {
+      --bone:      #efece5;
+      --ink:       #22201d;
+      --ink-mid:   #4a4742;
+      --ink-faint: #9a9590;
+      --rule:      rgba(34,32,29,0.12);
+
+      --step--1: clamp(0.75rem,  0.72rem + 0.14vw, 0.875rem);
+      --step-0:  clamp(1rem,     0.96rem + 0.19vw, 1.125rem);
+      --step-1:  clamp(1.25rem,  1.17rem + 0.38vw, 1.5rem);
+      --step-3:  clamp(2rem,     1.72rem + 1.38vw, 3.25rem);
+    }
+
+    body {
+      background: var(--bone);
+      color: var(--ink);
+      font-family: 'Newsreader', Georgia, serif;
+      line-height: 1.7;
+    }
+
+    a { color: var(--ink); }
+
+    /* Header */
+    .guide-header {
+      border-bottom: 1px solid var(--rule);
+      padding: 1.1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: 'Familjen Grotesk', sans-serif;
+    }
+    .guide-header__back {
+      font-size: var(--step--1); font-weight: 600;
+      letter-spacing: 0.10em; text-transform: uppercase;
+      text-decoration: none; color: var(--ink-mid);
+    }
+    .guide-header__back:hover { color: var(--ink); }
+    .guide-header__title {
+      font-size: var(--step--1); font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    /* Main layout */
+    main {
+      max-width: 780px; margin: 0 auto;
+      padding: 4rem 2rem 8rem;
+    }
+
+    /* Hero */
+    .guide-hero {
+      margin-bottom: 4rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .guide-eyebrow {
+      font-family: 'Familjen Grotesk', sans-serif;
+      font-size: var(--step--1); font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 1.5rem;
+    }
+    .guide-title {
+      font-family: 'Newsreader', serif;
+      font-style: italic; font-weight: 300;
+      font-size: var(--step-3);
+      line-height: 1.04; letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .guide-sub {
+      font-size: var(--step-1); line-height: 1.55;
+      color: var(--ink-mid); font-style: italic;
+    }
+
+    /* Sections */
+    .guide-section {
+      margin-bottom: 4rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .guide-section:last-child {
+      border-bottom: none;
+    }
+    .guide-section__label {
+      font-family: 'Familjen Grotesk', sans-serif;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .guide-section__label::after {
+      content: ''; flex: 1; height: 1px; background: var(--rule);
+    }
+    h2 {
+      font-family: 'Newsreader', serif;
+      font-style: italic; font-weight: 300;
+      font-size: var(--step-1); line-height: 1.3;
+      margin-bottom: 1.25rem;
+    }
+    p {
+      font-size: var(--step-0); line-height: 1.78;
+      color: var(--ink); margin-bottom: 1.3em;
+    }
+    p:last-child { margin-bottom: 0; }
+
+    /* Code block */
+    pre {
+      background: #1c1a17;
+      color: #d8d4cc;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.78rem; line-height: 1.6;
+      padding: 1.5rem 1.75rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-left: 3px solid rgba(200,134,42,0.6);
+    }
+    code { font-family: inherit; }
+    .token-prop { color: #7eb8f7; }
+    .token-val  { color: #c8862a; }
+    .token-comment { color: #6e6862; font-style: italic; }
+
+    /* Pass history table */
+    .pass-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Familjen Grotesk', sans-serif;
+      font-size: var(--step--1);
+      margin: 1.5rem 0;
+    }
+    .pass-table th {
+      text-align: left;
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      font-size: 0.65rem; color: var(--ink-faint);
+      border-bottom: 1px solid var(--rule);
+      padding: 0.5rem 0.75rem 0.5rem 0;
+    }
+    .pass-table td {
+      padding: 0.75rem 0.75rem 0.75rem 0;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+      color: var(--ink-mid);
+    }
+    .pass-table td:first-child {
+      font-weight: 600; color: var(--ink); white-space: nowrap;
+    }
+
+    /* Swatch row for rooms */
+    .room-list {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 2px; margin: 1.5rem 0;
+      border-radius: 3px; overflow: hidden;
+    }
+    .room-chip {
+      height: 32px; border-radius: 0;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding: 2rem;
+      text-align: center;
+      font-family: 'Familjen Grotesk', sans-serif;
+      font-size: var(--step--1);
+      color: var(--ink-faint);
+    }
+  </style>
+</head>
+<body>
+
+<header class="guide-header">
+  <a class="guide-header__back" href="../">← Chromatarium</a>
+  <span class="guide-header__title">Build Guide</span>
+</header>
+
+<main>
+
+  <div class="guide-hero">
+    <p class="guide-eyebrow">FABLE 25 LOCAL · Wave 2 · Gallery 9</p>
+    <h1 class="guide-title">Chromatarium</h1>
+    <p class="guide-sub">How a museum of pigment was built from color itself — six rooms, one palette system, and the OKLCH mathematics that ties it together.</p>
+  </div>
+
+  <!-- Brief -->
+  <section class="guide-section">
+    <div class="guide-section__label">The Brief</div>
+    <h2>Six rooms. Six pigments. Color mastery as the entire show.</h2>
+    <p>The brief asked for a museum of pigment: six rooms, one per historic pigment — Ultramarine, Vermilion, Viridian, Ochre, Tyrian Purple, Lead White — each room an essay in that color. The proof-of-concept: exceptional palette discipline, where every room derives its full UI from one pigment via OKLCH math; grain and wash textures from CSS gradients and blend modes.</p>
+    <p>Typography: Newsreader (display, body) + Familjen Grotesk (UI, labels). Base palette: gallery bone <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#efece5</code>, ink <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#22201d</code>. The rooms hold: Ultramarine <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#1a3aa8</code>, Vermilion <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#d5321f</code>, Viridian <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#1d7a5f</code>, Ochre <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#c8862a</code>, Tyrian <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">#66023c</code>, Lead White.</p>
+    <div class="room-list" aria-hidden="true">
+      <div class="room-chip" style="background:#1a3aa8"></div>
+      <div class="room-chip" style="background:#d5321f"></div>
+      <div class="room-chip" style="background:#1d7a5f"></div>
+      <div class="room-chip" style="background:#c8862a"></div>
+      <div class="room-chip" style="background:#66023c"></div>
+      <div class="room-chip" style="background:linear-gradient(135deg,#f8f5ee,#e4e0d6)"></div>
+    </div>
+    <p>Upgrade ideas from the brief: pigment-history marginalia; a mixing bench; room transitions as color-field dissolves. The dissolve transition was built in pass 1. The OKLCH luminance spectrum strip was added in pass 3 as the deliberate complexity upgrade.</p>
+  </section>
+
+  <!-- Signature Technique -->
+  <section class="guide-section">
+    <div class="guide-section__label">Signature Technique</div>
+    <h2>OKLCH palette derivation — one hue, seven tokens</h2>
+    <p>Each room is styled by seven CSS custom properties computed from a single pigment anchor: its OKLCH hue (H) and maximum chroma (C). The formula scales luminance L and chroma C to produce a coherent range from background to deep shadow, with a fixed text color that passes WCAG AA at all sizes.</p>
+    <p>The derivation rule (from <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">style.css</code>, lines 348–362, Ultramarine at H=264, C_max=0.22):</p>
+    <pre><code><span class="token-comment">/* OKLCH derivation: bg=(0.97, C×0.12, H), surf=(0.92, C×0.22),
+   wash=(0.78, C×0.35), accent=(L, C, H), deep=(L×0.76, C×0.85),
+   text=(0.18, C×0.30), textSec=(0.38, C×0.22)            */</span>
+
+<span class="token-prop">.room--ultramarine</span> {
+  <span class="token-val">--room-bg:</span>       oklch(0.97 0.026 264);   <span class="token-comment">/* C×0.12 */</span>
+  <span class="token-val">--room-surface:</span>  oklch(0.92 0.048 264);   <span class="token-comment">/* C×0.22 */</span>
+  <span class="token-val">--room-wash:</span>     oklch(0.78 0.077 264);   <span class="token-comment">/* C×0.35 */</span>
+  <span class="token-val">--room-accent:</span>   oklch(0.37 0.220 264);   <span class="token-comment">/* anchor: L=0.37, full C */</span>
+  <span class="token-val">--room-deep:</span>     oklch(0.28 0.187 264);   <span class="token-comment">/* L×0.76, C×0.85 */</span>
+  <span class="token-val">--room-text:</span>     oklch(0.18 0.066 264);   <span class="token-comment">/* C×0.30 */</span>
+  <span class="token-val">--room-text-sec:</span> oklch(0.38 0.048 264);   <span class="token-comment">/* C×0.22 */</span>
+  <span class="token-val">--room-border:</span>   oklch(0.88 0.034 264);   <span class="token-comment">/* C×0.155 */</span>
+}</code></pre>
+    <p>The key property of OKLCH is perceptual uniformity: changing L changes apparent brightness without shifting the hue, and the C scale produces an honest visual hierarchy. A quick contrast audit confirmed all six rooms pass WCAG AA (4.5:1) for small text — the worst case was Vermilion fact-keys at 7.2:1, well clear of the threshold.</p>
+
+    <h2 style="margin-top:2rem;">The OKLCH luminance spectrum strip</h2>
+    <p>The pass-3 upgrade adds a horizontal spectrum bar to each room, showing the full luminance range of the pigment's hue — from near-black shadow through the accent tone to pale tint. This is the math made visible. For Ochre (H=65°):</p>
+    <pre><code><span class="token-prop">.room--ochre .room__spectrum-bar</span> {
+  background: linear-gradient(to right,
+    oklch(0.10 0.06 65),    <span class="token-comment">/* deep shadow */</span>
+    oklch(0.24 0.10 65),
+    oklch(0.40 0.14 65),
+    oklch(0.62 0.15 65),    <span class="token-comment">/* ← pigment anchor */</span>
+    oklch(0.76 0.11 65),
+    oklch(0.88 0.05 65),
+    oklch(0.96 0.015 65)    <span class="token-comment">/* pale tint */</span>
+  );
+}</code></pre>
+    <p>Lead White's spectrum is the edge case: C is nearly zero (0.003), producing a scale from charcoal gray to paper white — the color of canvases, of grounds, of everything that other pigments paint against.</p>
+
+    <h2 style="margin-top:2rem;">Room transitions as color-field dissolves</h2>
+    <p>Navigation between rooms uses a full-viewport dissolve overlay, filled with the destination room's pigment color, that fades in then out over two 0.55s ease-in-out phases — hiding the DOM swap between them. The transition respects <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">prefers-reduced-motion</code> by instantly swapping rooms with no overlay. The code excerpt from <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">main.js</code>:</p>
+    <pre><code><span class="token-comment">/* Phase 1: fade in the pigment-colored overlay */</span>
+overlay.style.backgroundColor = DISSOLVE_COLORS[targetId];
+overlay.classList.add('fading');   <span class="token-comment">/* opacity 0→1 */</span>
+
+overlay.addEventListener('transitionend', function onFadeIn(e) {
+  <span class="token-comment">/* Swap room while hidden behind opaque overlay */</span>
+  document.getElementById(currentRoom)?.classList.remove('active');
+  nextRoom.classList.add('active');
+
+  <span class="token-comment">/* Phase 2: fade the overlay back out — revealing new room */</span>
+  requestAnimationFrame(() =&gt; {
+    requestAnimationFrame(() =&gt; {
+      overlay.classList.remove('fading');  <span class="token-comment">/* opacity 1→0 */</span>
+    });
+  });
+});</code></pre>
+    <p>The double-rAF before removing the 'fading' class is the reliability trick: one rAF fires at the same paint frame, but two rAFs guarantee the browser has committed the new room's styles before the fade-out begins.</p>
+  </section>
+
+  <!-- Pass History -->
+  <section class="guide-section">
+    <div class="guide-section__label">Pass History</div>
+    <h2>What each critique pass found and changed</h2>
+    <p>This site was built by an earlier builder in the FABLE 25 run that crashed mid-pass 2 on a platform spend limit. The initial build was committed intact. A finishing builder (Claude Sonnet 4.6) inherited the working tree and completed passes 2 and 3.</p>
+
+    <table class="pass-table">
+      <thead>
+        <tr>
+          <th>Pass</th>
+          <th>Status</th>
+          <th>Findings &amp; Changes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pass 1</td>
+          <td>Predecessor</td>
+          <td>Full build: HTML, CSS, JS. Six rooms with OKLCH palette system. Grain texture overlay. Dissolve transition. Navigation with colored dots. All six essays written with pigment history, chemical formulae, and marginalia fact-panels. Zero console errors on completion.</td>
+        </tr>
+        <tr>
+          <td>Pass 2</td>
+          <td>Predecessor (crashed)</td>
+          <td>Screenshots taken of entrance and Ultramarine room. Builder crashed before code changes were made. No CSS/JS/HTML modifications committed.</td>
+        </tr>
+        <tr>
+          <td>Pass 3</td>
+          <td>Finishing builder</td>
+          <td>
+            <strong>Audit findings:</strong> (1) Mobile title "Chromatarium" broke at 390px with the 3rem floor — font was 48px in a 326px usable column. Fixed: <code>clamp(2rem, 9vw, 9rem)</code>. (2) Credit line missing from all six room footers — only the entrance carried it. Added as a full-width flex row in each <code>.room__foot</code>. (3) WCAG contrast verified by script: all 6 rooms pass 4.5:1 for small text; worst case Vermilion at 7.2:1. No tokens changed.
+            <br><br>
+            <strong>Complexity upgrade:</strong> OKLCH luminance spectrum strip added to each room — a horizontal bar from <code>oklch(0.10 C H)</code> to <code>oklch(0.96 C×0.1 H)</code>, showing the full light-to-dark range of the pigment's hue. Demonstrates the OKLCH system directly as a museum exhibit tool. Pure CSS, no canvas, reduced-motion safe (static element, no animation).
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Technical notes -->
+  <section class="guide-section">
+    <div class="guide-section__label">Technical Notes</div>
+    <h2>Self-contained, no build step</h2>
+    <p>The site is three files: <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">index.html</code> (29 KB), <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">style.css</code> (18 KB), <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">main.js</code> (4.6 KB). No build step, no framework. Google Fonts via CDN (Newsreader + Familjen Grotesk). The grain texture is generated by a 256×256 canvas with a deterministic LCG random seed, converted to a data URL, and applied as a fixed-position overlay at 4.5% opacity in overlay blend mode.</p>
+    <p>Rooms are CSS display-toggled (<code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">display: none</code> / <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">display: block</code>) rather than scrolled into view, allowing each room to be a clean viewport with its own scroll position — museum rooms are separate spaces, not sections of one document.</p>
+    <p>Direct room access via <code style="font-size:0.85em;background:rgba(0,0,0,0.06);padding:.1em .35em;border-radius:3px;">?room=ochre</code> URL parameter is supported for QA and deep-linking.</p>
+  </section>
+
+</main>
+
+<footer>
+  <p>Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+</footer>
+
+</body>
+</html>

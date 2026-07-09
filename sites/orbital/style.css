@@ -243,7 +243,7 @@ nav { margin-left: auto; }
   font-size: 0.6rem;
   font-weight: 400;
   letter-spacing: 0.08em;
-  color: rgba(230,236,245,0.35);
+  color: rgba(230,236,245,0.55);
   text-shadow: 0 1px 10px rgba(6,9,19,0.9);
 }
 
@@ -390,7 +390,7 @@ nav { margin-left: auto; }
   font-family: var(--font-display);
   font-size: 0.5rem;
   letter-spacing: 0.08em;
-  color: rgba(230,236,245,0.3);
+  color: rgba(230,236,245,0.5);
   text-align: center;
 }
 
@@ -447,6 +447,19 @@ nav { margin-left: auto; }
   color: var(--dim);
   white-space: nowrap;
   display: block;
+}
+
+.ticker-sunlight {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid rgba(242, 182, 50, 0.35);
+  border-radius: 1px;
 }
 
 .ticker-utc {
@@ -600,12 +613,28 @@ main {
   background: rgba(67,217,199,0.1);
 }
 
+.sat-eclipse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--gold);
+  box-shadow: 0 0 4px var(--gold);
+  transition: background 0.4s, box-shadow 0.4s;
+}
+
+.sat-eclipse-dot.eclipse {
+  background: rgba(230, 236, 245, 0.2);
+  box-shadow: none;
+}
+
 .sat-id {
   font-family: var(--font-display);
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--starlight);
+  flex: 1;
 }
 
 .sat-list-item.active .sat-id { color: var(--cyan); }
@@ -639,7 +668,7 @@ main {
 .footer-text {
   font-family: var(--font-body);
   font-size: 0.65rem;
-  color: rgba(230,236,245,0.3);
+  color: rgba(230,236,245,0.5);
   text-align: center;
 }
 
@@ -647,7 +676,7 @@ main {
   font-family: var(--font-display);
   font-size: 0.6rem;
   letter-spacing: 0.08em;
-  color: rgba(230,236,245,0.2);
+  color: rgba(230,236,245,0.5);
 }
 
 /* ── Ground track (added in pass 2) ─────────────────────────── */
@@ -667,7 +696,17 @@ main {
 
 /* ── Mobile (390px+) ─────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .site-header { padding: 0 1rem; }
+  .site-header { padding: 0 0.75rem; }
+
+  .header-inner { gap: 0.25rem; }
+
+  .nav-list { gap: 0; }
+
+  .nav-link {
+    font-size: 0.55rem;
+    padding: 0.35rem 0.45rem;
+    letter-spacing: 0.06em;
+  }
 
   .hero-overlay {
     padding: 0 1.25rem;
@@ -701,8 +740,6 @@ main {
   .sat-catalog-list { grid-template-columns: 1fr 1fr; }
 
   .epoch-clock { display: none; }
-
-  .header-inner { gap: 0.5rem; }
 }
 
 @media (max-width: 390px) {

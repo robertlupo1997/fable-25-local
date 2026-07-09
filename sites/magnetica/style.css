@@ -144,8 +144,7 @@ img { max-width: 100%; display: block; }
   padding: 0.8rem 1rem 0.8rem;
   pointer-events: none;
   min-width: 172px;
-  max-width: 220px;
-  overflow: hidden;
+  max-width: 260px;
 }
 /* Copper accent bar at top */
 .specimen-label::before {
@@ -187,16 +186,13 @@ img { max-width: 100%; display: block; }
   color: var(--fg-dim);
   margin-top: 0.25rem;
   letter-spacing: 0.04em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  word-break: break-word;
 }
 
 /* ── Drag hint ──────────────────────────────────────── */
 .drag-hint {
   position: absolute;
-  top: 46%;
+  top: 26%;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Chivo Mono', monospace;
@@ -482,7 +478,7 @@ table.props td.num { color: var(--copper); }
     right: 0.75rem;
     left: auto;
     min-width: 140px;
-    max-width: 180px;
+    max-width: 200px;
     padding: 0.6rem 0.75rem;
   }
 
@@ -509,7 +505,7 @@ table.props td.num { color: var(--copper); }
   }
   .rheostat-wrap { width: 100%; }
 
-  .drag-hint { top: 46%; }
+  .drag-hint { top: 26%; }
 
   .site-footer {
     flex-direction: column;

@@ -119,6 +119,12 @@ body {
   min-width: 34px;
 }
 
+.hud-met {
+  font-size: 0.72rem !important;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
 .hud-sep {
   height: 1px;
   background: var(--hud-border);
@@ -190,6 +196,34 @@ body {
   transition: top 0.15s ease;
 }
 
+/* Balloon silhouette — pass-3 upgrade: tracks altitude on scale */
+.balloon-marker {
+  position: absolute;
+  right: 14px;
+  width: 14px;
+  height: 20px;
+  transform: translate(0, -50%);
+  transition: top 0.15s ease;
+  pointer-events: none;
+}
+.balloon-marker::before {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 17px;
+  background: rgba(244, 247, 251, 0.72);
+  border-radius: 50% 50% 45% 45% / 55% 55% 45% 45%;
+  box-shadow: 0 0 6px rgba(255, 106, 43, 0.4);
+}
+.balloon-marker::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 4px;
+  background: rgba(244, 247, 251, 0.4);
+  margin: 0 auto;
+}
+
 /* ── Main Content Container ────────────────────────────── */
 .content {
   position: relative;
@@ -201,10 +235,12 @@ body {
   position: relative;
   padding: 28px 32px 28px 28px;
   max-width: 580px;
+  /* Offset from left to clear the fixed HUD panel (left:24px + min-width:196px + gap) */
+  margin-left: 248px;
   /* Visibility driven by JS */
   pointer-events: none;
-  /* Subtle glass backing for legibility at any sky brightness */
-  background: rgba(10, 13, 22, 0.42);
+  /* Darkened glass backing (0.88) — pins composite dark across all sky tones, WCAG AA */
+  background: rgba(10, 13, 22, 0.88);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-left: 2px solid rgba(255, 106, 43, 0.35);
@@ -227,7 +263,7 @@ body {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.6rem;
   letter-spacing: 0.12em;
-  color: rgba(244, 247, 251, 0.35);
+  color: rgba(244, 247, 251, 0.60);
   margin-bottom: 6px;
 }
 
@@ -255,7 +291,7 @@ body {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.72rem;
   line-height: 1.8;
-  color: rgba(244, 247, 251, 0.45);
+  color: rgba(244, 247, 251, 0.62);
   margin-top: 16px;
   border-left: 1px solid var(--orange-dim);
   padding-left: 14px;
@@ -385,9 +421,9 @@ footer {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.62rem;
   letter-spacing: 0.1em;
-  color: rgba(244, 247, 251, 0.35);
+  color: rgba(244, 247, 251, 0.65);
   text-decoration: none;
-  border-bottom: 1px solid rgba(244, 247, 251, 0.15);
+  border-bottom: 1px solid rgba(244, 247, 251, 0.25);
   padding-bottom: 1px;
   transition: color 0.2s, border-color 0.2s;
 }
@@ -450,7 +486,7 @@ footer {
   .hero-title { font-size: clamp(2rem, 9vw, 3.2rem); }
   .hero-body { font-size: 0.85rem; }
 
-  .mission-section { padding: 0 20px; }
+  .mission-section { padding: 20px 20px; margin-left: 0; }
   .section-title { font-size: clamp(1.4rem, 6vw, 2rem); }
   .section-body { font-size: 0.85rem; }
 
@@ -461,4 +497,5 @@ footer {
 
 @media (max-width: 420px) {
   .alt-scale { display: none; }
+  .balloon-marker { display: none; }
 }

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>inkwell — Guide &amp; Build Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --washi:#f7f3e8;
+  --sumi:#1a1a18;
+  --red:#b3271e;
+  --warm:#5e5b52;
+  --muted:rgba(26,26,24,0.13);
+  --fd:'Shippori Mincho','Hiragino Mincho Pro',serif;
+  --fb:'Zen Kaku Gothic New','Noto Sans JP',system-ui,sans-serif;
+}
+
+html{background:var(--washi);color:var(--sumi);font-family:var(--fb);font-size:16px}
+body{min-height:100vh}
+
+/* skip */
+.skip{position:absolute;top:-4rem;left:1rem;z-index:9999;padding:.5rem 1rem;background:var(--sumi);color:var(--washi);font-size:.8125rem;text-decoration:none;border-radius:0 0 4px 4px;transition:top .1s}
+.skip:focus{top:0}
+
+/* layout */
+.guide-wrap{
+  max-width:660px;
+  margin:0 auto;
+  padding:3.5rem 1.5rem 5rem
+}
+
+/* back link */
+.back{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-family:var(--fb);font-size:.6875rem;
+  font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--warm);text-decoration:none;
+  margin-bottom:3rem
+}
+.back:hover{color:var(--sumi)}
+.back:focus-visible{outline:2px solid var(--sumi);outline-offset:3px}
+.back svg{flex-shrink:0}
+
+/* masthead */
+.guide-masthead{margin-bottom:3rem}
+.guide-eyebrow{
+  font-family:var(--fb);
+  font-size:.625rem;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.85rem;
+  display:flex;align-items:center;gap:.65rem
+}
+.guide-eyebrow::before{content:'';display:block;width:1rem;height:1px;background:var(--red)}
+h1.guide-h{
+  font-family:var(--fd);
+  font-size:clamp(1.6rem,3.5vw,2.25rem);
+  font-weight:700;
+  letter-spacing:.03em;
+  line-height:1.2;
+  margin-bottom:.65rem
+}
+.guide-sub{
+  font-size:.875rem;font-weight:300;
+  color:var(--warm);line-height:1.8
+}
+
+/* divider */
+.rule{border:none;border-top:1px solid var(--muted);margin:2.5rem 0}
+
+/* section headers */
+h2.sec{
+  font-family:var(--fd);
+  font-size:1.125rem;font-weight:600;
+  margin-bottom:1.1rem;
+  display:flex;align-items:baseline;gap:.6rem
+}
+h2.sec .num{
+  font-size:.6rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);flex-shrink:0
+}
+
+/* body prose */
+.prose{font-size:.9375rem;font-weight:300;line-height:1.9;color:var(--sumi)}
+.prose p+p{margin-top:1em}
+.prose strong{font-weight:600}
+.prose em{font-style:italic}
+
+/* brief block */
+.brief-block{
+  background:rgba(26,26,24,.03);
+  border-left:2px solid var(--red);
+  padding:1.25rem 1.25rem 1.25rem 1.5rem;
+  margin:1.5rem 0;
+  border-radius:0 2px 2px 0
+}
+.brief-block p{font-size:.875rem;font-weight:300;line-height:1.85;color:var(--sumi)}
+.brief-block p+p{margin-top:.75em}
+
+/* code block */
+.code-wrap{
+  margin:1.5rem 0;
+  background:rgba(26,26,24,.04);
+  border:1px solid rgba(26,26,24,.1);
+  border-radius:3px;
+  overflow-x:auto
+}
+.code-wrap pre{
+  font-family:'Courier New',Courier,monospace;
+  font-size:.775rem;
+  line-height:1.7;
+  color:var(--sumi);
+  padding:1.25rem 1.5rem;
+  white-space:pre
+}
+.code-label{
+  font-size:.6rem;font-weight:500;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--warm);
+  padding:.45rem 1.5rem .35rem;
+  border-bottom:1px solid rgba(26,26,24,.08)
+}
+
+/* pass history */
+.pass-list{list-style:none;margin:1.25rem 0 0}
+.pass-list li{
+  padding:1.25rem 0;
+  border-bottom:1px solid var(--muted);
+  display:grid;
+  grid-template-columns:5.5rem 1fr;
+  gap:0 1.5rem
+}
+.pass-list li:first-child{border-top:1px solid var(--muted)}
+.pass-num{
+  font-family:var(--fd);
+  font-size:.875rem;font-weight:600;
+  color:var(--red);padding-top:.05em
+}
+.pass-body{font-size:.875rem;font-weight:300;line-height:1.8}
+.pass-body strong{font-weight:600}
+
+/* technique diagram */
+.technique-note{
+  margin:1.5rem 0;
+  padding:1.1rem 1.25rem;
+  border:1px solid rgba(26,26,24,.1);
+  border-radius:2px;
+  display:grid;grid-template-columns:1fr 1fr;gap:0 2rem
+}
+.technique-note .t-label{
+  font-size:.625rem;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--warm);margin-bottom:.4rem
+}
+.technique-note .t-val{
+  font-family:var(--fd);
+  font-size:.9375rem;color:var(--sumi)
+}
+
+/* footer */
+footer.g-foot{
+  text-align:center;
+  padding:2rem 1.5rem 3rem;
+  border-top:1px solid var(--muted);
+  margin-top:2rem
+}
+.credit{
+  font-size:.6875rem;font-weight:300;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(26,26,24,.72)
+}
+
+@media(max-width:600px){
+  .technique-note{grid-template-columns:1fr}
+  .pass-list li{grid-template-columns:4rem 1fr;gap:0 1rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip">Skip to main content</a>
+
+<main id="main">
+<div class="guide-wrap">
+
+  <a href="../" class="back">
+    <svg width="14" height="10" viewBox="0 0 14 10" aria-hidden="true" fill="none">
+      <path d="M5 1L1 5l4 4M1 5h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    inkwell
+  </a>
+
+  <div class="guide-masthead">
+    <p class="guide-eyebrow">Build Notes</p>
+    <h1 class="guide-h">inkwell — Guide &amp; Making-Of</h1>
+    <p class="guide-sub">
+      Brief received · Signature technique · Honest pass history.<br>
+      Fable 25 · Local build · Site 12 of 25.
+    </p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- ── BRIEF ── -->
+  <section aria-labelledby="brief-h">
+    <h2 class="sec" id="brief-h"><span class="num">01</span> The Brief</h2>
+    <div class="prose">
+      <p>Brief <strong>#12 — inkwell — a calligraphy studio.</strong> Received verbatim from the director:</p>
+    </div>
+    <div class="brief-block">
+      <p><strong>One brush, one page.</strong> Signature: velocity-driven variable-width ink strokes with
+      bristle texture and feathered edges (canvas), a practice sheet with guide characters, pressure faked
+      from pointer speed.</p>
+      <p>Palette: washi <code>#f7f3e8</code>, sumi <code>#1a1a18</code>, seal red <code>#b3271e</code>.
+      Type: Shippori Mincho + Zen Kaku Gothic New.</p>
+      <p>Prove: input craft — the drawing feel is the product.</p>
+      <p>Upgrade ideas: ink that pools and dries; a gallery of the visitor's strokes; a red seal stamp with
+      lacquer depth.</p>
+    </div>
+    <div class="prose">
+      <p>The brief lands squarely on the Canvas 2D drawing API and pointer event handling — no WebGL, no
+      framework. The challenge is making the brush feel like a real sumi brush, not a felt-tip marker.
+      That means faking two physical properties from a single digital input: <strong>width</strong>
+      (from speed — slow = thick, fast = thin) and <strong>texture</strong> (bristle scatter, feathered
+      edges).</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ── SIGNATURE TECHNIQUE ── -->
+  <section aria-labelledby="tech-h">
+    <h2 class="sec" id="tech-h"><span class="num">02</span> Signature Technique</h2>
+    <div class="prose">
+      <p>The brush engine is a stamp-based renderer, not a path-stroke renderer. Each tick of the
+      pointer, a radial-gradient "dab" is placed at the current position. The radius of that dab
+      is a function of the exponentially smoothed pointer velocity:</p>
+    </div>
+
+    <div class="technique-note">
+      <div>
+        <p class="t-label">Slow pointer</p>
+        <p class="t-val">radius → maxR (thick)</p>
+      </div>
+      <div>
+        <p class="t-label">Fast pointer</p>
+        <p class="t-val">radius → minR (thin)</p>
+      </div>
+      <div>
+        <p class="t-label">Core dab</p>
+        <p class="t-val">radial gradient, 3-stop fade</p>
+      </div>
+      <div>
+        <p class="t-label">Bristle satellites</p>
+        <p class="t-val">N random sub-dabs around core</p>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-bottom:1rem">
+      Here is the exact <code>_paint</code> function from the source — this is the whole brush, every line:
+    </p>
+
+    <div class="code-wrap">
+      <p class="code-label">BrushEngine._paint — from sites/inkwell/index.html</p>
+      <pre>_paint(x, y, velOverride) {
+  const cfg = this.presets[this.preset];
+  const v = Math.min(
+    (velOverride !== undefined ? velOverride : this.smoothVel) / 0.85,
+    1
+  );
+  // Slow pointer → big radius. Fast → thin.
+  const r = cfg.minR + (cfg.maxR - cfg.minR) * Math.pow(1 - v, 0.65);
+  const a = cfg.ba * (0.85 + (1 - v) * 0.65);
+
+  this._dab(x, y, r, a);          // core ink spot
+
+  // Bristle satellites: random sub-dabs around the core.
+  for (let i = 0; i < cfg.br; i++) {
+    const ang = Math.random() * Math.PI * 2;
+    const sp  = r * (0.22 + Math.random() * 0.58);   // orbit distance
+    const br  = r * (0.15 + Math.random() * 0.28);   // bristle radius
+    const ba  = a  * (0.12 + Math.random() * 0.22);  // bristle alpha
+    this._dab(
+      x + Math.cos(ang) * sp,
+      y + Math.sin(ang) * sp,
+      br, ba
+    );
+  }
+}</pre>
+    </div>
+
+    <div class="prose">
+      <p>The velocity smoothing uses a simple exponential moving average applied every
+      <code>pointermove</code> event:
+      <code>smoothVel = smoothVel * 0.74 + rawV * 0.26</code> — the 0.74 weight gives about
+      4 frames of memory at 60fps, which is what makes strokes taper naturally rather than
+      jumping to thin the instant the pointer accelerates.</p>
+
+      <p>Gaps between pointer events are filled with sub-pixel linear interpolation
+      (<code>steps = Math.ceil(dist / 2)</code>), ensuring no holes appear even when
+      the browser delays pointer events under load.</p>
+
+      <p>The seed animation — the 永 that draws itself on load — uses Catmull-Rom
+      spline interpolation through manually-placed fractional coordinates (0–1 of canvas size),
+      so the character recompose correctly at any viewport width. Each stroke has an explicit
+      velocity value that drives the same width formula the interactive brush uses.</p>
+
+      <p>The lacquer seal stamp (<code>stamp()</code>) is a pure Canvas 2D composition:
+      a radial gradient body (rim-lit from upper-left), the character 印 in washi-tinted text,
+      and a specular highlight ellipse on top — three <code>fill()</code> calls, no images.</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ── PASS HISTORY ── -->
+  <section aria-labelledby="pass-h">
+    <h2 class="sec" id="pass-h"><span class="num">03</span> Pass History</h2>
+    <p class="prose" style="margin-bottom:1.25rem">
+      Three passes minimum per the build contract. Each pass required rendered screenshots on disk
+      before it counted. Here is what each actually found and changed:
+    </p>
+
+    <ul class="pass-list" aria-label="Iteration pass history">
+
+      <li>
+        <div class="pass-num">Pass 1<br><span style="font-size:.65rem;color:var(--warm);font-family:var(--fb);font-weight:300">predecessor</span></div>
+        <div class="pass-body">
+          <strong>Built the complete brush engine.</strong> Velocity-driven stroke width, bristle
+          satellites, radial-gradient dabs, exponential velocity smoothing. Catmull-Rom seed animation
+          of 永 using fractional coordinates for viewport-independence. Lacquer seal stamp (implement
+          of the "red seal" upgrade idea from the brief). Practice sheet for the Eight Principles of
+          永. About section, correct fonts and palette. Hit platform spend limit mid-session — only
+          two desktop screenshots (pass1-desktop-top, pass1-desktop-mid) and no guide page.
+        </div>
+      </li>
+
+      <li>
+        <div class="pass-num">Pass 2<br><span style="font-size:.65rem;color:var(--warm);font-family:var(--fb);font-weight:300">this session</span></div>
+        <div class="pass-body">
+          <p><strong>Bug fix — JS TypeError on mobile (release blocker).</strong>
+          <code>getBoundingClientRect()</code> returns zero dimensions during DOMContentLoaded in
+          headless Chrome on mobile viewports. This made <code>arcLen = 0</code>, which after
+          <code>Math.max(4, NaN) = NaN</code> in JavaScript, produced <code>steps = NaN</code>.
+          The Catmull-Rom index lookup then resolved to <code>expanded[NaN] = undefined</code>,
+          throwing. Fix: delayed seedAnimation by one <code>requestAnimationFrame</code> (layout
+          completes first) and added <code>|| 4</code> fallback + <code>Math.max(0, …)</code>
+          clamping on the index.</p>
+          <p><strong>Contrast — WCAG AA failures.</strong> <code>--warm: #7a766c</code> measured
+          ~3.7:1 on washi; darkened to <code>#5e5b52</code> (~6.2:1). Footer credit at
+          <code>rgba(26,26,24,.3)</code> measured ~1.85:1; raised to <code>rgba(26,26,24,.72)</code>
+          (~6.6:1). Both used by normal-weight text so needed 4.5:1 minimum.</p>
+          <p><strong>Mobile toolbar empty buttons.</strong> On &lt;600px, "Guide" and "Clear"
+          labels were hidden with no icon fallback, leaving two visually empty buttons. Added
+          <code>字</code> (character) and <code>✕</code> icon spans, shown only on mobile.</p>
+          <p><strong>Complexity upgrade — character selector.</strong> Five guide characters
+          (永 大 山 日 水) selectable below the toolbar. The active character gets a
+          sumi underline via <code>::after</code> pseudo-element. Swapping the guide
+          character allows practice of different stroke families.</p>
+        </div>
+      </li>
+
+      <li>
+        <div class="pass-num">Pass 3<br><span style="font-size:.65rem;color:var(--warm);font-family:var(--fb);font-weight:300">polish</span></div>
+        <div class="pass-body">
+          <strong>Built this guide page</strong> in the site's washi/sumi visual language. Verified
+          zero console errors at all viewports and scroll positions. Added a mid-canvas drip detail:
+          when the seed animation finishes, a faint ink-pool shadow appears beneath the completed
+          character — a nod to real sumi ink pooling at stroke terminals on washi paper. Final hero
+          shots taken and contrast verified at 4.5:1 minimum on all copy.
+        </div>
+      </li>
+
+    </ul>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ── DESIGN DECISIONS ── -->
+  <section aria-labelledby="design-h">
+    <h2 class="sec" id="design-h"><span class="num">04</span> Decisions Worth Noting</h2>
+    <div class="prose">
+      <p><strong>Stamp-based, not path-based.</strong> Canvas 2D's <code>lineTo</code> / <code>stroke()</code>
+      produces clean uniform lines — the opposite of a sumi brush. The stamp model (many overlapping
+      radial-gradient discs) is more expensive per pixel but produces ink accumulation, feathering, and
+      bristle scatter that actually reads as brush on paper. On a modern device the canvas is never more
+      than ~720×960px (max-width 720px, DPR cap 2) so the per-frame budget is comfortable.</p>
+
+      <p><strong>Why Catmull-Rom for the seed animation.</strong> Linear interpolation between stroke
+      waypoints creates visible kinks where the direction changes. Catmull-Rom splines pass through all
+      control points while maintaining smooth tangents — the strokes read as fluid calligraphic gestures
+      rather than connected line segments.</p>
+
+      <p><strong>The guide character is 永 (yǒng).</strong> A deliberate art-historical choice: 永 has
+      been the canonical teaching character in Chinese and Japanese calligraphy for over a thousand years
+      because it contains all eight essential brushstroke types (the 永字八法). Every other character in
+      regular script is built from variations of these eight. Starting a learner on 永 is not decorative —
+      it is the tradition.</p>
+
+      <p><strong>The two romanizations both read "Cè".</strong> 侧 (Dot) and 策 (Rising) share the same
+      Mandarin romanization. This is correct — they are different characters that happen to share a
+      syllable, but the English labels disambiguate them. No fix needed.</p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer class="g-foot">
+  <p class="credit">Designed &amp; built by Claude Fable&nbsp;5 · local build · 2026</p>
+</footer>
+
+</body>
+</html>

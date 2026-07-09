@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Notes — Norlund Wire Service · FABLE 25</title>
+  <meta name="description" content="Build notes for wireservice (site 11/25): brief, signature technique, pass history.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* ── NORLUND WIRE SERVICE — guide/index.html
+       Written in the site's own visual language.
+       ─────────────────────────────────────────── */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --crt:        #0b0d0b;
+      --phosphor:   #57ff6c;
+      --ph-body:    rgba(87, 255, 108, 0.82);
+      --ph-muted:   rgba(87, 255, 108, 0.62);
+      --ph-glow:    rgba(87, 255, 108, 0.48);
+      --ph-dim:     rgba(87, 255, 108, 0.22);
+      --amber:      #ffb000;
+      --amb-glow:   rgba(255, 176, 0, 0.50);
+      --grid:       rgba(87, 255, 108, 0.07);
+      --grid-strong: rgba(87, 255, 108, 0.14);
+      --sh-sm:      0 0 3px var(--phosphor), 0 0 9px var(--ph-dim);
+      --sh-md:      0 0 5px var(--phosphor), 0 0 16px var(--ph-glow), 0 0 32px var(--ph-dim);
+      --font:       'Fragment Mono', 'Courier New', monospace;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--crt);
+      color: var(--phosphor);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* CRT scan-lines */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.09) 3px, rgba(0,0,0,0.09) 4px
+      );
+      pointer-events: none;
+      z-index: 900;
+    }
+
+    /* CRT vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 48%, transparent 52%, rgba(0,0,0,0.72) 100%);
+      pointer-events: none;
+      z-index: 899;
+    }
+
+    /* ── Masthead ── */
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 400;
+      background: var(--crt);
+      border-bottom: 1px solid var(--grid-strong);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .mh-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .mh-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--amber);
+      box-shadow: 0 0 6px var(--amber);
+      flex-shrink: 0;
+    }
+
+    .mh-title {
+      font-size: 0.64rem;
+      letter-spacing: 0.28em;
+      color: var(--amber);
+      text-shadow: 0 0 5px var(--amber), 0 0 14px var(--amb-glow);
+    }
+
+    .mh-right {
+      font-size: 0.54rem;
+      letter-spacing: 0.12em;
+      color: var(--ph-muted);
+    }
+
+    /* ── Main content ── */
+    main {
+      flex: 1;
+      max-width: 800px;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── Dispatch sections ── */
+    .dispatch {
+      margin-bottom: 3.5rem;
+    }
+
+    .d-hdr {
+      margin-bottom: 0.9rem;
+    }
+
+    .d-id {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: var(--ph-muted);
+    }
+
+    .d-rule {
+      height: 1px;
+      background: linear-gradient(90deg, var(--grid-strong), transparent 85%);
+      margin: 0.5rem 0 0.8rem;
+    }
+
+    .d-cat {
+      font-size: 0.65rem;
+      letter-spacing: 0.30em;
+      color: var(--phosphor);
+      text-shadow: var(--sh-sm);
+    }
+
+    .d-cat.amber {
+      color: var(--amber);
+      text-shadow: 0 0 5px var(--amber), 0 0 14px var(--amb-glow);
+    }
+
+    /* ── Body text ── */
+    .body-text {
+      font-size: 0.8rem;
+      line-height: 1.80;
+      color: var(--ph-body);
+      text-shadow: var(--sh-sm);
+      max-width: 68ch;
+    }
+
+    .body-text p + p { margin-top: 1.1em; }
+
+    .body-text em {
+      font-style: italic;
+      color: var(--phosphor);
+      text-shadow: var(--sh-md);
+    }
+
+    /* ── Code block ── */
+    .code-block {
+      margin: 1.6rem 0;
+      border: 1px solid var(--grid-strong);
+      background: rgba(87, 255, 108, 0.02);
+    }
+
+    .code-label {
+      font-size: 0.50rem;
+      letter-spacing: 0.22em;
+      color: var(--ph-muted);
+      padding: 0.4rem 0.9rem;
+      border-bottom: 1px solid var(--grid);
+      display: block;
+    }
+
+    pre {
+      padding: 1rem 0.9rem;
+      overflow-x: auto;
+      font-size: 0.72rem;
+      line-height: 1.65;
+      color: var(--ph-body);
+      text-shadow: var(--sh-sm);
+    }
+
+    code { font-family: inherit; }
+
+    /* ── Pass history table ── */
+    .pass-list {
+      margin-top: 0.6rem;
+    }
+
+    .pass-entry {
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--grid);
+    }
+
+    .pass-entry:last-child { border-bottom: none; }
+
+    .pass-label {
+      font-size: 0.56rem;
+      letter-spacing: 0.28em;
+      color: var(--amber);
+      text-shadow: 0 0 4px var(--amber);
+      margin-bottom: 0.45rem;
+      display: block;
+    }
+
+    .pass-body {
+      font-size: 0.76rem;
+      line-height: 1.74;
+      color: var(--ph-body);
+      text-shadow: var(--sh-sm);
+    }
+
+    .pass-body strong {
+      color: var(--phosphor);
+      text-shadow: var(--sh-md);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--grid-strong);
+      padding: 0 2rem;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .ft-credit {
+      font-size: 0.52rem;
+      letter-spacing: 0.10em;
+      color: var(--ph-muted);
+    }
+
+    .ft-right {
+      margin-left: auto;
+      font-size: 0.52rem;
+      letter-spacing: 0.10em;
+      color: var(--ph-muted);
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      main { padding: 2rem 1rem 4rem; }
+      .masthead { padding: 0 1rem; }
+      pre { font-size: 0.64rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="masthead" aria-label="Guide header">
+    <div class="mh-left">
+      <span class="mh-dot" aria-hidden="true"></span>
+      <span class="mh-title">NWS BUILD NOTES</span>
+    </div>
+    <span class="mh-right">FABLE 25 LOCAL &middot; SITE 11 OF 25 &middot; 2026</span>
+  </header>
+
+  <main>
+
+    <!-- ── Brief received ─────────────────────────────── -->
+    <section class="dispatch" aria-labelledby="sec-brief">
+
+      <div class="d-hdr">
+        <span class="d-id">GUIDE-WIRESERVICE-001</span>
+        <div class="d-rule" aria-hidden="true"></div>
+        <h1 class="d-cat" id="sec-brief">THE BRIEF</h1>
+      </div>
+
+      <div class="body-text">
+        <p><em>wireservice — a teletype newsroom.</em> A wire service for a city that doesn't exist. Signature: dispatches typed character-by-character with authentic teletype cadence and bell; CRT phosphor persistence done as layered text-shadows; fully keyboard-navigable. Palette: CRT black <code>#0b0d0b</code>, phosphor <code>#57ff6c</code>, paper <code>#e9e9e2</code>, alert amber <code>#ffb000</code>. Type: Fragment Mono + Public Sans. Prove: terminal aesthetics with editorial standards.</p>
+        <p>The city is Norlund. The fiction is complete: every dispatch datelines from an invented metropolitan region with its own geography, institutions, civic politics, and sport. The news reads like news — specific names, accurate prose rhythms, no lorem ipsum anywhere.</p>
+      </div>
+
+    </section>
+
+    <!-- ── Signature technique ─────────────────────────── -->
+    <section class="dispatch" aria-labelledby="sec-sig">
+
+      <div class="d-hdr">
+        <span class="d-id">GUIDE-WIRESERVICE-002</span>
+        <div class="d-rule" aria-hidden="true"></div>
+        <h2 class="d-cat" id="sec-sig">SIGNATURE TECHNIQUE</h2>
+      </div>
+
+      <div class="body-text">
+        <p>The teletype cadence engine. Each character is emitted after a delay drawn from an interval table that mirrors a real Model 15 Teletype: punctuation pauses longer than prose, paragraph breaks longer than sentences, em-dashes longer than commas. A WebAudio BufferSource burst plays on every character; a sine-decay bell rings at dispatch end. The cursor is a literal phosphor block, blinking at 1.1 s step-end.</p>
+      </div>
+
+      <div class="code-block" aria-label="Code excerpt: teletype cadence intervals from main.js">
+        <span class="code-label">SOURCE EXCERPT — main.js: typeDispatch() cadence table</span>
+        <pre><code>const BASE = 36; /* ms per average character */
+
+let delay = BASE + (Math.random() * 12 - 6);
+if      (ch === '\n')
+  delay = BASE * 7;
+else if (ch === '.' || ch === '!' || ch === '?')
+  delay = BASE * 9 + Math.random() * 60;   /* sentence-end rest */
+else if (ch === ',')
+  delay = BASE * 4 + Math.random() * 30;
+else if (ch === ';' || ch === ':')
+  delay = BASE * 3;
+else if (ch === ' ')
+  delay = BASE * 0.75;                      /* spaces faster */
+else if (ch === '-' &amp;&amp; text[i-2] === '-')
+  delay = BASE * 5;                         /* em-dash pause */
+
+S.typingTimer = setTimeout(tick, delay);</code></pre>
+      </div>
+
+      <div class="body-text">
+        <p>The phosphor glow is implemented as a two-layer text-shadow on all body text: a tight 3 px bloom at full phosphor saturation, and a wider 9–32 px diffusion at reduced alpha — exactly what a sustained phosphor dot looks like on a P31 screen coating. Body text during typing briefly upgrades to the wider third shadow layer (16 px glow + 32 px halo), simulating the brightness spike as the electron beam sweeps past.</p>
+        <p>A canvas-based static noise layer (drawn at 1/3 viewport resolution, pixelated via CSS, updated at ~20 fps at 5.5% opacity) adds authentic phosphor hot-pixel scatter beneath the scan-line overlay. Both layers are suppressed in paper-feed mode (P key) and reduced to zero in prefers-reduced-motion.</p>
+      </div>
+
+    </section>
+
+    <!-- ── Pass history ─────────────────────────────────── -->
+    <section class="dispatch" aria-labelledby="sec-passes">
+
+      <div class="d-hdr">
+        <span class="d-id">GUIDE-WIRESERVICE-003</span>
+        <div class="d-rule" aria-hidden="true"></div>
+        <h2 class="d-cat amber" id="sec-passes">PASS HISTORY</h2>
+      </div>
+
+      <div class="pass-list">
+
+        <div class="pass-entry">
+          <span class="pass-label">PASS 1 — PREDECESSOR / CRASH RECOVERY</span>
+          <div class="pass-body">
+            <p>Predecessor builder shipped the core layout, teletype engine, WebAudio oscillators, paper-feed mode (P key), priority flash (F key), and all eight dispatch texts. Builder then crashed on a platform spend limit mid-critique with three pass-1 shots on disk but no guide and no ticker band HTML (CSS and a DOM reference existed for it; the element did not).</p>
+            <p>On inheriting the tree, the finishing builder found two release blockers: <strong>DOM.feedArea undefined</strong> — the scroll-container reference was never added to the DOM object, throwing <code>TypeError: Cannot read properties of undefined (reading 'scrollHeight')</code> on every page load — and <strong>zero &lt;h1&gt; elements</strong> (the masthead title was inside aria-hidden). Additionally, <strong>--ph-muted at 0.40 alpha computed 3.4:1 contrast on CRT black</strong>, failing WCAG AA for normal-weight text at that size. Both paper-mode muted values (0.38 / 0.40 alpha) failed the same gate on paper white.</p>
+            <p>Fixes applied: scroll references corrected (<code>window.scrollTo</code> for the H key, <code>scrollIntoView</code> for auto-follow during typing); masthead-title promoted from &lt;span&gt; to &lt;h1&gt;; --ph-muted raised to 0.62 alpha (6.1:1 on CRT black); paper-mode muted values raised to 0.58–0.60 alpha (≥4.9:1 on paper white). Complexity upgrade: the missing ticker band HTML was added and populated dynamically from an eight-item TICKER_ITEMS array, CSS-scrolled at 38 s / cycle.</p>
+          </div>
+        </div>
+
+        <div class="pass-entry">
+          <span class="pass-label">PASS 2 — LAYOUT + KEYBOARD</span>
+          <div class="pass-body">
+            <p>Screenshot critique revealed <strong>the ticker band scrolled off-screen immediately</strong> (it was in normal flow; the page init-scrolls to the newest dispatch). Fixed by setting the ticker to <code>position: sticky; top: var(--head-h)</code> and adding <code>--ticker-h: 32px</code> to coordinate the bulletin rail's sticky top and height.</p>
+            <p><strong>Dispatch timestamps orphaned at x ≈ 1060 px</strong> on a 1440 px viewport: the dispatch header's <code>d-cat { flex: 1 }</code> pushed the time to the right edge of the full-width feed area, while the body text was constrained to 66 ch (~545 px). Fixed by adding <code>max-width: 680 px</code> to the <code>.dispatch</code> article, so header and body share one editorial column.</p>
+            <p>Complexity upgrade: <strong>J/K dispatch navigation</strong> (vim-style, scrolls to next/previous article) added to the keyboard handler and operator-keys panel. A <strong>dispatch-arrival bloom animation</strong> (<code>dispatch-arrive</code> keyframe: brightness 2.2→1.6→1 over 0.9 s cubic-bezier) marks newly received dispatches as the phosphor flares under the incoming current.</p>
+          </div>
+        </div>
+
+        <div class="pass-entry">
+          <span class="pass-label">PASS 3 — NOISE + LIVE STATS</span>
+          <div class="pass-body">
+            <p>Complexity upgrade: <strong>canvas-based CRT static noise</strong>. An off-screen canvas drawn at 1/3 viewport resolution (pixelated via CSS) fills the viewport at 5.5% opacity. ~2% of pixels per frame receive a random luminance value (green channel only, to match the P31 phosphor spectrum) at roughly 20 fps. The canvas is z-indexed between the vignette and scan-line layers; suppressed in paper mode; rAF loop pauses on <code>document.hidden</code>; canvas is capped at <code>devicePixelRatio ≤ 2</code>. This completes the physical display stack: phosphor glow (text-shadow) + scan-lines (body::before) + vignette (body::after) + hot-pixel scatter (canvas).</p>
+            <p><strong>Live footer transmission stats</strong> replace the static "INITIALISING" status. The footer now shows "DISPATCHES: N · UPTIME: HH:MM:SS", updating every second. Dispatch count increments on instant-render (pre-loaded dispatches) and on typewriter completion (live-typed dispatches), giving the operator a genuine signal-throughput readout.</p>
+          </div>
+        </div>
+
+      </div><!-- /.pass-list -->
+
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <span class="ft-credit">Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</span>
+    <span class="ft-right">NORLUND WIRE SERVICE &middot; GUIDE</span>
+  </footer>
+
+</body>
+</html>

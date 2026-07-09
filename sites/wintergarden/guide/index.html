@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wintergarden — Build Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=Mulish:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --dusk:#0f1712;--leaf:#7fbf7a;--bloom:#e77fb3;--brass:#b59a5a;--brass-l:#d4be8a;
+  --cream:#e8e0d0;--text:#bfcfb8;--text-d:#7a9870;--bg2:#111a13;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dusk);color:var(--text);font-family:'Mulish',system-ui,sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}
+
+.guide-header{padding:3rem 3rem 2rem;border-bottom:1px solid rgba(181,154,90,.15);display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.guide-back{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--brass);text-decoration:none;font-weight:400;border:1px solid rgba(181,154,90,.3);padding:.3rem .7rem;border-radius:2px}
+.guide-back:hover{border-color:var(--brass);background:rgba(181,154,90,.1)}
+.guide-site{font-family:'Gloock',serif;font-size:1.4rem;font-weight:400;color:var(--cream)}
+.guide-sub{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--brass);margin-left:.25rem;vertical-align:.2em}
+
+.guide-main{max-width:820px;margin:0 auto;padding:4rem 3rem}
+section{margin-bottom:4rem}
+
+h2{font-family:'Gloock',serif;font-size:clamp(1.5rem,2.5vw,2rem);font-weight:400;color:var(--cream);margin-bottom:1.5rem}
+h3{font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;color:var(--brass);font-weight:600;margin-bottom:.75rem}
+p{font-size:.875rem;line-height:1.8;color:var(--text-d);margin-bottom:1rem;max-width:66ch}
+p.lead{font-family:'Gloock',serif;font-size:clamp(.95rem,1.6vw,1.1rem);color:var(--text);line-height:1.7;margin-bottom:1.5rem}
+
+.brief-box{border:1px solid rgba(181,154,90,.2);border-left:3px solid var(--brass);padding:1.75rem 2rem;background:rgba(181,154,90,.03)}
+.brief-box p{color:var(--text);font-style:italic}
+.brief-meta{margin-top:1rem;display:flex;gap:2rem;flex-wrap:wrap}
+.brief-meta span{font-size:.68rem;letter-spacing:.12em;color:var(--text-d)}
+.brief-meta strong{color:var(--brass-l)}
+
+.palette{display:flex;gap:1rem;margin:1.5rem 0;flex-wrap:wrap}
+.swatch{display:flex;align-items:center;gap:.6rem;font-size:.72rem;color:var(--text-d)}
+.swatch-dot{width:18px;height:18px;border-radius:50%}
+
+pre{background:rgba(0,0,0,.4);border:1px solid rgba(181,154,90,.15);padding:1.5rem;overflow-x:auto;font-size:.72rem;line-height:1.7;border-radius:2px;margin:1rem 0}
+code{font-family:'Courier New',monospace;color:var(--leaf)}
+.cm{color:var(--text-d)}
+.ck{color:var(--brass-l)}
+.cs{color:#e08060}
+
+.pass-grid{display:grid;gap:2rem}
+.pass-entry{padding:1.75rem 2rem;background:var(--bg2);border:1px solid rgba(181,154,90,.1);border-top:2px solid var(--brass)}
+.pass-num{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--brass);margin-bottom:.35rem}
+.pass-title{font-family:'Gloock',serif;font-size:1.05rem;color:var(--cream);margin-bottom:1rem}
+ul{list-style:none;padding:0}
+li{font-size:.82rem;line-height:1.65;color:var(--text-d);padding:.25rem 0;padding-left:1.25rem;position:relative}
+li::before{content:'—';position:absolute;left:0;color:var(--brass);opacity:.6}
+li.fix::before{content:'✦';color:var(--leaf)}
+li.upgrade::before{content:'↑';color:var(--bloom)}
+
+.upgrade-tag{display:inline-block;background:rgba(231,127,179,.1);border:1px solid rgba(231,127,179,.3);color:var(--bloom);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;padding:.15rem .5rem;border-radius:1px;margin-bottom:.65rem}
+
+footer{border-top:1px solid rgba(181,154,90,.12);padding:2rem 3rem;text-align:center;font-size:.7rem;color:var(--text-d);letter-spacing:.08em}
+
+@media(max-width:640px){
+  .guide-header,.guide-main{padding-left:1.5rem;padding-right:1.5rem}
+  .guide-main{padding-top:2.5rem}
+  pre{font-size:.65rem}
+  .brief-meta{flex-direction:column;gap:.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="guide-header" role="banner">
+  <a href="../" class="guide-back">← Site</a>
+  <span class="guide-site">Wintergarden <span class="guide-sub">Build Guide</span></span>
+</header>
+
+<main class="guide-main">
+
+  <!-- BRIEF -->
+  <section>
+    <h2>Brief Received</h2>
+    <div class="brief-box">
+      <h3>Brief #10 — Wave 2</h3>
+      <p><strong>wintergarden — a generative glasshouse.</strong> A conservatory where every visit grows a different garden. Signature: seeded stochastic L-systems drawn stem-by-stem on canvas — you watch them grow; species vary by seed. Gentle generative WebAudio chimes (muted until invited).</p>
+      <p style="margin-top:.75rem">Prove: generative art with botanical credibility. Upgrade ideas: a seed-packet share card (canvas-rendered); seasons; a gardener's log naming each generated specimen.</p>
+      <div class="brief-meta">
+        <span>Palette: glasshouse dusk <strong>#0f1712</strong> · leaf <strong>#7fbf7a</strong> · bloom <strong>#e77fb3</strong> · brass <strong>#b59a5a</strong></span>
+        <span>Type: <strong>Gloock</strong> + <strong>Mulish</strong></span>
+      </div>
+    </div>
+    <div class="palette" style="margin-top:1.75rem">
+      <div class="swatch"><div class="swatch-dot" style="background:#0f1712;border:1px solid rgba(255,255,255,.1)"></div>Dusk #0f1712</div>
+      <div class="swatch"><div class="swatch-dot" style="background:#7fbf7a"></div>Leaf #7fbf7a</div>
+      <div class="swatch"><div class="swatch-dot" style="background:#e77fb3"></div>Bloom #e77fb3</div>
+      <div class="swatch"><div class="swatch-dot" style="background:#b59a5a"></div>Brass #b59a5a</div>
+    </div>
+  </section>
+
+  <!-- SIGNATURE TECHNIQUE -->
+  <section>
+    <h2>Signature Technique</h2>
+    <p class="lead">Recursive stochastic branch generation — not string-based L-systems but a direct recursive function that accumulates draw commands into a pre-computed queue, then executes them one by one per animation frame so you watch the plant grow tip-by-tip.</p>
+    <p>Each species carries its own grammar: branching count function, angle array, length decay factor, phototropism coefficient, leaf probability, and visual dimensions. The seeded PRNG (mulberry32) ensures every garden is reproducible from its seed number. Stems are quadratic Bézier curves with per-frame jitter, width tapered proportional to depth. Leaves are filled Bézier teardrop paths rotated to the branch angle.</p>
+    <h3 style="margin-top:2rem">Core excerpt — branch generator</h3>
+    <pre><code><span class="cm">// Each plant is generated as an ordered list of draw commands,</span>
+<span class="cm">// then animated by executing them one at a time each rAF frame.</span>
+
+<span class="ck">function</span> generatePlant(sx, sy, spIdx, p, hScale) {
+  <span class="ck">const</span> sp = SPECIES[spIdx];
+  <span class="ck">const</span> baseLen = sp.startLen * hScale;   <span class="cm">// scale to canvas height</span>
+  <span class="ck">const</span> leafSz  = sp.leafSz  * hScale;
+  <span class="ck">const</span> maxW    = sp.maxW    * Math.sqrt(hScale);  <span class="cm">// sqrt for 2-D feel</span>
+  <span class="ck">const</span> cmds = [];
+
+  <span class="ck">function</span> rec(x, y, ang, len, d) {
+    <span class="cm">// Phototropism: gentle pull toward vertical on every segment</span>
+    <span class="ck">const</span> a2 = ang + ((-Math.PI/2) - ang) * <span class="cs">0.08</span>;
+
+    <span class="cm">// Organic curve via perpendicular jitter on the control point</span>
+    <span class="ck">const</span> jMag = len * <span class="cs">0.16</span> * (p() - <span class="cs">0.5</span>);
+    <span class="ck">const</span> ex = x + Math.cos(a2) * len;
+    <span class="ck">const</span> ey = y + Math.sin(a2) * len;
+    <span class="ck">const</span> cpx = (x+ex)/2 + Math.cos(a2+Math.PI/2) * jMag;
+    <span class="ck">const</span> cpy = (y+ey)/2 + Math.sin(a2+Math.PI/2) * jMag;
+
+    <span class="cm">// Taper: full caliper at root (d=maxD), hairline at tips (d=0)</span>
+    <span class="ck">const</span> w = Math.max(<span class="cs">0.4</span>, maxW * (d / sp.maxD));
+    cmds.push({t:<span class="cs">'s'</span>, x1:x, y1:y, cpx, cpy, x2:ex, y2:ey, col:sp.stemCol, w});
+
+    <span class="ck">if</span> (d === <span class="cs">0</span>) {
+      <span class="cm">// Tip: bloom (if species has one) or terminal leaf</span>
+      <span class="ck">if</span> (sp.bloomCol && p() < <span class="cs">0.65</span>)
+        cmds.push({t:<span class="cs">'b'</span>, x:ex, y:ey, col:sp.bloomCol, sz:bloomSz*(0.8+p()*.4), n:sp.bloomN});
+      <span class="ck">else</span>
+        cmds.push({t:<span class="cs">'l'</span>, x:ex, y:ey, ang:a2, sz:leafSz*(0.9+p()*.35), col:sp.leafCol});
+      <span class="ck">return</span>;
+    }
+
+    <span class="cm">// Recurse into sub-branches per species grammar</span>
+    <span class="ck">const</span> nb = sp.branches(d, p);
+    <span class="ck">for</span> (<span class="ck">let</span> i=0; i&lt;nb; i++) {
+      <span class="ck">const</span> newAngle = a2 + sp.angles[i % sp.angles.length] + (p()-0.5)*2*sp.angleVar;
+      <span class="ck">const</span> newLen   = len * sp.lenF * (<span class="cs">0.87</span> + p() * <span class="cs">0.26</span>);
+      rec(ex, ey, newAngle, newLen, d-1);
+    }
+  }
+
+  rec(sx, sy, -Math.PI/<span class="cs">2</span>, baseLen, sp.maxD);
+  <span class="ck">return</span> {spIdx, cmds};
+}</code></pre>
+
+    <h3 style="margin-top:1.75rem">Species definitions (excerpt)</h3>
+    <p>Four species with distinct grammars. The fern uses binary branching at ±33° creating a fan; the reed uses near-zero angles (0, ±13°) for upright culms; the hibiscus uses larger angles (±36°) for a spreading crown; jasmine is the most stochastic (2–3 branches, angle variability 0.2 radians).</p>
+    <pre><code><span class="cm">// Reed: nearly vertical, high length-decay, narrow grass blades</span>
+{
+  id:<span class="cs">'reed'</span>, sci:<span class="cs">'Arundo'</span>, maxD:<span class="cs">4</span>,
+  startLen:<span class="cs">132</span>, lenF:<span class="cs">0.84</span>, angleVar:<span class="cs">0.06</span>,
+  branches(d,p){ <span class="ck">return</span> d&gt;<span class="cs">3</span> ? <span class="cs">1</span> : (d&gt;<span class="cs">1</span> ? <span class="cs">2</span> : <span class="cs">1</span>); },
+  angles: [<span class="cs">0</span>, Math.PI/<span class="cs">14</span>, -Math.PI/<span class="cs">14</span>],
+  leafSz:<span class="cs">52</span>, leafRx:<span class="cs">0.12</span>, leafRy:<span class="cs">1.6</span>,  <span class="cm">// narrow blade</span>
+}
+
+<span class="cm">// Fern: strict binary, ±33°, pure green, round leaflets</span>
+{
+  id:<span class="cs">'fern'</span>, sci:<span class="cs">'Adiantum'</span>, maxD:<span class="cs">5</span>,
+  startLen:<span class="cs">125</span>, lenF:<span class="cs">0.62</span>, angleVar:<span class="cs">0.15</span>,
+  branches(d,p){ <span class="ck">return</span> <span class="cs">2</span>; },
+  angles: [-Math.PI/<span class="cs">5.5</span>, Math.PI/<span class="cs">5.5</span>],
+  leafSz:<span class="cs">16</span>, leafRx:<span class="cs">0.7</span>, leafRy:<span class="cs">0.8</span>,   <span class="cm">// near-circular leaflets</span>
+  bloomCol:<span class="ck">null</span>,                            <span class="cm">// fern: no flowers</span>
+}</code></pre>
+  </section>
+
+  <!-- PASS HISTORY -->
+  <section>
+    <h2>Critique Pass History</h2>
+    <p>Three passes, each with a vision read of rendered screenshots, a hostile-director critique, fixes applied, then one deliberate complexity upgrade.</p>
+
+    <div class="pass-grid">
+
+      <div class="pass-entry">
+        <p class="pass-num">Pass 1</p>
+        <p class="pass-title">Initial build — plants too small, log names incoherent</p>
+        <ul>
+          <li>Plants occupied only the bottom 15% of the canvas — startLen values (38–74 px) were too small for a 900px canvas. The entire upper viewport was empty dark space with only the glass pane grid visible.</li>
+          <li>Gardener's Log showed incoherent names: "Arundo minutus — GLASSHOUSE HIBISCUS — [Hibiscus description]" because <code>specName()</code> drew genus from all four species at random instead of from the plant's own species. Fixed: <code>specName(genus, p)</code> now receives <code>sp.sci</code> directly.</li>
+          <li class="fix">Increased startLen 2.8× across all species (fern: 38→105, hibiscus: 58→148, jasmine: 50→130, reed: 74→108); introduced <code>hScale = H/900</code> applied throughout <code>generatePlant()</code>.</li>
+          <li class="fix">Moved hero text from <code>top:50%</code> to <code>top:30%</code> to position above growing plants.</li>
+          <li class="upgrade">UPGRADE: Floating specimen stake labels — italic translucent name tags fading in at each plant's base after growth completes, generated from the same seed as the log.</li>
+        </ul>
+      </div>
+
+      <div class="pass-entry">
+        <p class="pass-num">Pass 2</p>
+        <p class="pass-title">Bloom overscale, fern too blobby, missing ground</p>
+        <ul>
+          <li>Bloom sizes (bloomSz:40 for hibiscus, 28 for jasmine) were cartoonishly large — petals overlapped into formless blobs. Visible particularly against the dark background where individual flower shapes couldn't resolve.</li>
+          <li>The fern used a ternary branching grammar with a center branch (angles: [−30°, +30°, 0]) producing a round bush silhouette. Needed a strict binary grammar at ±33° to create the distinctive fan shape.</li>
+          <li>Fern stem colour (#3a5228) was nearly invisible against the dusk background. Brightened to #527a42.</li>
+          <li class="fix">Reduced bloomSz: hibiscus 40→22, jasmine 28→14. Adjusted further upward with startLen to maintain plant scale.</li>
+          <li class="fix">Fern grammar changed to pure binary (branches always returns 2), angles [−PI/5.5, PI/5.5], leafRx:0.7, leafRy:0.8 for rounder leaflets.</li>
+          <li class="upgrade">UPGRADE: Edge vignette (radial gradient darkening canvas corners) + soil bed gradient at canvas bottom with a faint horizontal soil line at 96.5% height.</li>
+        </ul>
+      </div>
+
+      <div class="pass-entry">
+        <p class="pass-num">Pass 3</p>
+        <p class="pass-title">Particle canvas conflict, fern stem visibility</p>
+        <ul>
+          <li>The ambient particle system (pass 3 upgrade) was drawing pollen dots directly onto the main garden canvas without clearing between frames. Since the garden canvas is never cleared after initial draw (plants accumulate), particles left permanent smear trails — visible as pink streaks along plant stems.</li>
+          <li>At 3.5s into growth on mobile, a single particle had drifted into the hero text area. Acceptable (1–2 px dot, charming), but flagged.</li>
+          <li class="fix">Added a dedicated <code>&lt;canvas id="particle-canvas"&gt;</code> layer above the garden canvas. Particle loop uses <code>pCtx.clearRect(0,0,W,H)</code> each frame — pollen dots animate without corrupting the botanical drawing beneath.</li>
+          <li class="fix">Particle spawn height raised to H*0.5–H*0.9 (previously bottomed out at H*0.7) so they drift through the full plant volume.</li>
+          <li class="upgrade">UPGRADE: Ambient pollen/dust motes — 8–14 particles per plant in bloom/leaf colours (1–2.4 px radius, low alpha 0.12–0.4), sinusoidally drifting upward with mild horizontal wobble. They respawn at each plant base when they exit the top of the canvas, creating a continuous living presence after growth completes.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RELEASE GATES -->
+  <section>
+    <h2>Release Gates</h2>
+    <ul>
+      <li class="fix">Zero console errors (all passes)</li>
+      <li class="fix">Zero page errors (all passes)</li>
+      <li class="fix">WCAG AA text contrast: cream (#e8e0d0) on dusk (#0f1712) = 13.5:1; brass (#b59a5a) on dusk = 4.9:1; both clear AA</li>
+      <li class="fix"><code>prefers-reduced-motion: reduce</code> — garden draws all commands instantly in a single synchronous pass; particle system is not started; animate pulse on grow-dot is suppressed via CSS <code>animation:none</code></li>
+      <li class="fix">Exactly one <code>&lt;h1&gt;</code> (site name in header)</li>
+      <li class="fix">Canvas elements carry <code>aria-hidden="true"</code>; <code>aria-label</code> on stage section</li>
+      <li class="fix">AudioContext created only on user gesture (chimes button), starts suspended</li>
+      <li class="fix">rAF loops check <code>document.hidden</code> and skip work when tab is backgrounded</li>
+      <li class="fix">DPR capped at 2 on all canvas elements</li>
+      <li class="fix">Responsive 390 → 1440; plants labels hidden on mobile (<code>display:none</code> at ≤640px)</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer role="contentinfo">
+  Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026
+</footer>
+
+</body>
+</html>

@@ -134,6 +134,18 @@ const BULLETINS = [
   },
 ];
 
+/* ── Ticker items ──────────────────────────────────────── */
+const TICKER_ITEMS = [
+  'ALDERCROSS TERMINAL: TONNAGE EXCEEDS PROJECTIONS BY 11% — FOURTH BERTH STUDY UNDERWAY',
+  'PELHAM QUAY FERRY CAPTAIN MARTA OHLSEN RETIRES AFTER 31 YEARS AND 4.2M PASSENGERS',
+  'MERCER THEATRE WORLD PREMIERE: "LONG DISTANCE PLEASE" — HERITAGE PRESENTATION DESIGNATION AWARDED',
+  'CITY COUNCIL APPROVES EASTWICK CORRIDOR — 220 MILLION BOND AUTHORITY — 7-4 VOTE',
+  'DOCKWORKERS ADVANCE TO CONTINENTAL SEMI-FINALS — VELD SCORES TWICE IN FINAL 12 MINUTES',
+  'VERATH GULF LOW-PRESSURE SYSTEM: 20-40MM PRECIP EXPECTED — PELHAM BRIDGE SPEED ADVISORY',
+  'ALDEN RIVER DISSOLVED OXYGEN UP 18% — FIVE-YEAR RECOVERY LINKED TO EASTWICK UPGRADE',
+  '★ DEVELOPING — VANDERMEER MILL FIRE EASTWICK — SHELTER-IN-PLACE FOUR-BLOCK RADIUS ★',
+];
+
 /* ── State ─────────────────────────────────────────────── */
 const S = {
   audioCtx:    null,
@@ -142,6 +154,8 @@ const S = {
   reduced:     window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   queueIdx:    PRE_RENDER,   /* next dispatch index to type */
   dispatchEls: {},           /* id → article element */
+  dispatchIds: [],           /* ordered list of rendered dispatch ids */
+  focusIdx:    -1,           /* J/K navigation cursor (-1 = none) */
   typingTimer: null,
   isTyping:    false,
 };
@@ -149,13 +163,14 @@ const S = {
 /* ── DOM refs ──────────────────────────────────────────── */
 const $ = (id) => document.getElementById(id);
 const DOM = {
-  dispatches:   $('dispatches'),
-  bulletins:    $('bulletins'),
-  clock:        $('clock'),
-  overlay:      $('priority-overlay'),
-  paperLabel:   $('paper-label'),
-  muteLabel:    $('mute-label'),
-  footerSt:     $('footer-status'),
+  dispatches:    $('dispatches'),
+  bulletins:     $('bulletins'),
+  clock:         $('clock'),
+  overlay:       $('priority-overlay'),
+  noiseCanvas:   $('noise-canvas'),
+  paperLabel:    $('paper-label'),
+  muteLabel:     $('mute-label'),
+  footerSt:      $('footer-status'),
   tickerContent: $('ticker-content'),
 };
 
@@ -215,6 +230,57 @@ function playTick() {
   src.start(now);
 }
 
+/* ── CRT static noise engine ───────────────────────────── */
+(function initNoise() {
+  const canvas = DOM.noiseCanvas;
+  if (!canvas) return;
+  const ctx    = canvas.getContext('2d');
+  const SCALE  = 3;   /* draw at 1/SCALE size, pixelate via CSS */
+  const DPR    = Math.min(window.devicePixelRatio || 1, 2);
+  let w, h, frame = 0;
+
+  function resize() {
+    w = Math.ceil(window.innerWidth  / SCALE);
+    h = Math.ceil(window.innerHeight / SCALE);
+    canvas.width  = w;
+    canvas.height = h;
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  function drawNoise() {
+    if (document.hidden) return;
+    frame++;
+    if (frame % 3 !== 0) return; /* ~20 fps for noise */
+    const img = ctx.createImageData(w, h);
+    const d   = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      /* Sparse hot pixels — ~2% chance */
+      const v = Math.random() < 0.022 ? (Math.random() * 180 + 40) | 0 : 0;
+      d[i] = 0; d[i+1] = v; d[i+2] = 0;  /* phosphor green tint */
+      d[i+3] = v ? ((v * 0.55) | 0) : 0;
+    }
+    ctx.putImageData(img, 0, 0);
+    requestAnimationFrame(drawNoise);
+  }
+  requestAnimationFrame(drawNoise);
+}());
+
+/* ── Live footer stats ─────────────────────────────────── */
+const BOOT_TIME = Date.now();
+let totalDispatches = 0;
+
+function updateFooterStats(label) {
+  if (label) { DOM.footerSt.textContent = label; return; }
+  const elapsed = Math.floor((Date.now() - BOOT_TIME) / 1000);
+  const hh = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+  const mm = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+  const ss = String(elapsed % 60).padStart(2, '0');
+  DOM.footerSt.textContent =
+    `DISPATCHES: ${totalDispatches} · UPTIME: ${hh}:${mm}:${ss}`;
+}
+setInterval(updateFooterStats, 1000);
+
 /* ── Clock ─────────────────────────────────────────────── */
 function tickClock() {
   const n  = new Date();
@@ -269,13 +335,19 @@ function renderInstant(d) {
   body.textContent = d.body;
   DOM.dispatches.appendChild(art);
   S.dispatchEls[d.id] = art;
+  S.dispatchIds.push(d.id);
+  totalDispatches++;
 }
 
 /* ── Typewriter ────────────────────────────────────────── */
 function typeDispatch(d, onDone) {
   const { art, body } = makeDispatch(d);
+  /* Phosphor bloom arrival flash */
+  art.classList.add('arriving');
+  art.addEventListener('animationend', () => art.classList.remove('arriving'), { once: true });
   DOM.dispatches.appendChild(art);
   S.dispatchEls[d.id] = art;
+  S.dispatchIds.push(d.id);
   S.isTyping = true;
 
   if (S.reduced) {
@@ -312,6 +384,7 @@ function typeDispatch(d, onDone) {
       cur.remove();
       body.classList.remove('typing');
       S.isTyping = false;
+      totalDispatches++;
       if (d.priority) triggerPriorityFlash();
       else setTimeout(playBell, 80);
       onDone && onDone();
@@ -323,7 +396,7 @@ function typeDispatch(d, onDone) {
     i++;
 
     /* Auto-scroll the feed to keep cursor visible */
-    DOM.feedArea.scrollTop = DOM.feedArea.scrollHeight;
+    art.scrollIntoView({ behavior: 'instant', block: 'nearest' });
 
     playTick();
 
@@ -375,7 +448,7 @@ function triggerPriorityFlash() {
 /* ── Dispatch queue ────────────────────────────────────── */
 function runQueue() {
   if (S.queueIdx >= DISPATCHES.length) {
-    DOM.footerSt.textContent = 'NORLUND WIRE SERVICE · LINE OPEN · STANDING BY';
+    updateFooterStats('LINE OPEN · STANDING BY');
     return;
   }
 
@@ -448,7 +521,7 @@ document.addEventListener('keydown', (e) => {
     case 'H':
       e.preventDefault();
       ensureAudio();
-      DOM.feedArea.scrollTo({ top: 0, behavior: S.reduced ? 'auto' : 'smooth' });
+      window.scrollTo({ top: 0, behavior: S.reduced ? 'auto' : 'smooth' });
       break;
     case 'B':
       e.preventDefault();
@@ -475,6 +548,24 @@ document.addEventListener('keydown', (e) => {
       if (!S.audioCtx) break;
       triggerPriorityFlash();
       break;
+    case 'J': {
+      e.preventDefault();
+      ensureAudio();
+      const nextIdx = Math.min(S.focusIdx + 1, S.dispatchIds.length - 1);
+      S.focusIdx = nextIdx;
+      const nextEl = S.dispatchEls[S.dispatchIds[nextIdx]];
+      if (nextEl) nextEl.scrollIntoView({ behavior: S.reduced ? 'auto' : 'smooth', block: 'start' });
+      break;
+    }
+    case 'K': {
+      e.preventDefault();
+      ensureAudio();
+      const prevIdx = Math.max(S.focusIdx <= 0 ? 0 : S.focusIdx - 1, 0);
+      S.focusIdx = prevIdx;
+      const prevEl = S.dispatchEls[S.dispatchIds[prevIdx]];
+      if (prevEl) prevEl.scrollIntoView({ behavior: S.reduced ? 'auto' : 'smooth', block: 'start' });
+      break;
+    }
   }
 });
 
@@ -490,7 +581,25 @@ function init() {
     .forEach(renderBulletin);
 
   /* Scroll feed to bottom so most-recent dispatch is visible */
-  DOM.feedArea.scrollTop = DOM.feedArea.scrollHeight;
+  window.scrollTo(0, document.body.scrollHeight);
+
+  /* Populate ticker band — duplicate set for seamless loop */
+  if (DOM.tickerContent) {
+    const frag = document.createDocumentFragment();
+    const allItems = [...TICKER_ITEMS, ...TICKER_ITEMS];
+    allItems.forEach(text => {
+      const item = document.createElement('span');
+      item.className = 'ticker-item';
+      item.textContent = text;
+      const sep = document.createElement('span');
+      sep.className = 'ticker-item-sep';
+      sep.setAttribute('aria-hidden', 'true');
+      sep.textContent = ' ·· ';
+      frag.appendChild(item);
+      frag.appendChild(sep);
+    });
+    DOM.tickerContent.appendChild(frag);
+  }
 
   /* Start audio context on first user interaction */
   const bootAudio = () => { ensureAudio(); };

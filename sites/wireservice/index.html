@@ -22,8 +22,8 @@
       NWS
     </a>
 
-    <div class="masthead-center" aria-hidden="true">
-      <span class="masthead-title">NORLUND WIRE SERVICE</span>
+    <div class="masthead-center">
+      <h1 class="masthead-title">NORLUND WIRE SERVICE</h1>
       <span class="masthead-sub">ESTABLISHED 1946 &middot; METROPOLITAN REGION DESK &middot; OPEN LINE</span>
     </div>
 
@@ -36,6 +36,16 @@
     </div>
 
   </header>
+
+  <!-- ── Ticker band ───────────────────────────────────── -->
+  <div class="ticker-band" aria-hidden="true">
+    <span class="ticker-label">NWS&thinsp;LIVE</span>
+    <div class="ticker-track">
+      <div class="ticker-content" id="ticker-content">
+        <!-- populated by main.js -->
+      </div>
+    </div>
+  </div>
 
   <!-- ── Page body ────────────────────────────────────── -->
   <div class="page-body">
@@ -82,6 +92,14 @@
           <span class="sk-key" aria-hidden="true">F</span>
           <span class="sk-desc">FLASH ALERT</span>
         </div>
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">J</span>
+          <span class="sk-desc">NEXT DISPATCH</span>
+        </div>
+        <div class="shortcut">
+          <span class="sk-key" aria-hidden="true">K</span>
+          <span class="sk-desc">PREV DISPATCH</span>
+        </div>
 
       </div>
 
@@ -97,6 +115,9 @@
 
   <!-- Priority screen overlay (decorative) -->
   <div id="priority-overlay" aria-hidden="true"></div>
+
+  <!-- CRT static noise canvas (decorative) -->
+  <canvas id="noise-canvas" aria-hidden="true"></canvas>
 
   <script src="main.js"></script>
 

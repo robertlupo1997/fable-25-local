@@ -292,9 +292,10 @@ function renderSky(altitude_m, scrollY, time) {
     }
   });
 
-  // ── Atmospheric limb arc (above 25km) ─────────────────
-  if (altitude_m > 25000) {
-    const limbA = Math.min(1, (altitude_m - 25000) / 8000);
+  // ── Atmospheric limb arc (above 20km) ─────────────────
+  // Threshold lowered to 20km with 12km ramp for a gradual entry (no pop).
+  if (altitude_m > 20000) {
+    const limbA = Math.min(1, (altitude_m - 20000) / 12000);
     drawAtmosphericLimb(altitude_m, earthH, limbA);
   }
 }
@@ -440,6 +441,7 @@ const hudAlt   = document.getElementById('hud-alt');
 const hudTemp  = document.getElementById('hud-temp');
 const hudPres  = document.getElementById('hud-pres');
 const hudRho   = document.getElementById('hud-rho');
+const hudMet   = document.getElementById('hud-met');
 const hudPhase = document.getElementById('hud-phase');
 
 function updateHUD(altitude_m, scrollY) {
@@ -450,6 +452,7 @@ function updateHUD(altitude_m, scrollY) {
   hudTemp.textContent = (isa.T_C >= 0 ? '+' : '') + isa.T_C.toFixed(1);
   hudPres.textContent = isa.P_hPa.toFixed(1);
   hudRho.textContent  = isa.rho.toFixed(4);
+  if (hudMet) hudMet.textContent = formatMET(Math.round(scrollToMET(scrollY)));
 
   // Phase label
   let phase = 'GROUND';
@@ -465,7 +468,8 @@ function updateHUD(altitude_m, scrollY) {
 }
 
 // ── Altitude Scale ────────────────────────────────────────
-const altScaleCursor = document.querySelector('.alt-scale-cursor');
+const altScaleCursor  = document.querySelector('.alt-scale-cursor');
+const balloonMarker   = document.querySelector('.balloon-marker');
 const SCALE_MAX = 39000;
 
 function updateAltScale(altitude_m) {
@@ -474,14 +478,17 @@ function updateAltScale(altitude_m) {
   const displayAlt = Math.min(altitude_m, SCALE_MAX);
   const frac = Math.max(0, Math.min(1, displayAlt / SCALE_MAX));
   // Scale: top=0% is 39 km, top=100% is 0 km → invert
-  altScaleCursor.style.top = ((1 - frac) * 100) + '%';
+  const posTop = ((1 - frac) * 100) + '%';
+  altScaleCursor.style.top = posTop;
+  if (balloonMarker) balloonMarker.style.top = posTop;
 }
 
 // ── Narrative Section Manager ─────────────────────────────
 const SECTIONS = [];
 
 function registerSections() {
-  const els = document.querySelectorAll('.mission-section');
+  // Also manage .hero — fades as user scrolls into content.
+  const els = document.querySelectorAll('.mission-section, .hero');
   els.forEach(el => {
     const scrollIn  = parseFloat(el.dataset.scrollIn  || 0);
     const scrollOut = parseFloat(el.dataset.scrollOut || 99999);
@@ -519,8 +526,7 @@ let burstTriggered = false;
 
 function checkBurst(scrollY) {
   if (!burstFlash) return;
-  const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if (mediaQuery.matches) return;
+  if (reducedMotionMQ.matches) return;
 
   const burstScroll = SCROLL_MAP[9][0]; // hold-at-apogee ends, descent starts
   if (scrollY > burstScroll - 100 && scrollY < burstScroll + 600) {
@@ -535,11 +541,46 @@ function checkBurst(scrollY) {
   }
 }
 
+// ── Mission Elapsed Time ──────────────────────────────────
+// Maps scrollY → mission time in seconds (piecewise linear).
+// Ascent to 39 km (76 min) + hold + descent (48 min) = 2h 07m.
+const MET_MAP = [
+  [0,      0],
+  [9600,   79 * 60],   // apogee T+01:19
+  [10200,  80 * 60],   // hold
+  [11000,  87 * 60],
+  [12000,  106 * 60],
+  [12800,  120 * 60],
+  [13200,  127 * 60],  // landing T+02:07
+];
+
+function scrollToMET(scrollY) {
+  if (scrollY <= MET_MAP[0][0]) return MET_MAP[0][1];
+  if (scrollY >= MET_MAP[MET_MAP.length - 1][0]) return MET_MAP[MET_MAP.length - 1][1];
+  for (let i = 0; i < MET_MAP.length - 1; i++) {
+    if (scrollY >= MET_MAP[i][0] && scrollY < MET_MAP[i + 1][0]) {
+      const t = (scrollY - MET_MAP[i][0]) / (MET_MAP[i + 1][0] - MET_MAP[i][0]);
+      return MET_MAP[i][1] + (MET_MAP[i + 1][1] - MET_MAP[i][1]) * t;
+    }
+  }
+  return 0;
+}
+
+function formatMET(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = Math.floor(s % 60);
+  return `T+${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+}
+
 // ── RAF loop ──────────────────────────────────────────────
 let lastScrollY = -1;
 let animTime = 0;
 let lastTs = 0;
 let rafId = null;
+
+// Cache the reduced-motion media query — re-check on each frame is fine; it's a live object.
+const reducedMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function animate(ts) {
   if (document.hidden) {
@@ -549,7 +590,9 @@ function animate(ts) {
 
   const dt = Math.min(50, ts - (lastTs || ts));
   lastTs = ts;
-  animTime += dt;
+  // Under prefers-reduced-motion: freeze animTime so stars/clouds don't animate.
+  // The sky still responds to scroll (altitude changes) — dignified static composition.
+  if (!reducedMotionMQ.matches) animTime += dt;
 
   const scrollY = window.scrollY;
   const altitude_m = scrollToAltitude(scrollY);

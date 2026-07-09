@@ -393,6 +393,64 @@ function buildOrbitLine(sat) {
   scene.add(orbitLine);
 }
 
+/* ── Ground footprint circle ─────────────────────────────────
+   Sensor footprint on Earth's surface for the selected satellite.
+   Coverage half-angle ρ (from nadir) where elevation = 0°:
+     sin(ρ) = R_E / r  → ρ = arcsin(R_E_scene / pos.length())
+   The circle is recomputed every frame so it tracks the satellite
+   as it moves through the rotating ECI frame.
+   ─────────────────────────────────────────────────────────── */
+const FOOTPRINT_STEPS = 80;
+const fpPositions = new Float32Array((FOOTPRINT_STEPS + 1) * 3);
+const fpGeo = new THREE.BufferGeometry();
+const fpAttr = new THREE.BufferAttribute(fpPositions, 3);
+fpAttr.setUsage(THREE.DynamicDrawUsage);
+fpGeo.setAttribute('position', fpAttr);
+const fpMat = new THREE.LineBasicMaterial({
+  color: 0xf2b632, transparent: true, opacity: 0,
+  blending: THREE.AdditiveBlending, depthWrite: false,
+});
+const footprintLoop = new THREE.Line(fpGeo, fpMat);
+scene.add(footprintLoop);
+
+function updateFootprint(satIdx) {
+  if (satIdx < 0) { fpMat.opacity = 0; return; }
+  const pos = satPos[satIdx];
+  const r   = pos.length();            // satellite radius in scene units
+  if (r <= 1.0) { fpMat.opacity = 0; return; }
+
+  // Earth central angle from nadir to horizon (elevation = 0):
+  // In right triangle O-H-S: cos(ρ) = R_E / r, so ρ = arccos(R_E / r)
+  const rho  = Math.acos(Math.min(1, 1.0 / r)); // radians
+  const cosR = Math.cos(rho);
+  const sinR = Math.sin(rho);
+
+  // Nadir direction (toward satellite, normalized)
+  const nadir = pos.clone().normalize();
+
+  // Two orthogonal tangent vectors in the footprint plane
+  const up = Math.abs(nadir.y) < 0.9
+    ? new THREE.Vector3(0, 1, 0)
+    : new THREE.Vector3(1, 0, 0);
+  const t1 = new THREE.Vector3().crossVectors(nadir, up).normalize();
+  const t2 = new THREE.Vector3().crossVectors(nadir, t1).normalize();
+
+  for (let k = 0; k <= FOOTPRINT_STEPS; k++) {
+    const a = (k / FOOTPRINT_STEPS) * 2 * Math.PI;
+    const ca = Math.cos(a), sa = Math.sin(a);
+    // Point on unit sphere at angular distance rho from nadir
+    const px = nadir.x * cosR + t1.x * sinR * ca + t2.x * sinR * sa;
+    const py = nadir.y * cosR + t1.y * sinR * ca + t2.y * sinR * sa;
+    const pz = nadir.z * cosR + t1.z * sinR * ca + t2.z * sinR * sa;
+    // Project slightly above Earth surface (radius 1.003 in scene units)
+    fpPositions[k * 3]     = px * 1.003;
+    fpPositions[k * 3 + 1] = py * 1.003;
+    fpPositions[k * 3 + 2] = pz * 1.003;
+  }
+  fpAttr.needsUpdate = true;
+  fpMat.opacity = 0.28;
+}
+
 /* ── Ground track (built at selection, updated in animate) ──── */
 let groundTrack = null;
 
@@ -531,6 +589,11 @@ function updatePanel(sat) {
   const n    = Math.sqrt(GM / (sat.a * sat.a * sat.a));
   const T_min = (2 * Math.PI / n) / 60;
 
+  // Footprint radius: Earth central angle ρ = arcsin(R_E / r)
+  // Footprint radius in km = R_E × ρ
+  const rho_rad = Math.asin(Math.min(1, R_E / r_km));
+  const footprint_km = Math.round(R_E * rho_rad);
+
   document.getElementById('sat-name').textContent    = sat.name;
   document.getElementById('sat-sensor').textContent  = sat.sensor;
   document.getElementById('sat-alt').textContent     = alt.toFixed(1) + ' km';
@@ -539,6 +602,8 @@ function updatePanel(sat) {
   document.getElementById('sat-operator').textContent = sat.operator;
   document.getElementById('sat-launch').textContent  = String(sat.launch);
   document.getElementById('sat-period').textContent  = T_min.toFixed(1) + ' min';
+  const fpEl = document.getElementById('sat-footprint');
+  if (fpEl) fpEl.textContent = '~' + footprint_km + ' km r';
 }
 
 /* ── Pointer / click selection ──────────────────────────────── */
@@ -568,6 +633,22 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape' && selIdx >= 0) selectSat(-1);
 });
 
+/* ── Eclipse / sunlight test (cylindrical shadow model) ─────── */
+// Returns true if satellite position (Three.js coords) is in sunlight.
+// Uses a cylindrical umbra: satellite is in shadow if it's on the anti-sun
+// side AND its perpendicular distance from the sun-axis is within Earth radius.
+function isInSunlight(pos) {
+  const s = pos.dot(sunDir); // projection onto sun direction (scene units)
+  if (s > 0) return true;    // satellite is on sun-facing hemisphere → sunlit
+  // Distance from the sun axis (line through origin in sunDir direction)
+  // perp = pos - s * sunDir
+  const perpDistSq = pos.lengthSq() - s * s;
+  return perpDistSq > 1.0;   // > Earth radius squared (1.0 in scene units)
+}
+
+const sunlightEl = document.getElementById('sunlight-count');
+const eclipseDots = [];  // parallel array to SATS
+
 /* ── Accessible satellite list ──────────────────────────────── */
 const listEl = document.getElementById('sat-nav-list');
 SATS.forEach((sat, i) => {
@@ -576,14 +657,23 @@ SATS.forEach((sat, i) => {
   li.setAttribute('role', 'option');
   li.setAttribute('aria-selected', 'false');
   li.setAttribute('tabindex', '0');
+
+  const eclipseDot = document.createElement('span');
+  eclipseDot.className = 'sat-eclipse-dot';
+  eclipseDot.title = 'Sunlight status';
+
   const idSpan = document.createElement('span');
   idSpan.className = 'sat-id';
   idSpan.textContent = sat.name;
   const sensorSpan = document.createElement('span');
   sensorSpan.className = 'sat-sensor-tag';
   sensorSpan.textContent = sat.sensor;
+
+  li.appendChild(eclipseDot);
   li.appendChild(idSpan);
   li.appendChild(sensorSpan);
+  eclipseDots.push(eclipseDot);
+
   li.addEventListener('click', () => selectSat(i));
   li.addEventListener('keydown', ev => {
     if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); selectSat(i); }
@@ -677,7 +767,8 @@ function animate() {
   // Earth rotation (Y axis = ECI Z = north pole)
   earth.rotation.y = W_E * elapsed;
 
-  // Propagate satellites
+  // Propagate satellites + eclipse check
+  let nSunlit = 0;
   for (let i = 0; i < SATS.length; i++) {
     keplerPos(SATS[i], elapsed, satPos[i]);
 
@@ -685,8 +776,22 @@ function animate() {
     dummy.scale.setScalar(i === selIdx ? 2.2 : 1.0);
     dummy.updateMatrix();
     instMesh.setMatrixAt(i, dummy.matrix);
+
+    // Eclipse / sunlight status (cylindrical shadow model)
+    const sunlit = isInSunlight(satPos[i]);
+    if (sunlit) nSunlit++;
+    if (eclipseDots[i]) eclipseDots[i].classList.toggle('eclipse', !sunlit);
   }
   instMesh.instanceMatrix.needsUpdate = true;
+
+  // Sunlight count display (throttle DOM write to once per second)
+  if (sunlightEl && Math.floor(elapsed) % 2 === 0) {
+    sunlightEl.textContent = nSunlit + '/12 ☀';
+    sunlightEl.title = nSunlit + ' of 12 satellites in sunlight';
+  }
+
+  // Footprint update (every frame for selected satellite)
+  updateFootprint(selIdx);
 
   // Camera follow selected satellite
   if (followMode && selIdx >= 0 && !reduced) {
@@ -716,14 +821,23 @@ function animate() {
 
 /* ── Static frame for reduced motion ────────────────────────── */
 function staticRender() {
+  let nSunlit = 0;
   for (let i = 0; i < SATS.length; i++) {
     keplerPos(SATS[i], 0, satPos[i]);
     dummy.position.copy(satPos[i]);
     dummy.scale.setScalar(1.0);
     dummy.updateMatrix();
     instMesh.setMatrixAt(i, dummy.matrix);
+    const sunlit = isInSunlight(satPos[i]);
+    if (sunlit) nSunlit++;
+    if (eclipseDots[i]) eclipseDots[i].classList.toggle('eclipse', !sunlit);
   }
   instMesh.instanceMatrix.needsUpdate = true;
+  if (sunlightEl) {
+    sunlightEl.textContent = nSunlit + '/12 ☀';
+    sunlightEl.title = nSunlit + ' of 12 satellites in sunlight';
+  }
+  updateFootprint(-1); // no selection in static mode initially
   controls.update();
   renderer.render(scene, camera);
   updateEpoch(0);

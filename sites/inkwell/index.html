@@ -14,7 +14,7 @@
   --washi:#f7f3e8;
   --sumi:#1a1a18;
   --red:#b3271e;
-  --warm:#7a766c;
+  --warm:#5e5b52;
   --border:rgba(26,26,24,0.13);
   --fd:'Shippori Mincho','Hiragino Mincho Pro',serif;
   --fb:'Zen Kaku Gothic New','Noto Sans JP',system-ui,sans-serif;
@@ -48,7 +48,7 @@ h1.studio-name{
 }
 .tagline .k{
   margin-right:.7em;
-  color:rgba(26,26,24,.5)
+  color:rgba(26,26,24,.72)
 }
 
 /* ── CANVAS AREA ── */
@@ -259,8 +259,37 @@ footer{
 .credit{
   font-size:.6875rem;font-weight:300;
   letter-spacing:.12em;text-transform:uppercase;
-  color:rgba(26,26,24,.3)
+  color:rgba(26,26,24,.72)
 }
+
+/* ── CHARACTER SELECTOR ── */
+.char-select{
+  display:flex;align-items:center;justify-content:center;
+  gap:.25rem;padding:.5rem .9rem .6rem;
+  border-top:1px solid var(--border)
+}
+.char-btn{
+  background:none;border:none;cursor:pointer;
+  font-family:var(--fd);
+  font-size:1.3rem;line-height:1;
+  color:rgba(26,26,24,.28);
+  padding:.35rem .5rem .25rem;
+  border-radius:2px;
+  position:relative;
+  transition:color .15s,background .15s
+}
+.char-btn::after{
+  content:'';
+  position:absolute;
+  bottom:2px;left:50%;transform:translateX(-50%);
+  width:0;height:1.5px;
+  background:var(--sumi);
+  transition:width .2s cubic-bezier(.4,0,.2,1)
+}
+.char-btn[aria-pressed="true"]{color:var(--sumi)}
+.char-btn[aria-pressed="true"]::after{width:60%}
+.char-btn:hover{color:var(--sumi);background:rgba(26,26,24,.04)}
+.char-btn:focus-visible{outline:2px solid var(--sumi);outline-offset:2px}
 
 /* ── RESPONSIVE ── */
 @media(max-width:600px){
@@ -270,7 +299,9 @@ footer{
   .p-char{font-size:1.75rem}
   .section-practice,.section-about{margin-top:3.5rem}
   .toolbar-actions .btn-t span.label{display:none}
+  .toolbar-actions .btn-t span.icon{display:inline}
 }
+.toolbar-actions .btn-t span.icon{display:none}
 
 /* ── REDUCED MOTION ── */
 @media(prefers-reduced-motion:reduce){
@@ -316,15 +347,23 @@ footer{
       </div>
       <div class="toolbar-actions">
         <button class="btn-t" id="btn-guide" aria-pressed="true" title="Toggle guide character">
-          <span class="label">Guide</span><span class="sr-only"> character on</span>
+          <span class="label">Guide</span><span class="icon" aria-hidden="true" lang="ja">字</span><span class="sr-only"> character on</span>
         </button>
         <button class="btn-t stamp-btn" id="btn-stamp" aria-pressed="false" title="Place red seal stamp">
           <span aria-hidden="true" lang="ja">印</span><span class="sr-only">Place seal stamp</span>
         </button>
         <button class="btn-t" id="btn-clear" title="Clear canvas">
-          <span class="label">Clear</span><span class="sr-only"> canvas</span>
+          <span class="label">Clear</span><span class="icon" aria-hidden="true">✕</span><span class="sr-only"> canvas</span>
         </button>
       </div>
+    </div>
+
+    <div class="char-select" role="group" aria-label="Select guide character">
+      <button class="char-btn" data-char="永" lang="ja" aria-pressed="true"  title="永 (yǒng) — Forever — the eight principles">永</button>
+      <button class="char-btn" data-char="大" lang="ja" aria-pressed="false" title="大 (dà) — Great">大</button>
+      <button class="char-btn" data-char="山" lang="ja" aria-pressed="false" title="山 (shān) — Mountain">山</button>
+      <button class="char-btn" data-char="日" lang="ja" aria-pressed="false" title="日 (rì) — Sun">日</button>
+      <button class="char-btn" data-char="水" lang="ja" aria-pressed="false" title="水 (shuǐ) — Water">水</button>
     </div>
   </section>
 
@@ -398,6 +437,7 @@ footer{
 
 <footer>
   <p class="credit">Designed &amp; built by Claude Fable&nbsp;5 · local build · 2026</p>
+  <p class="credit" style="margin-top:.6rem"><a href="guide/" style="color:inherit;text-decoration:underline;text-underline-offset:.2em;opacity:.7">Build notes &amp; guide</a></p>
 </footer>
 
 <script>
@@ -526,6 +566,22 @@ class BrushEngine {
   }
 
   setPreset(name) { this.preset = name; }
+
+  /* Ink pool — faint elliptical bleed at a stroke terminal, simulating
+     sumi ink that gathers when the brush lifts from washi paper */
+  _pool(x, y) {
+    const ctx = this.ctx;
+    const r = this.presets.md.maxR;
+    const g = ctx.createRadialGradient(x, y + r*0.12, 0, x, y + r*0.12, r * 2.4);
+    g.addColorStop(0,    'rgba(26,26,24,0.055)');
+    g.addColorStop(0.42, 'rgba(26,26,24,0.022)');
+    g.addColorStop(1,    'rgba(26,26,24,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.ellipse(x, y + r*0.12, r * 2.4, r * 1.05, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   setMode(m) {
     this.mode = m;
     this.canvas.style.cursor = m === 'stamp' ? 'cell' : 'crosshair';
@@ -635,14 +691,14 @@ async function seedAnimation(engine, instant) {
       const dx=raw[i].x-raw[i-1].x, dy=raw[i].y-raw[i-1].y;
       arcLen += Math.sqrt(dx*dx+dy*dy);
     }
-    const steps = Math.max(4, Math.ceil(arcLen / 2.2));
+    const steps = Math.max(4, Math.ceil(arcLen / 2.2) || 4);
 
     if (instant) {
       /* Draw all at once */
       engine.smoothVel = s.vel * 0.85;
       for (let st=0; st<=steps; st++) {
         const tg = st/steps * (expanded.length-3);
-        const si = Math.min(Math.floor(tg), expanded.length-4);
+        const si = Math.max(0, Math.min(Math.floor(tg), expanded.length-4));
         const tt = tg - si;
         const p = catmullRom(expanded[si],expanded[si+1],expanded[si+2],expanded[si+3],tt);
         engine.paintSeed(p.x, p.y, s.vel * 0.85);
@@ -658,7 +714,7 @@ async function seedAnimation(engine, instant) {
           const targetIdx = Math.min(Math.floor(elapsed/dur * steps), steps);
           for (let i=lastIdx; i<=targetIdx; i++) {
             const tg = i/steps * (expanded.length-3);
-            const si = Math.min(Math.floor(tg), expanded.length-4);
+            const si = Math.max(0, Math.min(Math.floor(tg), expanded.length-4));
             const tt = tg - si;
             const p = catmullRom(expanded[si],expanded[si+1],expanded[si+2],expanded[si+3],tt);
             engine.paintSeed(p.x, p.y, s.vel * (0.7 + Math.random()*0.3));
@@ -685,7 +741,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const engine = new BrushEngine(canvas);
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  seedAnimation(engine, reduced);
+  /* One rAF delay ensures layout is complete so getBoundingClientRect returns real dims */
+  requestAnimationFrame(() => {
+    engine._resize();
+    seedAnimation(engine, reduced);
+  });
 
   /* Brush size buttons */
   document.querySelectorAll('.brush-btn').forEach(btn => {
@@ -725,7 +785,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hint) {
       hint.classList.remove('hidden');
       /* Re-seed after a moment */
-      setTimeout(() => seedAnimation(engine, reduced), 200);
+      requestAnimationFrame(() => {
+        engine._resize();
+        setTimeout(() => seedAnimation(engine, reduced), 200);
+      });
     }
   });
 
@@ -735,6 +798,17 @@ document.addEventListener('DOMContentLoaded', () => {
       engine.setMode('draw');
       btnStamp.setAttribute('aria-pressed','false');
     }
+  });
+
+  /* Character selector */
+  document.querySelectorAll('.char-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.char-btn').forEach(b => b.setAttribute('aria-pressed','false'));
+      btn.setAttribute('aria-pressed','true');
+      const ch = btn.dataset.char;
+      guideEl.textContent = ch;
+      if (guideOn) guideEl.classList.remove('hidden');
+    });
   });
 });
 </script>
