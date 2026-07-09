@@ -437,6 +437,8 @@ nav { margin-left: auto; }
 .ticker-track {
   flex: 1;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 82%, transparent 100%);
 }
 
 .ticker-msg {
@@ -679,7 +681,68 @@ main {
   color: rgba(230,236,245,0.5);
 }
 
-/* ── Ground track (added in pass 2) ─────────────────────────── */
+/* ── Scroll cue ──────────────────────────────────────────────── */
+.scroll-cue {
+  position: fixed;
+  bottom: 48px; /* above telemetry bar */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  pointer-events: none;
+  animation: scrollCueDrift 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  transition: opacity 0.5s ease;
+}
+
+.scroll-cue.hidden { opacity: 0; }
+
+.scroll-cue-text {
+  font-family: var(--font-display);
+  font-size: 0.45rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(230, 236, 245, 0.45);
+}
+
+.scroll-cue-chevron {
+  width: 16px;
+  height: 10px;
+  position: relative;
+}
+
+.scroll-cue-chevron::before,
+.scroll-cue-chevron::after {
+  content: '';
+  position: absolute;
+  height: 1px;
+  width: 9px;
+  background: rgba(67, 217, 199, 0.55);
+}
+
+.scroll-cue-chevron::before {
+  left: 0;
+  top: 50%;
+  transform: rotate(35deg);
+  transform-origin: left center;
+}
+
+.scroll-cue-chevron::after {
+  right: 0;
+  top: 50%;
+  transform: rotate(-35deg);
+  transform-origin: right center;
+}
+
+@keyframes scrollCueDrift {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) translateY(0); }
+  50%       { opacity: 0.35; transform: translateX(-50%) translateY(5px); }
+}
+
+/* Ground track (added in pass 2) */
 /* No CSS needed — rendered in Three.js */
 
 /* ── Reduced motion ──────────────────────────────────────────── */

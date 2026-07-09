@@ -850,3 +850,15 @@ if (reduced) {
 } else {
   animate();
 }
+
+/* ── Scroll cue — hide once user scrolls past hero ───────────── */
+const scrollCueEl = document.getElementById('scroll-cue');
+if (scrollCueEl) {
+  const hideScrollCue = () => {
+    if (window.scrollY > 80) {
+      scrollCueEl.classList.add('hidden');
+      window.removeEventListener('scroll', hideScrollCue, { passive: true });
+    }
+  };
+  window.addEventListener('scroll', hideScrollCue, { passive: true });
+}

@@ -96,6 +96,16 @@ code{font-size:.78rem;color:var(--leaf);background:rgba(127,191,122,.1);padding:
 /* ── FOOTER ── */
 .site-footer{border-top:1px solid rgba(181,154,90,.12);padding:2rem 3rem;text-align:center;font-size:.7rem;color:var(--text-d);letter-spacing:.08em}
 
+/* ── SHARE MODAL ── */
+.share-modal{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(8,14,10,.82);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s cubic-bezier(.22,.68,0,1.2)}
+.share-modal.open{opacity:1;pointer-events:all}
+.share-card-wrap{position:relative;background:var(--dusk);border:1px solid rgba(181,154,90,.3);padding:1.5rem;max-width:360px;width:90%;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.share-card-wrap canvas{display:block;width:100%;height:auto;border:1px solid rgba(181,154,90,.15)}
+.share-actions{display:flex;gap:.65rem;margin-top:1rem}
+.share-btn-close{position:absolute;top:.7rem;right:.7rem;background:none;border:none;cursor:pointer;color:var(--brass);font-size:1rem;line-height:1;padding:.25rem .4rem;border-radius:2px}
+.share-btn-close:hover,.share-btn-close:focus-visible{background:rgba(181,154,90,.15);outline:2px solid var(--brass);outline-offset:2px}
+.share-copy-note{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);margin-top:.65rem;min-height:.9rem;text-align:center;transition:opacity .3s}
+
 /* ── REDUCED MOTION ── */
 @media(prefers-reduced-motion:reduce){
   .scroll-hint,.grow-dot{animation:none!important}
@@ -142,6 +152,15 @@ code{font-size:.78rem;color:var(--leaf);background:rgba(127,191,122,.1);padding:
         <circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="1.1"/>
       </svg>
       <span class="btn-label">New Garden</span>
+    </button>
+    <button class="btn" id="share-btn" aria-label="Share this garden" style="opacity:.45;transition:opacity .4s" disabled>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <circle cx="10" cy="2" r="1.5" stroke="currentColor" stroke-width="1.1"/>
+        <circle cx="2" cy="6" r="1.5" stroke="currentColor" stroke-width="1.1"/>
+        <circle cx="10" cy="10" r="1.5" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M3.4 5.25L8.6 2.75M3.4 6.75L8.6 9.25" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+      </svg>
+      <span class="btn-label">Share</span>
     </button>
   </nav>
 </header>
@@ -200,6 +219,19 @@ code{font-size:.78rem;color:var(--leaf);background:rgba(127,191,122,.1);padding:
 <footer class="site-footer" role="contentinfo">
   Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026
 </footer>
+
+<!-- Seed-packet share card modal -->
+<div class="share-modal" id="share-modal" role="dialog" aria-modal="true" aria-label="Share this garden">
+  <div class="share-card-wrap">
+    <button class="share-btn-close" id="share-close" aria-label="Close">&times;</button>
+    <canvas id="seed-packet" width="640" height="880" aria-hidden="true"></canvas>
+    <div class="share-actions">
+      <button class="btn" id="copy-url-btn" style="flex:1;justify-content:center">Copy Garden URL</button>
+      <button class="btn" id="download-packet-btn" style="flex:1;justify-content:center">Download Card</button>
+    </div>
+    <p class="share-copy-note" id="share-copy-note" aria-live="polite"></p>
+  </div>
+</div>
 
 <script>
 'use strict';
@@ -484,7 +516,7 @@ function buildGlassOverlay(W, H) {
 
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <g stroke="#b59a5a" stroke-width="1" fill="none" opacity="0.13">${lines}</g>
-    <g fill="#b59a5a" opacity="0.18">${lines.match(/<circle[^>]+>/g)||''}</g>
+    <g fill="#b59a5a" opacity="0.18">${(lines.match(/<circle[^>]+>/g)||[]).join('')}</g>
   </svg>`;
 }
 
@@ -510,7 +542,7 @@ function buildLog(plants, seed) {
     el.className='spec-entry';
     el.setAttribute('role','listitem');
     el.innerHTML=`
-      <div class="spec-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="spec-num" aria-hidden="true">${String(i+1).padStart(2,'0')}</div>
       <div class="spec-body">
         <em class="spec-sci">${sci}</em>
         <span class="spec-common"><span class="spec-swatch" style="background:${swatch}" aria-hidden="true"></span>${sp.name}</span>
@@ -589,6 +621,10 @@ function grow(seed){
   const gl=document.getElementById('grow-label');
   gs.classList.remove('done');
   gl.textContent='Growing…';
+  // Reset share button until growth completes
+  const sb=document.getElementById('share-btn');
+  sb.disabled=true; sb.style.opacity='.45';
+  shareCardPlants=null;
 
   sizeCanvas();
   drawBackground(ctx,W,H);
@@ -668,6 +704,11 @@ function showPlantLabels(plants, xs) {
     container.appendChild(el);
     setTimeout(()=>el.classList.add('show'), 300+i*200);
   });
+  // Enable share button once garden is complete
+  shareCardPlants=plants; shareCardXs=xs;
+  const sb=document.getElementById('share-btn');
+  sb.disabled=false;
+  sb.style.opacity='1';
   if(!REDUCED) startParticles(plants, xs);
 }
 
@@ -739,6 +780,178 @@ function startParticles(plants, xs) {
 }
 
 // ════════════════════════════════════════════
+// SEED-PACKET SHARE CARD
+// ════════════════════════════════════════════
+let shareCardPlants=null, shareCardXs=null;
+
+function renderSeedPacket(seedNum, plants) {
+  const pc = document.getElementById('seed-packet');
+  const CW=640, CH=880;
+  pc.width=CW; pc.height=CH;
+  const c=pc.getContext('2d');
+
+  // Background — deep glasshouse dusk
+  c.fillStyle='#0f1712';
+  c.fillRect(0,0,CW,CH);
+
+  // Outer brass frame
+  c.strokeStyle='rgba(181,154,90,.55)';
+  c.lineWidth=2;
+  c.strokeRect(18,18,CW-36,CH-36);
+
+  // Inner rule lines
+  c.strokeStyle='rgba(181,154,90,.18)';
+  c.lineWidth=1;
+  c.strokeRect(26,26,CW-52,CH-52);
+
+  // Corner rosettes (simple cross-hatch motif)
+  [[34,34],[CW-34,34],[34,CH-34],[CW-34,CH-34]].forEach(([cx,cy])=>{
+    c.beginPath();
+    c.arc(cx,cy,5,0,Math.PI*2);
+    c.fillStyle='rgba(181,154,90,.45)';
+    c.fill();
+    c.beginPath();
+    c.moveTo(cx-10,cy); c.lineTo(cx+10,cy);
+    c.moveTo(cx,cy-10); c.lineTo(cx,cy+10);
+    c.strokeStyle='rgba(181,154,90,.28)';
+    c.lineWidth=0.8;
+    c.stroke();
+  });
+
+  // Header label
+  c.fillStyle='rgba(181,154,90,.55)';
+  c.font='400 13px "Mulish",sans-serif';
+  c.letterSpacing='0.3em';
+  c.textAlign='center';
+  c.fillText('WINTERGARDEN CONSERVATORY', CW/2, 72);
+
+  // Seed number — large Gloock-style serif (fallback to Georgia)
+  c.fillStyle='#e8e0d0';
+  c.font='400 92px Georgia,serif';
+  c.letterSpacing='0';
+  c.textAlign='center';
+  c.fillText('#'+String(seedNum).padStart(5,'0'), CW/2, 200);
+
+  // Divider rule
+  c.beginPath();
+  c.moveTo(60,228); c.lineTo(CW-60,228);
+  c.strokeStyle='rgba(181,154,90,.3)';
+  c.lineWidth=1;
+  c.stroke();
+
+  // Sub-label
+  c.fillStyle='rgba(181,154,90,.6)';
+  c.font='300 11px "Mulish",sans-serif';
+  c.letterSpacing='0.22em';
+  c.textAlign='center';
+  c.fillText('GARDEN SEED · UNIQUE SPECIMEN', CW/2, 252);
+
+  // Mini botanical illustration: draw 3 simplified plants
+  const drawMiniPlant=(sx,sy,col,bloomCol)=>{
+    // Stem
+    c.beginPath();
+    c.moveTo(sx,sy);
+    c.quadraticCurveTo(sx-10,sy-50,sx+8,sy-90);
+    c.strokeStyle=col;
+    c.lineWidth=2.5;
+    c.lineCap='round';
+    c.stroke();
+    // Two side branches
+    [-1,1].forEach((side,bi)=>{
+      c.beginPath();
+      c.moveTo(sx+(side*3),sy-55+(bi*10));
+      c.quadraticCurveTo(sx+side*22,sy-65+(bi*5),sx+side*30,sy-82+(bi*8));
+      c.strokeStyle=col; c.lineWidth=1.5; c.stroke();
+      // Leaf
+      c.save(); c.translate(sx+side*30,sy-82+(bi*8)); c.rotate(side*0.5);
+      c.beginPath();
+      c.moveTo(0,0); c.bezierCurveTo(-4,-5,-4,-12,0,-14);
+      c.bezierCurveTo(4,-12,4,-5,0,0);
+      c.fillStyle=col; c.globalAlpha=0.7; c.fill(); c.restore(); c.globalAlpha=1;
+    });
+    // Bloom if applicable
+    if(bloomCol){
+      c.save(); c.translate(sx+8,sy-100);
+      for(let i=0;i<5;i++){
+        const a=(i/5)*Math.PI*2;
+        c.save(); c.rotate(a); c.translate(0,-7);
+        c.beginPath(); c.ellipse(0,0,4,7,0,0,Math.PI*2);
+        c.fillStyle=bloomCol; c.globalAlpha=0.8; c.fill();
+        c.restore();
+      }
+      c.beginPath(); c.arc(0,0,3.5,0,Math.PI*2);
+      c.fillStyle='#f5e04a'; c.globalAlpha=0.9; c.fill();
+      c.restore(); c.globalAlpha=1;
+    }
+  };
+
+  const illustY=430;
+  const pDefs=[
+    {x:CW/2-110,col:'#527a42',bloom:null},
+    {x:CW/2,     col:'#3d5020',bloom:'#e77fb3'},
+    {x:CW/2+110, col:'#4e7540',bloom:'#f0c8e0'},
+  ];
+  // Ground rule
+  c.beginPath();
+  c.moveTo(60,illustY+2); c.lineTo(CW-60,illustY+2);
+  c.strokeStyle='rgba(80,110,60,.3)'; c.lineWidth=1; c.stroke();
+  pDefs.forEach(d=>drawMiniPlant(d.x,illustY,d.col,d.bloom));
+
+  // Divider under illustration
+  c.beginPath();
+  c.moveTo(60,CH/2+40); c.lineTo(CW-60,CH/2+40);
+  c.strokeStyle='rgba(181,154,90,.2)'; c.lineWidth=1; c.stroke();
+
+  // Species list
+  const lp2=mulberry32(seedHash('log'+seedNum));
+  const labelX=70, startY=CH/2+80;
+  c.font='400 11px "Mulish",sans-serif'; c.letterSpacing='0.22em';
+  c.fillStyle='rgba(181,154,90,.55)'; c.textAlign='left';
+  c.fillText('SPECIMENS GROWING IN THIS GARDEN', labelX, startY);
+  if(plants && plants.length){
+    plants.forEach((pl,i)=>{
+      const sp=SPECIES[pl.spIdx];
+      const sci=specName(sp.sci, lp2);
+      const col=sp.bloomCol||sp.leafCol;
+      const yy=startY+36+i*48;
+      // swatch dot
+      c.beginPath();
+      c.arc(labelX+6,yy+1,5,0,Math.PI*2);
+      c.fillStyle=col; c.globalAlpha=0.7; c.fill(); c.globalAlpha=1;
+      // sci name
+      c.font='italic 400 17px Georgia,serif';
+      c.fillStyle='#bfcfb8'; c.letterSpacing='0';
+      c.fillText(sci, labelX+20, yy+5);
+      // common name
+      c.font='300 11px "Mulish",sans-serif'; c.letterSpacing='0.12em';
+      c.fillStyle='rgba(181,154,90,.5)';
+      c.fillText(sp.name.toUpperCase(), labelX+20, yy+22);
+    });
+  }
+
+  // URL footnote
+  const url=location.href.replace(location.hash,'')+'#'+seedNum;
+  c.font='300 10px "Mulish",sans-serif'; c.letterSpacing='0.12em';
+  c.fillStyle='rgba(127,191,122,.35)'; c.textAlign='center';
+  c.fillText(url, CW/2, CH-48);
+
+  c.font='300 10px "Mulish",sans-serif'; c.letterSpacing='0.18em';
+  c.fillStyle='rgba(181,154,90,.28)'; c.textAlign='center';
+  c.fillText('DESIGNED & BUILT BY CLAUDE FABLE 5 · LOCAL BUILD · 2026', CW/2, CH-28);
+}
+
+function openShareModal(plants){
+  renderSeedPacket(currentSeed, plants);
+  document.getElementById('share-modal').classList.add('open');
+  document.getElementById('share-copy-note').textContent='';
+  document.getElementById('share-close').focus();
+}
+
+function closeShareModal(){
+  document.getElementById('share-modal').classList.remove('open');
+}
+
+// ════════════════════════════════════════════
 // INIT & EVENTS
 // ════════════════════════════════════════════
 function init(){
@@ -761,6 +974,35 @@ function init(){
     if(lbl) lbl.textContent=audioOn?'Chimes on':'Chimes';
   });
 
+  document.getElementById('share-btn').addEventListener('click',()=>{
+    if(shareCardPlants) openShareModal(shareCardPlants);
+  });
+
+  document.getElementById('share-close').addEventListener('click', closeShareModal);
+  document.getElementById('share-modal').addEventListener('click',e=>{
+    if(e.target===e.currentTarget) closeShareModal();
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeShareModal(); });
+
+  document.getElementById('copy-url-btn').addEventListener('click',()=>{
+    const url=location.origin+location.pathname+'#'+currentSeed;
+    const note=document.getElementById('share-copy-note');
+    navigator.clipboard.writeText(url).then(()=>{
+      note.textContent='URL copied to clipboard';
+      setTimeout(()=>{ note.textContent=''; }, 2800);
+    }).catch(()=>{
+      note.textContent=url;
+    });
+  });
+
+  document.getElementById('download-packet-btn').addEventListener('click',()=>{
+    const pc=document.getElementById('seed-packet');
+    const a=document.createElement('a');
+    a.download='wintergarden-'+String(currentSeed).padStart(5,'0')+'.png';
+    a.href=pc.toDataURL('image/png');
+    a.click();
+  });
+
   window.addEventListener('resize',()=>{
     sizeCanvas();
     drawBackground(ctx,W,H);
@@ -768,6 +1010,14 @@ function init(){
     // Redraw all completed commands
     const done=Math.min(cmdIdx,allCmds.length);
     for(let i=0;i<done;i++) execCmd(ctx,allCmds[i]);
+    // Resize particle canvas if active
+    if(pCtx){
+      const pc=document.getElementById('particle-canvas');
+      pc.width=W*dpr; pc.height=H*dpr;
+      pc.style.width=W+'px'; pc.style.height=H+'px';
+      pCtx.setTransform(1,0,0,1,0,0);
+      pCtx.scale(dpr,dpr);
+    }
   });
 
   window.addEventListener('hashchange',()=>{

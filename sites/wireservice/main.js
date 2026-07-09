@@ -376,7 +376,10 @@ function typeDispatch(d, onDone) {
 
   function tick() {
     if (document.hidden) {
-      /* Pause while tab not visible; resume on visibilitychange */
+      /* Tab not visible — poll every 400 ms until visible again.
+         Using setTimeout (not visibilitychange) keeps the closure's
+         `i` counter intact without needing an external reference. */
+      S.typingTimer = setTimeout(tick, 400);
       return;
     }
 
@@ -416,15 +419,8 @@ function typeDispatch(d, onDone) {
   setTimeout(tick, 400);
 }
 
-/* Resume typing if tab becomes visible mid-dispatch */
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && S.isTyping && !S.typingTimer) {
-    /* The last tick cleared itself; restart from current cursor position.
-       This is handled automatically — the next tick was already scheduled;
-       we just need to let it fire.  Nothing to do here unless the tab
-       went hidden before the first tick ran, which is extremely rare. */
-  }
-});
+/* Typing resume is handled inside tick() via a 400 ms poll when
+   document.hidden is true — no separate visibilitychange listener needed. */
 
 /* ── Priority flash ────────────────────────────────────── */
 function triggerPriorityFlash() {

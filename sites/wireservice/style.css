@@ -90,7 +90,7 @@ body::after {
   letter-spacing: 0.1em;
   padding: 0.5rem 1rem;
   z-index: 9999;
-  transition: top 0.15s;
+  transition: top 0.15s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .skip-link:focus { top: 0.5rem; }
 
@@ -629,11 +629,11 @@ body.paper-mode .bul-priority {
 }
 
 body.paper-mode .bul-hed { color: #1a1a15; text-shadow: none; }
-body.paper-mode .bul-priority .bul-hed { color: #8c6400; text-shadow: none; }
-body.paper-mode .bul-badge { color: #8c6400; text-shadow: none; }
+body.paper-mode .bul-priority .bul-hed { color: #865e00; text-shadow: none; }
+body.paper-mode .bul-badge { color: #865e00; text-shadow: none; }
 
 body.paper-mode .cur { background: #1a1a15; box-shadow: none; }
-body.paper-mode .sk-key { color: #8c6400; border-color: rgba(140,100,0,0.30); }
+body.paper-mode .sk-key { color: #865e00; border-color: rgba(134,94,0,0.30); }
 
 body.paper-mode footer { border-top-color: rgba(0,0,0,0.10); }
 

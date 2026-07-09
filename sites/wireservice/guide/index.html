@@ -368,6 +368,24 @@ S.typingTimer = setTimeout(tick, delay);</code></pre>
           </div>
         </div>
 
+        <div class="pass-entry">
+          <span class="pass-label">PASS 4 — STAGE A: BUG FIX PASS</span>
+          <div class="pass-body">
+            <p>Stage A inherited a fully functional site with zero console errors on desktop and mobile. Critique found two correctness defects.</p>
+            <p><strong>Bug: typing permanently paused when browser tab was hidden.</strong> The <code>tick()</code> function returned early (without rescheduling) whenever <code>document.hidden</code> was true — a correct optimisation for the noise canvas rAF loop, but catastrophic for the typing chain, which runs on <code>setTimeout</code>. After returning, <code>tick</code> was never called again and the feed froze permanently. Fix: when hidden, reschedule the timer to 400 ms instead of the character delay (<code>S.typingTimer = setTimeout(tick, 400)</code>). Typing resumes the instant the tab becomes visible again. A stale <code>visibilitychange</code> listener comment (left over from an earlier approach) was removed.</p>
+            <p><strong>Minor: skip-link transition used the <code>ease</code> default</strong> — violating the build-standard motion rule requiring custom easing. Fixed to <code>cubic-bezier(0.22, 1, 0.36, 1)</code> (expo-out), consistent with every other transition in the file.</p>
+          </div>
+        </div>
+
+        <div class="pass-entry">
+          <span class="pass-label">PASS 5 — STAGE B: POLISH + GUIDE</span>
+          <div class="pass-body">
+            <p>Stage B took desktop (1024×640) and mobile (390×844) shots at scrollY 0. Both viewports returned <strong>zero console errors, zero page errors</strong>. docHeight: 2357 px desktop / 2884 px mobile, unchanged from Stage A.</p>
+            <p>Critique found no structural or typographic defects. The CRT stack (scan-lines, vignette, phosphor glow, hot-pixel noise), ticker band, sticky bulletin rail, and dispatch feed all render correctly at both widths. No complexity upgrade triggered — NOTES.md confirmed all three brief upgrade ideas (priority-flash bulletin, paper-feed mode, operator hotkeys) were implemented in earlier passes; the iteration-pass "add one upgrade" condition was not active.</p>
+            <p>Work completed: guide page (<code>sites/wireservice/guide/index.html</code>) reviewed, code excerpt verified against <code>main.js</code> (lines 374–414), pass history extended through Stage B, guide shot with zero errors. NOTES.md updated; site handed to Stage C for final hero shots.</p>
+          </div>
+        </div>
+
       </div><!-- /.pass-list -->
 
     </section>

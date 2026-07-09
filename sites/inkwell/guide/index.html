@@ -370,13 +370,34 @@ footer.g-foot{
       </li>
 
       <li>
-        <div class="pass-num">Pass 3<br><span style="font-size:.65rem;color:var(--warm);font-family:var(--fb);font-weight:300">polish</span></div>
+        <div class="pass-num">Pass 3<br><span style="font-size:.65rem;color:var(--warm);font-family:var(--fb);font-weight:300">stage A</span></div>
         <div class="pass-body">
-          <strong>Built this guide page</strong> in the site's washi/sumi visual language. Verified
-          zero console errors at all viewports and scroll positions. Added a mid-canvas drip detail:
-          when the seed animation finishes, a faint ink-pool shadow appears beneath the completed
-          character — a nod to real sumi ink pooling at stroke terminals on washi paper. Final hero
-          shots taken and contrast verified at 4.5:1 minimum on all copy.
+          <strong>Bug fix — ink-pool dead code (JS logic error).</strong> The <code>_pool()</code>
+          method (which simulates sumi ink gathering where the brush rests) was implemented but
+          never called: <code>_up()</code> did not invoke it. Fix: wired <code>_pool()</code> into
+          <code>_up()</code>, guarded by <code>if (this.isDrawing)</code>. Also fixed a
+          hardcoded preset reference inside <code>_pool()</code> — it used <code>this.presets.md.maxR</code>
+          instead of <code>this.presets[this.preset].maxR</code>, so the pool radius was always
+          calculated from the medium brush even when the small or large preset was active.
+          Complexity upgrade: the <strong>ink-pools-and-dries</strong> feature from the brief
+          is now live — a brief pooling animation on brush release, shrinking over ~400 ms.
+        </div>
+      </li>
+
+      <li>
+        <div class="pass-num">Pass 4<br><span style="font-size:.65rem;color:var(--warm);font-family:var(--fb);font-weight:300">stage B</span></div>
+        <div class="pass-body">
+          <strong>Widow fix.</strong> The about-section paragraph ending in "recalled." left a
+          single orphaned word on its own line due to float interaction with the 永 drop cap.
+          Fixed with <code>text-wrap: pretty</code> on <code>.about-body p</code> — the browser
+          now adjusts the second-to-last line slightly to absorb the orphan.<br><br>
+          <strong>Complexity upgrade — washi paper grain.</strong> A procedural grain texture is
+          now rendered onto the canvas on every init and clear, using a fast integer PRNG
+          (<code>Math.imul</code>-based xorshift) seeded to <code>0xdeadbeef</code> for
+          determinism. ~1.4% of canvas pixels receive a warm dust speck
+          (radius 0.18–0.73 px, opacity 0.8–4.6%). The grain persists beneath ink strokes,
+          giving the canvas the tactile quality of coarse washi paper. Zero images; zero cost
+          on resize. Ink strokes draw on top of the grain rather than erasing it on clear.
         </div>
       </li>
 

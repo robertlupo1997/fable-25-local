@@ -175,7 +175,7 @@ footer{border-top:1px solid rgba(181,154,90,.12);padding:2rem 3rem;text-align:ce
   <!-- PASS HISTORY -->
   <section>
     <h2>Critique Pass History</h2>
-    <p>Three passes, each with a vision read of rendered screenshots, a hostile-director critique, fixes applied, then one deliberate complexity upgrade.</p>
+    <p>Four passes total — three in the initial build wave, one in Stage A — each with a vision read of rendered screenshots, a hostile-director critique, fixes applied, then one deliberate complexity upgrade.</p>
 
     <div class="pass-grid">
 
@@ -213,6 +213,19 @@ footer{border-top:1px solid rgba(181,154,90,.12);padding:2rem 3rem;text-align:ce
           <li class="fix">Added a dedicated <code>&lt;canvas id="particle-canvas"&gt;</code> layer above the garden canvas. Particle loop uses <code>pCtx.clearRect(0,0,W,H)</code> each frame — pollen dots animate without corrupting the botanical drawing beneath.</li>
           <li class="fix">Particle spawn height raised to H*0.5–H*0.9 (previously bottomed out at H*0.7) so they drift through the full plant volume.</li>
           <li class="upgrade">UPGRADE: Ambient pollen/dust motes — 8–14 particles per plant in bloom/leaf colours (1–2.4 px radius, low alpha 0.12–0.4), sinusoidally drifting upward with mild horizontal wobble. They respawn at each plant base when they exit the top of the canvas, creating a continuous living presence after growth completes.</li>
+        </ul>
+      </div>
+
+
+      <div class="pass-entry">
+        <p class="pass-num">Stage A — Bug fixes + complexity upgrade</p>
+        <p class="pass-title">SVG circle serialisation crash, particle canvas sizing, seed-packet share card</p>
+        <ul>
+          <li><strong>Bug: SVG circle array interpolation.</strong> <code>buildGlassOverlay()</code> called <code>lines.match(/&lt;circle[^&gt;]+&gt;/g)||''</code> inside a template literal. When matches exist, the array serialises as comma-separated SVG strings — invalid SVG that the browser silently swallows, rendering no rivet dots. Fixed: <code>(match||[]).join('')</code>.</li>
+          <li><strong>Bug: particle canvas not resized.</strong> The window <code>resize</code> handler resized the main garden canvas (W, H, DPR) but left the particle overlay at its original pixel dimensions. On rotate or resize, particles appeared offset from the plants they orbit. Added identical DPR-aware resize logic for <code>particle-canvas</code> inline with the main canvas handler.</li>
+          <li class="fix">Both bugs resolved; zero console errors confirmed after fix.</li>
+          <div class="upgrade-tag">UPGRADE</div>
+          <li class="upgrade">Seed-packet share card: a canvas-rendered 640×880 collectible card — brass border with corner rivets, conservatory masthead in Gloock, the garden seed number large as a print run identifier, a mini three-plant botanical illustration drawn in JS (same species as the live garden), species list with colour swatches and generated binomial names, URL footnote, and credit line. Triggered from a "Share" button in the header nav (disabled while garden grows, enabled on completion). Modal overlay with Escape / click-outside dismissal; "Copy Garden URL" copies the <code>#seed</code> hash URL to clipboard; "Download Card" saves a PNG. Resets alongside "New Garden".</li>
         </ul>
       </div>
 

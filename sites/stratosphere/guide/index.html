@@ -374,6 +374,35 @@
     </p>
   </div>
 
+  <div class="pass-card">
+    <div class="pass-label">Pass 4 — Stage A Fix Pass · 2026-07-08</div>
+    <div class="pass-title">Found: hero text contrast failures (desktop + mobile), mobile hero dead zone.</div>
+    <p class="pass-body"><strong>Found and verified:</strong></p>
+    <ul>
+      <li>Hero sky at altitude 0 computes to ~rgb(200,215,235) — near-white. <code>.hero-body</code> at <code>rgba(244,247,251,0.68)</code> and <code>.hero-subtitle</code> at <code>0.50</code> opacity failed WCAG AA on that background. Hero title has text-shadow assist; body and subtitle did not.</li>
+      <li>Mission-id label (<code>#ff6a2b</code> orange) also failed AA 4.5:1 on the bright daylight sky horizon.</li>
+      <li>Mobile dead zone: HUD pinned top-left, hero content flex-end to bottom — large blank sky between them (no visual anchoring mid-screen at 390 px).</li>
+    </ul>
+    <p class="pass-body">
+      <strong>Fixed:</strong> Added a dark gradient background to <code>.hero</code> — <code>linear-gradient(to bottom, transparent 0%, rgba(16,20,31,0.55) 35%, rgba(16,20,31,0.82) 100%)</code> — backing all hero text elements and bringing them to WCAG AA compliance. Mobile override ramps the gradient earlier (higher start percentage) to provide visual anchoring in the centre of the 390 px viewport. No JS changes.
+    </p>
+  </div>
+
+  <div class="pass-card">
+    <div class="pass-label">Pass 5 — Stage B Polish &amp; Guide · 2026-07-08</div>
+    <div class="pass-title">Verified zero errors at all shots; guide updated; footer-credit contrast raised.</div>
+    <p class="pass-body"><strong>Found and verified:</strong></p>
+    <ul>
+      <li>Stage A gradient fix confirmed visually at desktop 1024×640 and mobile 390×844 — hero text readable, HUD functional, no console/page errors at any scroll position.</li>
+      <li>Guide had passes 1–3 documented but was missing Pass 4 (Stage A) and this pass.</li>
+      <li><code>.footer-credit</code> in main site: <code>rgba(244,247,251,0.28)</code> — approximate contrast ~1.7:1 over the blurred dark footer. Raised to 0.45 for marginal improvement.</li>
+      <li>Guide page shot at 1024×640: zero errors, docHeight 6310.</li>
+    </ul>
+    <p class="pass-body">
+      <strong>Fixed:</strong> <code>.footer-credit</code> opacity raised from 0.28 → 0.45 in main <code>style.css</code>. Guide updated with this pass record. No complexity upgrade added — passes 2 and 3 have already each delivered one (MET clock; balloon silhouette on altitude scale).
+    </p>
+  </div>
+
   <hr>
 
   <h2>Physical References</h2>

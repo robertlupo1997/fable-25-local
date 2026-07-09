@@ -247,6 +247,7 @@ h2.practice-h{
   font-size:.9375rem;font-weight:300;
   line-height:1.95;color:var(--sumi)
 }
+.about-body p{text-wrap:pretty}
 .about-body p+p{margin-top:1.2em}
 
 /* ── FOOTER ── */
@@ -483,6 +484,7 @@ class BrushEngine {
     this.canvas.width  = Math.floor(this.cssW * this.dpr);
     this.canvas.height = Math.floor(this.cssH * this.dpr);
     this.ctx.scale(this.dpr, this.dpr);
+    this._drawGrain();
     // Update guide char size
     const g = document.getElementById('guide-char');
     if (g) g.style.fontSize = (this.cssH * 0.70) + 'px';
@@ -532,7 +534,11 @@ class BrushEngine {
     this.prevX = p.x; this.prevY = p.y; this.prevT = now;
   }
 
-  _up() { this.isDrawing = false; this.smoothVel = 0; }
+  _up() {
+    if (this.isDrawing) this._pool(this.prevX, this.prevY);
+    this.isDrawing = false;
+    this.smoothVel = 0;
+  }
 
   _paint(x, y, velOverride) {
     const cfg = this.presets[this.preset];
@@ -571,7 +577,7 @@ class BrushEngine {
      sumi ink that gathers when the brush lifts from washi paper */
   _pool(x, y) {
     const ctx = this.ctx;
-    const r = this.presets.md.maxR;
+    const r = this.presets[this.preset].maxR;
     const g = ctx.createRadialGradient(x, y + r*0.12, 0, x, y + r*0.12, r * 2.4);
     g.addColorStop(0,    'rgba(26,26,24,0.055)');
     g.addColorStop(0.42, 'rgba(26,26,24,0.022)');
@@ -587,7 +593,28 @@ class BrushEngine {
     this.canvas.style.cursor = m === 'stamp' ? 'cell' : 'crosshair';
   }
 
-  clear() { this.ctx.clearRect(0, 0, this.cssW, this.cssH); }
+  /* Washi paper grain — seeded PRNG for deterministic warm fiber texture */
+  _drawGrain() {
+    const ctx = this.ctx;
+    const w = this.cssW, h = this.cssH;
+    let seed = 0xdeadbeef;
+    const rng = () => { seed = Math.imul(seed ^ seed >>> 15, seed | 1); seed ^= seed + Math.imul(seed ^ seed >>> 7, seed | 61); return ((seed ^ seed >>> 14) >>> 0) / 4294967296; };
+    const N = Math.floor(w * h * 0.014);
+    ctx.save();
+    for (let i = 0; i < N; i++) {
+      const x = rng() * w;
+      const y = rng() * h;
+      const a = rng() * 0.038 + 0.008;
+      const r = rng() * 0.55 + 0.18;
+      ctx.fillStyle = rng() > 0.45 ? `rgba(175,155,110,${a})` : `rgba(120,110,95,${a})`;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  clear() { this.ctx.clearRect(0, 0, this.cssW, this.cssH); this._drawGrain(); }
 
   /* Lacquered red seal stamp */
   stamp(x, y) {

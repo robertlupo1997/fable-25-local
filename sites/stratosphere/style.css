@@ -9,7 +9,7 @@
   --white:  #f4f7fb;
   --orange: #ff6a2b;
   --orange-dim: rgba(255, 106, 43, 0.35);
-  --hud-bg: rgba(10, 13, 22, 0.82);
+  --hud-bg: rgba(10, 13, 22, 0.96);
   --hud-border: rgba(255, 106, 43, 0.28);
   --data-green: #6ee4a0;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -96,7 +96,7 @@ body {
 }
 
 .hud-label {
-  color: rgba(244, 247, 251, 0.4);
+  color: rgba(244, 247, 251, 0.55);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   min-width: 42px;
@@ -113,7 +113,7 @@ body {
 }
 
 .hud-unit {
-  color: rgba(244, 247, 251, 0.35);
+  color: rgba(244, 247, 251, 0.55);
   font-size: 0.58rem;
   letter-spacing: 0.08em;
   min-width: 34px;
@@ -136,7 +136,7 @@ body {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--orange);
-  opacity: 0.8;
+  opacity: 0.9;
   min-height: 1em;
 }
 
@@ -170,7 +170,7 @@ body {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.52rem;
   letter-spacing: 0.06em;
-  color: rgba(244, 247, 251, 0.35);
+  color: rgba(244, 247, 251, 0.55);
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -311,6 +311,14 @@ body {
   position: relative;
   z-index: 10;
   max-width: 700px;
+  /* Dark gradient at bottom backs hero text for WCAG AA on the computed sky */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 45%,
+    rgba(10, 13, 22, 0.48) 72%,
+    rgba(10, 13, 22, 0.70) 100%
+  );
 }
 
 .hero-mission-id {
@@ -320,6 +328,12 @@ body {
   text-transform: uppercase;
   color: var(--orange);
   margin-bottom: 20px;
+  /* Dark backing ensures WCAG AA for orange on sky: same panel as mission sections */
+  display: inline-block;
+  background: rgba(10, 13, 22, 0.88);
+  padding: 3px 10px 3px 6px;
+  margin-left: -6px;
+  border-radius: 1px;
 }
 
 .hero-title {
@@ -414,7 +428,7 @@ footer {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.62rem;
   letter-spacing: 0.1em;
-  color: rgba(244, 247, 251, 0.28);
+  color: rgba(244, 247, 251, 0.55);
 }
 
 .footer-link {
@@ -442,7 +456,7 @@ footer {
   font-size: 0.68rem;
 }
 .apogee-reading-label {
-  color: rgba(244, 247, 251, 0.35);
+  color: rgba(244, 247, 251, 0.55);
   font-size: 0.55rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -482,7 +496,17 @@ footer {
   }
   .alt-scale-marker { font-size: 0.45rem; }
 
-  .hero { padding: 0 20px 48px; }
+  .hero {
+    padding: 0 20px 48px;
+    /* Mobile: text occupies more of the lower half — ramp gradient earlier */
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 26%,
+      rgba(10, 13, 22, 0.55) 58%,
+      rgba(10, 13, 22, 0.80) 100%
+    );
+  }
   .hero-title { font-size: clamp(2rem, 9vw, 3.2rem); }
   .hero-body { font-size: 0.85rem; }
 
