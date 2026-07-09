@@ -64,9 +64,11 @@ harness). Sites use CDN-hosted Three.js and Google Fonts; everything else is van
 |---|---|---|
 | 1 | aurorae · foundry · paperlight · signalhouse · magnetica · monolith · tremor | ✅ complete |
 | 2 | orbital · chromatarium · wintergarden · wireservice · inkwell · stratosphere | ✅ complete |
-| 3 | reliquary · glasswing · cartome · staccato · nocturne · slowlight | 🔨 building |
-| 4 | kitefield · pressroom · undertow · equinox · afterimage · tempo | ⏳ queued |
-| — | gallery index + project guide + final cold review | ⏳ queued |
+| 3 | reliquary · glasswing · cartome · staccato · nocturne · slowlight | ✅ complete |
+| 4 | kitefield · pressroom · undertow · equinox · afterimage · tempo | ✅ complete |
+| — | gallery index + project guide + final cold review | ✅ complete |
+
+**The collection is complete: 25 sites, 4 waves + finale, ~80 agents, zero templates.**
 
 ## Honesty note
 
