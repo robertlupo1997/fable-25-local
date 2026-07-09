@@ -1,0 +1,321 @@
+/* ─────────────────────────────────────────────
+   RELIQUARY — Museum of Impossible Objects
+   Palette: charcoal #17161a · ivory #efe9dd
+            brass #ad8f52 · violet #8a63d2
+   Type: Cardo (serif) + Questrial (sans)
+───────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --charcoal:  #17161a;
+  --ivory:     #efe9dd;
+  --brass:     #ad8f52;
+  --violet:    #8a63d2;
+  --dim:       #2d2b33;
+  --dimmer:    #1f1e24;
+  --rule:      #3a3740;
+  --text-muted: #8a8590;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--charcoal);
+  color: var(--ivory);
+  font-family: 'Cardo', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Skip link ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--brass);
+  color: var(--charcoal);
+  padding: 0.5rem 1rem;
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.875rem;
+  border-radius: 0 0 4px 4px;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 0; }
+
+/* ── Header ── */
+header {
+  text-align: center;
+  padding: 5rem 2rem 3.5rem;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+header::before {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 3rem;
+  background: var(--rule);
+  margin: 0 auto 2rem;
+}
+
+.museum-sub {
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-family: 'Cardo', Georgia, serif;
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ivory);
+  line-height: 1.05;
+  margin-bottom: 0.6rem;
+}
+
+.museum-tagline {
+  font-family: 'Cardo', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--brass);
+  margin-bottom: 1.2rem;
+}
+
+.museum-info {
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+/* ── Gallery ── */
+.gallery {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Artifact section ── */
+.artifact {
+  padding: 5rem 0;
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+}
+
+.artifact:last-child { border-bottom: none; }
+
+.artifact-numeral {
+  font-family: 'Cardo', Georgia, serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: rgba(173,143,82,0.38);
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+/* ── Canvas wrapper ── */
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  background: var(--dimmer);
+  margin-bottom: 2rem;
+  overflow: hidden;
+  /* Glass display case: rule border + top highlight + base shadow */
+  border: 1px solid var(--rule);
+  box-shadow: inset 0 1px 0 rgba(239,233,221,0.07), 0 8px 32px rgba(0,0,0,0.45);
+}
+
+.canvas-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, transparent 40%, rgba(23,22,26,0.35) 100%);
+  pointer-events: none;
+}
+
+.canvas-wrapper + .label {
+  margin-top: 0.25rem;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+}
+
+/* "Do not touch" sign */
+.canvas-wrapper .do-not-touch {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── Museum label ── */
+.label {
+  padding: 0 0.25rem;
+}
+
+.label-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+
+.label-title {
+  font-family: 'Cardo', Georgia, serif;
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ivory);
+}
+
+.label-ref {
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--brass);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.label-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 2rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (max-width: 580px) {
+  .label-meta { grid-template-columns: 1fr; }
+}
+
+.label-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.field-key {
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.field-val {
+  font-family: 'Cardo', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--ivory);
+  line-height: 1.4;
+}
+
+.label-body {
+  font-family: 'Cardo', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(239,233,221,0.8);
+  max-width: 62ch;
+}
+
+.label-body em {
+  color: var(--ivory);
+  font-style: italic;
+}
+
+/* ── Condition note ── */
+.condition-note {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-left: 2px solid var(--dim);
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.condition-note strong {
+  color: var(--brass);
+  font-weight: normal;
+}
+
+/* ── Loading state ── */
+.canvas-wrapper.loading::before {
+  content: 'Initialising display…';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* ── Footer ── */
+footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--rule);
+  font-family: 'Questrial', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+}
+
+footer::before {
+  content: '✦';
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--brass);
+  letter-spacing: 0;
+}
+
+.credit {
+  margin-top: 0.5rem;
+  /* opacity removed — any opacity < ~0.97 on charcoal background fails WCAG AA 4.5:1;
+     text-muted at full opacity = 5.01:1 ✓ */
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  canvas { filter: none; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  header { padding: 3.5rem 1.5rem 2.5rem; }
+  .gallery { padding: 0 1.25rem; }
+  .artifact { padding: 3.5rem 0; }
+  .label-header { flex-direction: column; gap: 0.25rem; }
+}

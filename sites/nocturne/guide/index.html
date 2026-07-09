@@ -1,0 +1,524 @@
+<title>Nocturne — Build Guide</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Build guide for Nocturne: the brief, signature technique, and critique-pass history.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Faustina:ital,opsz,wght@0,8..144,300;0,8..144,400;0,8..144,600;1,8..144,300;1,8..144,400;1,8..144,600&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --night:   #131521;
+    --night-2: #1c1f31;
+    --night-3: #232740;
+    --page:    #e9e6db;
+    --page-2:  #d4d0c4;
+    --lamp:    #ffd47e;
+    --lamp-dim:#a8863e;
+    --dust:    #9aa4c7;
+    --ink:     #2b2840;
+    --rule:    rgba(233,230,219,0.12);
+    --rule-ink:rgba(43,40,64,0.18);
+    --code-bg: #0e1020;
+
+    --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--night);
+    color: var(--page);
+    font-family: 'Nunito Sans', system-ui, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Layout ─────────────────────────── */
+  .page-wrap {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* ── Header ─────────────────────────── */
+  .guide-header {
+    padding: 4.5rem 1.5rem 3rem;
+    border-bottom: 1px solid var(--rule);
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  .guide-eyebrow {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lamp);
+    opacity: 0.75;
+    margin-bottom: 1rem;
+  }
+
+  .guide-title {
+    font-family: 'Faustina', serif;
+    font-size: clamp(2.8rem, 7vw, 4.5rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--page);
+    line-height: 1.0;
+    margin-bottom: 1rem;
+    text-wrap: balance;
+  }
+
+  .guide-subtitle {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--page);
+    opacity: 0.38;
+  }
+
+  /* ── Sections ───────────────────────── */
+  .guide-section {
+    padding: 3.5rem 1.5rem;
+    max-width: 740px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--dust);
+    opacity: 0.65;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-heading {
+    font-family: 'Faustina', serif;
+    font-size: clamp(1.3rem, 3vw, 1.85rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--page);
+    margin-bottom: 1.2rem;
+    text-wrap: balance;
+    line-height: 1.2;
+  }
+
+  .body-text {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    line-height: 1.82;
+    color: var(--page);
+    opacity: 0.72;
+    margin-bottom: 1rem;
+  }
+
+  .body-text:last-child { margin-bottom: 0; }
+
+  /* ── Brief Quote ────────────────────── */
+  .brief-plate {
+    margin: 1.5rem 0;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--lamp);
+    padding: 1.4rem 1.6rem;
+    background: var(--night-2);
+  }
+
+  .brief-plate p {
+    font-family: 'Faustina', serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.8;
+    color: var(--page);
+    opacity: 0.82;
+  }
+
+  .brief-plate .brief-source {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lamp);
+    opacity: 0.55;
+    margin-top: 0.8rem;
+    font-style: normal;
+  }
+
+  /* ── Technique cards ────────────────── */
+  .technique-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--rule);
+    margin: 1.5rem 0;
+  }
+
+  .technique-item {
+    background: var(--night);
+    padding: 1.1rem 1.3rem;
+    display: grid;
+    grid-template-columns: 1.8rem 1fr;
+    gap: 0 0.8rem;
+    align-items: start;
+  }
+
+  .technique-num {
+    font-family: 'Faustina', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--lamp);
+    opacity: 0.6;
+    padding-top: 0.05rem;
+  }
+
+  .technique-text {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--page);
+    opacity: 0.68;
+  }
+
+  .technique-text strong {
+    font-weight: 600;
+    color: var(--page);
+    opacity: 1;
+  }
+
+  /* ── Code block ─────────────────────── */
+  .code-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dust);
+    opacity: 0.55;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid rgba(154,164,199,0.18);
+    overflow-x: auto;
+    padding: 1.3rem 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .code-block pre {
+    font-family: 'Courier New', 'Courier', monospace;
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: var(--page);
+    white-space: pre;
+  }
+
+  .c-comment { color: #5a6080; }
+  .c-keyword { color: #9aa4c7; }
+  .c-string  { color: #ffd47e; opacity: 0.88; }
+  .c-num     { color: #b8c8b0; }
+  .c-fn      { color: #c8b8e8; }
+
+  /* ── Pass history ───────────────────── */
+  .pass-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 1.5rem 0;
+  }
+
+  .pass-card {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0 1.4rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+
+  .pass-card:first-child { border-top: 1px solid var(--rule); }
+
+  .pass-id {
+    font-family: 'Faustina', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--lamp);
+    opacity: 0.45;
+    line-height: 1;
+    padding-top: 0.1rem;
+    text-align: right;
+  }
+
+  .pass-body {}
+
+  .pass-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--page);
+    opacity: 0.45;
+    margin-bottom: 0.6rem;
+  }
+
+  .pass-findings {
+    list-style: none;
+    padding: 0;
+  }
+
+  .pass-findings li {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--page);
+    opacity: 0.68;
+    padding: 0.2rem 0 0.2rem 1rem;
+    position: relative;
+  }
+
+  .pass-findings li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--dust);
+    opacity: 0.6;
+  }
+
+  .pass-upgrade {
+    margin-top: 0.8rem;
+    padding: 0.6rem 0.9rem;
+    background: rgba(255,212,126,0.06);
+    border-left: 2px solid var(--lamp);
+  }
+
+  .pass-upgrade-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--lamp);
+    opacity: 0.6;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  .pass-upgrade p {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.80rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--page);
+    opacity: 0.70;
+  }
+
+  /* ── Footer ─────────────────────────── */
+  footer {
+    padding: 2rem 1.5rem;
+    max-width: 740px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    justify-content: space-between;
+  }
+
+  footer span {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--page);
+    opacity: 0.30;
+  }
+
+  footer a {
+    color: var(--dust);
+    text-decoration: none;
+    opacity: 0.55;
+  }
+
+  footer a:hover { opacity: 1; }
+
+  /* ── Responsive ─────────────────────── */
+  @media (max-width: 560px) {
+    .pass-card {
+      grid-template-columns: 1fr;
+      gap: 0.4rem 0;
+    }
+    .pass-id { text-align: left; font-size: 1.2rem; }
+  }
+</style>
+
+<header class="guide-header">
+  <p class="guide-eyebrow">Build Guide · Wave 3 · Fable 25 Local</p>
+  <h1 class="guide-title">Nocturne</h1>
+  <p class="guide-subtitle">Field Guide to Moths of the Invented World</p>
+</header>
+
+<main>
+
+  <!-- ── The Brief ────────────────────── -->
+  <section class="guide-section">
+    <p class="section-label">The Brief</p>
+    <h2 class="section-heading">What was asked for</h2>
+
+    <div class="brief-plate">
+      <p><strong style="font-style:normal; color:#ffd47e; opacity:0.75;">18. nocturne — a field guide to moths.</strong> Dark botanical plates for invented species. Signature: procedurally drawn moths — bilateral symmetry from seeded parameters (wing shape, eyespots, dust); they steer toward a draggable lamp with real steering behaviors; plates render as engraved SVG. Palette: night <code style="font-size:0.85em; color:#9aa4c7;">#131521</code>, page <code style="font-size:0.85em; color:#9aa4c7;">#e9e6db</code>, lamp <code style="font-size:0.85em; color:#9aa4c7;">#ffd47e</code>, wing dust <code style="font-size:0.85em; color:#9aa4c7;">#9aa4c7</code>. Type: Faustina + Nunito Sans. Prove: generative creatures with taxonomy-plate elegance.</p>
+      <p class="brief-source">BRIEFS.md · Wave 3 · Fable 25 Local</p>
+    </div>
+
+    <p class="body-text">The core tension in the brief is taxonomic precision versus living motion — engraved plates carry the stillness of a museum drawer; the canvas scene places the same creatures in flight. The guide resolves this by treating the two registers separately: SVG plates use ink-stroke aesthetics and calibrated scale bars; the canvas simulation uses steering behaviors and wing-flap dynamics.</p>
+  </section>
+
+  <!-- ── Signature Technique ──────────── -->
+  <section class="guide-section">
+    <p class="section-label">Signature Technique</p>
+    <h2 class="section-heading">Procedural SVG moths with bilateral symmetry</h2>
+
+    <p class="body-text">Each of the six species is defined by a parameter object — wing dimensions, tip angle, eyespot positions, dust density, scallop flag — and a seeded PRNG. The SVG is generated at runtime: every wing outline, cross-hatch pattern, eyespot ring, dust stipple, and scale bar is built from these parameters. No pre-drawn artwork is used.</p>
+
+    <p class="body-text">Bilateral symmetry is enforced by a <code style="color:var(--dust); font-size:0.88em;">side</code> argument (±1) passed to every drawing function. The same bezier control points that produce the right forewing, negated, produce the left:</p>
+
+    <p class="code-label">main.js — foreWingPath() · bilateral symmetry via side = ±1</p>
+    <div class="code-block">
+<pre><span class="c-keyword">function</span> <span class="c-fn">foreWingPath</span>(fw, fh, tipAngle, side) {
+  <span class="c-keyword">const</span> s = side; <span class="c-comment">// +1 = right, -1 = left</span>
+  <span class="c-keyword">const</span> cx = BODY_CX;
+  <span class="c-keyword">const</span> cy = BODY_TY;
+  <span class="c-keyword">const</span> tipY = cy - tipAngle * fh * <span class="c-num">0.44</span>;
+
+  <span class="c-keyword">return</span> [
+    <span class="c-string">`M ${cx} ${cy - 4}`</span>,
+    <span class="c-string">`C ${fmtN(cx + s*fw*0.30)} ${fmtN(cy - fh*0.70)},`</span>,
+    <span class="c-string">`  ${fmtN(cx + s*fw*0.62)} ${fmtN(tipY - fh*0.14)},`</span>,
+    <span class="c-string">`  ${fmtN(cx + s*fw)} ${fmtN(tipY)}`</span>,
+    <span class="c-string">`C ${fmtN(cx + s*fw*1.03)} ${fmtN(tipY + fh*0.36)},`</span>,
+    <span class="c-string">`  ${fmtN(cx + s*fw*0.87)} ${fmtN(cy + fh*0.60)},`</span>,
+    <span class="c-string">`  ${fmtN(cx + s*fw*0.52)} ${fmtN(cy + fh*0.80)}`</span>,
+    <span class="c-comment">// Return to body centre</span>
+    <span class="c-string">`C ${fmtN(cx + s*fw*0.25)} ${fmtN(cy + fh*0.90)},`</span>,
+    <span class="c-string">`  ${fmtN(cx + s*5)} ${fmtN(cy + fh*0.65)},`</span>,
+    <span class="c-string">`  ${cx} ${fmtN(cy + fh*0.35)}`</span>,
+    <span class="c-string">`Z`</span>
+  ].<span class="c-fn">join</span>(<span class="c-string">' '</span>);
+}</pre>
+    </div>
+
+    <p class="body-text">The same symmetry argument passes through every sub-function: <code style="color:var(--dust); font-size:0.88em;">eyespotSVG</code>, <code style="color:var(--dust); font-size:0.88em;">venationLines</code>, <code style="color:var(--dust); font-size:0.88em;">dustSVG</code>, <code style="color:var(--dust); font-size:0.88em;">antennaPath</code>. Each function multiplies its x-offsets by <code style="color:var(--dust); font-size:0.88em;">s</code>, so specifying one wing fully specifies the other. Dust and venation use separate PRNG instances per side to avoid mirror-identical scatter.</p>
+
+    <div class="technique-grid">
+      <div class="technique-item"><span class="technique-num">i</span><p class="technique-text"><strong>Cross-hatching:</strong> SVG <code style="color:var(--dust); font-size:0.9em;">&lt;pattern&gt;</code> at 45° and 135°, clipped to wing outlines via <code style="color:var(--dust); font-size:0.9em;">&lt;clipPath&gt;</code>. Opacity differs between hatch angles to create directional shading near the body.</p></div>
+      <div class="technique-item"><span class="technique-num">ii</span><p class="technique-text"><strong>Eyespots (ocelli):</strong> three concentric rings per ocellus — outer stroke, pale fill, dark pupil — positioned by fractional u/v coordinates within the wing bounding box, so wing size does not affect eyespot proportion.</p></div>
+      <div class="technique-item"><span class="technique-num">iii</span><p class="technique-text"><strong>Scale bar:</strong> calibrated to actual specimen wingspan. <em>Nocturia grandipennis</em> at 85–112 mm renders a longer bar than <em>Selenus pulverulentus</em> at 28–36 mm, using the formula <code style="color:var(--dust); font-size:0.9em;">scaleBarPx = fw&nbsp;× 20 / wsMid</code>.</p></div>
+      <div class="technique-item"><span class="technique-num">iv</span><p class="technique-text"><strong>Bipectinate antennae:</strong> a curved SVG path with computed normals at each interval used to orient perpendicular barbs — the feathered appearance of moth (vs butterfly) antennae.</p></div>
+    </div>
+
+    <p class="body-text">The canvas simulation assigns each moth a <code style="color:var(--dust); font-size:0.88em;">canvasScale</code> derived from its real wingspan (Nocturia at 1.45×, Selenus at 0.60×), so larger species are visibly larger in flight. Steering uses a wander circle on the current heading, blended with an arrival force toward the lamp and a tangential orbit force that prevents pile-up within 80 px.</p>
+
+    <p class="code-label">main.js — spawnMoths() · moon-phase-weighted species pool (pass 2 upgrade)</p>
+    <div class="code-block">
+<pre><span class="c-comment">// Determine current moon phase bucket (0–7)</span>
+<span class="c-keyword">const</span> moonP = <span class="c-fn">getMoonPhase</span>() / <span class="c-num">29.53058867</span>;
+<span class="c-keyword">let</span> moonBucket;
+<span class="c-keyword">if</span>      (moonP &lt; <span class="c-num">0.04</span> || moonP &gt; <span class="c-num">0.96</span>) moonBucket = <span class="c-num">0</span>; <span class="c-comment">// New Moon</span>
+<span class="c-keyword">else if</span> (moonP &lt; <span class="c-num">0.22</span>)                moonBucket = <span class="c-num">1</span>; <span class="c-comment">// Waxing Crescent</span>
+<span class="c-keyword">else if</span> (moonP &lt; <span class="c-num">0.28</span>)                moonBucket = <span class="c-num">2</span>; <span class="c-comment">// First Quarter</span>
+<span class="c-comment">// …(full moon = 4, waning crescent = 7)</span>
+
+<span class="c-comment">// Build weighted pool — each species appears (weight) times</span>
+<span class="c-keyword">const</span> pool = [];
+SPECIES.<span class="c-fn">forEach</span>(sp =&gt; {
+  <span class="c-keyword">const</span> w = (sp.phaseWeights || [])[moonBucket] ?? <span class="c-num">2</span>;
+  <span class="c-keyword">for</span> (<span class="c-keyword">let</span> j = <span class="c-num">0</span>; j &lt; w; j++) pool.<span class="c-fn">push</span>(sp);
+});
+
+<span class="c-comment">// phaseWeights example — Lethia pallida (dawn species):</span>
+<span class="c-comment">// [NewMoon WaxCres 1stQ WaxGib Full WanGib LastQ WanCres]</span>
+phaseWeights: [<span class="c-num">2</span>, <span class="c-num">0</span>, <span class="c-num">0</span>, <span class="c-num">0</span>, <span class="c-num">1</span>, <span class="c-num">1</span>, <span class="c-num">1</span>, <span class="c-num">3</span>]  <span class="c-comment">// peaks at waning crescent</span></pre>
+    </div>
+  </section>
+
+  <!-- ── Pass History ──────────────────── -->
+  <section class="guide-section">
+    <p class="section-label">Critique Pass History</p>
+    <h2 class="section-heading">What each pass found and changed</h2>
+
+    <div class="pass-stack">
+
+      <div class="pass-card">
+        <div class="pass-id">I</div>
+        <div class="pass-body">
+          <p class="pass-title">Stage 1 · Initial build + first critique</p>
+          <ul class="pass-findings">
+            <li>Canvas moths rendered as undifferentiated blobs — wing bezier redesigned to distinct forewing + hindwing pair with separate stroke and alpha</li>
+            <li>Mobile moon text overlapped subtitle — <code style="color:var(--dust); font-size:0.88em;">.moon-note</code> and <code style="color:var(--dust); font-size:0.88em;">.scene-subtitle</code> hidden on viewports below 600 px</li>
+            <li>Plate SVG had a 240 px max-width constraint leaving dead space at card edges — removed, SVG now fills card width</li>
+            <li>Moths clumped at lamp origin — orbit tangential force increased; outward repel force added inside 45 px radius</li>
+            <li><code style="color:var(--dust); font-size:0.88em;">&lt;em&gt;</code> used for site title — corrected to <code style="color:var(--dust); font-size:0.88em;">&lt;h1&gt;</code>; section headings downgraded to <code style="color:var(--dust); font-size:0.88em;">&lt;h2&gt;</code></li>
+          </ul>
+          <div class="pass-upgrade">
+            <span class="pass-upgrade-label">Complexity upgrade</span>
+            <p>Calibrated scale bar added to every specimen plate SVG — 10 mm calculated from actual species wingspan midpoint using <code style="color:var(--dust); font-size:0.88em;">scaleBarPx = fw × 20 / wsMid</code>. Smallest species (Selenus, 28–36 mm) renders a noticeably shorter bar than the largest (Nocturia, 85–112 mm).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pass-card">
+        <div class="pass-id">II</div>
+        <div class="pass-body">
+          <p class="pass-title">Stage 2 · Color identity + phase ecology</p>
+          <ul class="pass-findings">
+            <li>All canvas moths read as near-identical gray-blue — impossible to distinguish species in flight, defeating the field-guide premise</li>
+            <li>Moths near the lamp still crowded center despite orbit force — acceptable but noted; orbit radius increase would push them further out</li>
+          </ul>
+          <div class="pass-upgrade">
+            <span class="pass-upgrade-label">Complexity upgrade</span>
+            <p>Moon-phase species filtering: each species now carries a <code style="color:var(--dust); font-size:0.88em;">phaseWeights[8]</code> array mapping to the eight moon phase buckets. <em>Lethia pallida</em> (dawn species, "lamp is rarely helpful") peaks at waning crescent; <em>Selenus pulverulentus</em> peaks at new and waxing crescent; <em>Veluma ocellata</em> (strongly lamp-attracted) peaks at full moon. The canvas scene reflects tonight's actual phase. Canvas colors were simultaneously made dramatically distinct per species: iridescent slate-blue for Veluma, pale straw-cream for Lethia, dark charcoal for the cryptic Umbria tenebrosa, warm amber for the large Nocturia grandipennis.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pass-card">
+        <div class="pass-id">III</div>
+        <div class="pass-body">
+          <p class="pass-title">Stage 2 · Species identification on hover</p>
+          <ul class="pass-findings">
+            <li>Size differentiation per species: canvas moth size now scales by <code style="color:var(--dust); font-size:0.88em;">canvasScale</code> (Nocturia at 1.45×, Selenus at 0.60×), making wingspan differences visible in flight</li>
+            <li>Zero console errors and zero page errors across desktop and mobile at all scroll positions</li>
+          </ul>
+          <div class="pass-upgrade">
+            <span class="pass-upgrade-label">Complexity upgrade</span>
+            <p>Hovering near any canvas moth fades in a two-line identification label — common name in small caps above, binomial italic in dust-blue below — using a custom-eased alpha ramp. The label smoothly fades out when the cursor moves away. Adds the discovery layer a real field guide implies: the scene is not ornament, it is the index.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span><a href="../">← Nocturne</a></span>
+  <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+</footer>

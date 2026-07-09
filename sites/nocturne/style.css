@@ -1,0 +1,544 @@
+/* ═══════════════════════════════════════════
+   Nocturne — Field Guide to Moths
+   Palette: night #131521, page #e9e6db,
+            lamp #ffd47e, dust #9aa4c7
+   Type: Faustina + Nunito Sans
+   ═══════════════════════════════════════════ */
+
+:root {
+  --night:    #131521;
+  --night-2:  #1c1f31;
+  --page:     #e9e6db;
+  --page-2:   #d8d5c8;
+  --lamp:     #ffd47e;
+  --lamp-dim: #a8863e;
+  --dust:     #9aa4c7;
+  --ink:      #2b2840;
+  --ink-lt:   #4a4765;
+  --warm-ink: #3a3020;
+  --rule:     rgba(43,40,64,0.18);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--night);
+  color: var(--page);
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Skip Link ─────────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  background: var(--lamp);
+  color: var(--ink);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 1rem; }
+
+/* ══ SCENE ════════════════════════════════════ */
+#scene {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  cursor: none;
+}
+
+#moth-canvas {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--night);
+}
+
+/* Scene overlay — title */
+.scene-title {
+  position: absolute;
+  top: 2.5rem;
+  left: 2.5rem;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+}
+
+.scene-series {
+  display: block;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dust);
+  opacity: 0.75;
+  margin-bottom: 0.5rem;
+}
+
+.scene-heading {
+  font-family: 'Faustina', Georgia, serif;
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--page);
+  display: block;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.7), 0 0 60px rgba(19,21,33,0.9);
+}
+
+.scene-subtitle {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--page);
+  opacity: 0.45;
+  margin-top: 0.75rem;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* Moon display */
+.moon-display {
+  position: absolute;
+  top: 2.5rem;
+  right: 2.5rem;
+  z-index: 10;
+  pointer-events: none;
+  text-align: right;
+}
+
+.moon-icon {
+  display: block;
+  font-size: 1.75rem;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  filter: drop-shadow(0 0 8px rgba(255,212,126,0.4));
+}
+
+.moon-name {
+  display: block;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dust);
+  opacity: 0.75; /* WCAG AA: dust@0.6 failed (3.44:1); 0.75 → ≥4.5:1 */
+}
+
+.moon-note {
+  display: block;
+  font-family: 'Faustina', serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--page);
+  opacity: 0.35;
+  margin-top: 0.2rem;
+  max-width: 160px;
+  line-height: 1.4;
+}
+
+/* Lamp */
+#lamp {
+  position: absolute;
+  z-index: 20;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  touch-action: none;
+  will-change: transform;
+}
+
+#lamp:active { cursor: grabbing; }
+
+.lamp-glow {
+  position: absolute;
+  inset: -60px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255,212,126,0.22) 0%,
+    rgba(255,180,60,0.10) 40%,
+    transparent 72%);
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.lamp-bulb {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--lamp);
+  box-shadow:
+    0 0 8px 3px rgba(255,212,126,0.7),
+    0 0 24px 8px rgba(255,180,60,0.4),
+    0 0 60px 20px rgba(255,150,30,0.15);
+}
+
+/* Scene hint */
+.scene-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--page);
+  opacity: 0;
+  animation: hintFadeIn 1.4s var(--ease-out-expo) 2.8s forwards;
+}
+
+@keyframes hintFadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 0.28; transform: translateX(-50%) translateY(0); }
+}
+
+/* Scroll arrow */
+.scroll-arrow {
+  position: absolute;
+  bottom: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  opacity: 0;
+  animation: hintFadeIn 1.4s var(--ease-out-expo) 3.5s forwards;
+}
+
+.scroll-arrow span {
+  display: block;
+  width: 1px;
+  height: 20px;
+  background: linear-gradient(to bottom, transparent, rgba(233,230,219,0.3));
+}
+
+/* ══ PLATES SECTION ══════════════════════════ */
+#plates {
+  background: var(--page);
+  color: var(--warm-ink);
+  padding: 5rem 2rem 6rem;
+}
+
+.plates-header {
+  max-width: 860px;
+  margin: 0 auto 3.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 2rem;
+}
+
+.plates-header h2, .plates-header h1 {
+  font-family: 'Faustina', serif;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--warm-ink);
+}
+
+.plates-header-sub {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-lt);
+  opacity: 0.82; /* WCAG AA: inkLt@0.6 failed (2.81:1); 0.82 → ≥4.5:1 */
+  margin-top: 0.5rem;
+}
+
+.plates-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Plate Card ───────────────────────────── */
+.plate-card {
+  background: var(--page);
+  border: 1px solid rgba(58,48,32,0.15);
+  padding: 1.75rem 1.5rem 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 20px rgba(0,0,0,0.04);
+  transition: box-shadow 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo);
+}
+
+.plate-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1), 0 8px 36px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.plate-number {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  font-family: 'Faustina', serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  color: var(--ink-lt);
+  opacity: 0.4;
+}
+
+.plate-illustration {
+  width: 100%;
+  aspect-ratio: 5/4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--page);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.plate-illustration svg {
+  width: 100%;
+  height: 100%;
+}
+
+.plate-rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 0.9rem 0;
+}
+
+.plate-binomial {
+  font-family: 'Faustina', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--warm-ink);
+  line-height: 1.15;
+  margin-bottom: 0.15rem;
+}
+
+.plate-author {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--ink-lt);
+  opacity: 0.82; /* WCAG AA: inkLt@0.55 failed (2.54:1); 0.82 → ≥4.5:1 */
+  margin-bottom: 0.25rem;
+}
+
+.plate-common {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-lt);
+  opacity: 0.82; /* WCAG AA: inkLt@0.55 failed (2.54:1); 0.82 → ≥4.5:1 */
+}
+
+.plate-table {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 0.75rem;
+  margin: 0.35rem 0;
+}
+
+.plate-table dt {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-lt);
+  opacity: 0.82; /* WCAG AA: inkLt@0.5 failed (2.30:1); 0.82 → ≥4.5:1 */
+  white-space: nowrap;
+}
+
+.plate-table dd {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: var(--warm-ink);
+  opacity: 0.8;
+}
+
+.plate-notes {
+  font-family: 'Faustina', serif;
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--warm-ink);
+  opacity: 0.75;
+  margin: 0.35rem 0;
+}
+
+.plate-collection {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--ink-lt);
+  opacity: 0.45;
+  line-height: 1.7;
+}
+
+/* ══ ABOUT ════════════════════════════════════ */
+#about {
+  background: var(--night-2);
+  color: var(--page);
+  padding: 5rem 2rem;
+}
+
+.about-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+#about h2 {
+  font-family: 'Faustina', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--page);
+  margin-bottom: 1.5rem;
+}
+
+#about p {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--page);
+  opacity: 0.65;
+  margin-bottom: 1rem;
+}
+
+.about-lunar-note {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border-left: 2px solid rgba(154,164,199,0.3);
+  background: rgba(154,164,199,0.04);
+}
+
+.about-lunar-note p {
+  font-family: 'Faustina', serif;
+  font-size: 0.875rem;
+  font-style: italic;
+  opacity: 0.55; /* WCAG AA: page@0.5 on night2 failed (4.31:1); 0.55 → ≥4.5:1 */
+  margin: 0;
+}
+
+/* ══ FOOTER ═══════════════════════════════════ */
+footer {
+  background: var(--night);
+  padding: 2rem;
+  border-top: 1px solid rgba(154,164,199,0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+footer span {
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--page);
+  opacity: 0.25;
+}
+
+/* ══ RESPONSIVE ═══════════════════════════════ */
+@media (max-width: 900px) {
+  .plates-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .plates-grid {
+    grid-template-columns: 1fr;
+  }
+  .scene-title {
+    top: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem; /* prevent overlap with moon */
+  }
+  .scene-subtitle {
+    display: none; /* avoid overlap on narrow screens */
+  }
+  .moon-display {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+  .moon-note {
+    display: none; /* too verbose on mobile */
+  }
+  .moon-name {
+    font-size: 0.55rem;
+  }
+  #plates {
+    padding: 3rem 1rem 4rem;
+  }
+  .plate-card {
+    padding: 1.25rem 1rem 1rem;
+  }
+  footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+/* ══ REDUCED MOTION ═══════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .scene-hint, .scroll-arrow {
+    opacity: 0.25;
+    animation: none;
+  }
+
+  .plate-card:hover {
+    transform: none;
+  }
+
+  /* Canvas moths are paused in JS when reduced-motion detected */
+}

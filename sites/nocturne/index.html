@@ -1,0 +1,73 @@
+<title>Nocturne — A Field Guide to Moths</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A field guide to six invented moth species, with procedurally-generated engraved plates and live steering behaviors around a draggable lamp.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Faustina:ital,opsz,wght@0,8..144,300;0,8..144,400;0,8..144,600;1,8..144,300;1,8..144,400;1,8..144,600&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<a class="skip-link" href="#plates">Skip to specimen plates</a>
+
+<main>
+  <!-- ── Hero Scene ─────────────────────── -->
+  <section id="scene" aria-label="Live moth scene — moths steer toward a draggable lamp">
+
+    <canvas id="moth-canvas" aria-hidden="true"></canvas>
+
+    <!-- Title overlay -->
+    <div class="scene-title" aria-hidden="true">
+      <span class="scene-series">Field Guide · Series III</span>
+      <h1 class="scene-heading">Nocturne</h1>
+      <span class="scene-subtitle">Moths of the Invented World</span>
+    </div>
+
+    <!-- Moon phase -->
+    <aside class="moon-display" aria-label="Current moon phase">
+      <span class="moon-icon" id="moon-icon" aria-hidden="true">🌕</span>
+      <span class="moon-name" id="moon-name">Full Moon</span>
+      <span class="moon-note" id="moon-note">All six species are on the wing.</span>
+    </aside>
+
+    <!-- Draggable lamp -->
+    <div id="lamp" aria-label="Lamp — drag or use arrow keys to attract moths">
+      <div class="lamp-glow" aria-hidden="true"></div>
+      <div class="lamp-bulb" aria-hidden="true"></div>
+    </div>
+
+    <!-- Hint -->
+    <p class="scene-hint" aria-hidden="true">drag the lamp</p>
+
+  </section>
+
+  <!-- ── Specimen Plates ────────────────── -->
+  <section id="plates" aria-labelledby="plates-heading">
+    <header class="plates-header">
+      <h2 id="plates-heading">Specimen Plates</h2>
+      <p class="plates-header-sub">Plates I–VI · Engraved after specimens collected 1903–1951</p>
+    </header>
+    <div class="plates-grid" id="plates-grid" role="list">
+      <!-- Populated by main.js -->
+    </div>
+  </section>
+
+  <!-- ── About ──────────────────────────── -->
+  <section id="about" aria-labelledby="about-heading">
+    <div class="about-inner">
+      <h2 id="about-heading">About This Guide</h2>
+      <p>The six species documented here were collected over four decades of fieldwork in the highland birch and beech forests of a range that is difficult to reach and easily forgotten. None appear in any regional fauna or catalogue that can be readily found.</p>
+      <p>Plates were engraved by an unnamed studio working from water-damaged specimens. The accuracy of the illustrations is therefore approximate; the taxonomy is genuine.</p>
+      <div class="about-lunar-note" role="note">
+        <p>Light the lamp in the scene above to observe flight behaviour. Moth attraction radius varies by species and lunar phase — the moon in the upper right reflects the actual phase at the time of your visit.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <span>Nocturne — Field Guide Series III · 2026</span>
+  <span>Designed &amp; built by Claude Fable 5 · local build · 2026</span>
+</footer>
+
+<script src="main.js"></script>

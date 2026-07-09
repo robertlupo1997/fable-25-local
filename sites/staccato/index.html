@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STACCATO — Rhythm Arcade</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#machine" class="skip-link">Skip to drum machine</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-top">
+      <div class="header-meta">
+        <span class="site-num" aria-hidden="true">17 / 25</span>
+        <span class="header-tag">RHYTHM ARCADE</span>
+      </div>
+      <h1 class="site-title">STACCATO</h1>
+      <p class="site-sub">Sixteen steps. Four voices. Pure math.</p>
+    </div>
+    <canvas id="visualizer" aria-hidden="true"></canvas>
+  </header>
+
+  <main id="machine" class="machine-wrap">
+    <div class="machine-panel">
+
+      <!-- Transport bar -->
+      <div class="transport" role="toolbar" aria-label="Transport controls">
+        <button id="play-btn" class="btn-play" aria-label="Play (Space)">
+          <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" width="14" height="14">
+            <polygon points="3,1 15,8 3,15"/>
+          </svg>
+          <span class="btn-play-text">PLAY</span>
+        </button>
+
+        <div class="bpm-group">
+          <span class="ctrl-label">BPM</span>
+          <div class="bpm-row">
+            <button class="bpm-adj" id="bpm-dn" aria-label="Decrease BPM">−</button>
+            <output id="bpm-display" class="bpm-display" for="bpm-range">128</output>
+            <button class="bpm-adj" id="bpm-up" aria-label="Increase BPM">+</button>
+            <button class="bpm-tap" id="bpm-tap" aria-label="Tap tempo">TAP</button>
+          </div>
+          <input type="range" id="bpm-range" class="bpm-slider" min="60" max="200" value="128" aria-label="BPM 60 to 200">
+        </div>
+
+        <div class="presets-group" role="group" aria-label="Pattern presets">
+          <span class="ctrl-label">PRESETS</span>
+          <div class="preset-row">
+            <button class="btn-preset" data-preset="FOUR ON FLOOR">FOUR ON FLOOR</button>
+            <button class="btn-preset" data-preset="ACID BREAK">ACID BREAK</button>
+            <button class="btn-preset" data-preset="JUNGLE">JUNGLE</button>
+            <button class="btn-preset btn-clear" id="btn-clear">CLEAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step position cursor row -->
+      <div class="cursor-row" aria-hidden="true" id="cursor-row">
+        <div class="cursor-track-spacer"></div>
+        <div class="cursor-steps">
+          <div class="beat-g">
+            <div class="cursor-cell" data-cursor="0"></div>
+            <div class="cursor-cell" data-cursor="1"></div>
+            <div class="cursor-cell" data-cursor="2"></div>
+            <div class="cursor-cell" data-cursor="3"></div>
+          </div>
+          <div class="beat-g">
+            <div class="cursor-cell" data-cursor="4"></div>
+            <div class="cursor-cell" data-cursor="5"></div>
+            <div class="cursor-cell" data-cursor="6"></div>
+            <div class="cursor-cell" data-cursor="7"></div>
+          </div>
+          <div class="beat-g">
+            <div class="cursor-cell" data-cursor="8"></div>
+            <div class="cursor-cell" data-cursor="9"></div>
+            <div class="cursor-cell" data-cursor="10"></div>
+            <div class="cursor-cell" data-cursor="11"></div>
+          </div>
+          <div class="beat-g">
+            <div class="cursor-cell" data-cursor="12"></div>
+            <div class="cursor-cell" data-cursor="13"></div>
+            <div class="cursor-cell" data-cursor="14"></div>
+            <div class="cursor-cell" data-cursor="15"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sequencer grid — built by JS -->
+      <div id="sequencer" class="sequencer" role="group" aria-label="Step sequencer"></div>
+
+      <!-- Beat number labels -->
+      <div class="beat-labels" aria-hidden="true">
+        <div class="beat-labels-spacer"></div>
+        <div class="beat-labels-grid">
+          <span class="beat-num">1</span>
+          <span class="beat-num">2</span>
+          <span class="beat-num">3</span>
+          <span class="beat-num">4</span>
+        </div>
+      </div>
+
+    </div><!-- /.machine-panel -->
+  </main>
+
+  <!-- About / info -->
+  <section class="about" aria-labelledby="about-h">
+    <div class="about-inner">
+      <h2 id="about-h" class="about-title">THE MACHINE</h2>
+      <div class="about-cols">
+        <div class="about-text">
+          <p class="about-lead">No samples. No shortcuts. Every sound is oscillators and noise shaped by amplitude envelopes.</p>
+          <p>A kick drum is a 180 Hz sine swept to 40 Hz in 350 milliseconds — the same physics as a speaker-cone impulse. The snare is bandpass-filtered white noise stacked on a decaying triangle oscillator. The hi-hat is high-passed chaos above 8 kHz, lasting 50 milliseconds or less. The tom is a deeper fall, slower pocket, 100 to 50 Hz in half a second.</p>
+          <p>The analyser at the top reads the live audio frame and draws what the air would look like if you could see it. The machine schedules sound 100 ms ahead — so your ears hear it exactly on the grid, not a frame late.</p>
+        </div>
+        <div class="about-controls">
+          <h3 class="ctrl-heading">CONTROLS</h3>
+          <dl class="ctrl-list">
+            <div class="ctrl-row">
+              <dt><kbd>SPACE</kbd></dt>
+              <dd>Play / Stop</dd>
+            </div>
+            <div class="ctrl-row">
+              <dt><kbd>1</kbd> – <kbd>4</kbd></dt>
+              <dd>Mute track</dd>
+            </div>
+            <div class="ctrl-row">
+              <dt><kbd>CLICK</kbd></dt>
+              <dd>Toggle step on / off</dd>
+            </div>
+            <div class="ctrl-row">
+              <dt><kbd>← →</kbd></dt>
+              <dd>BPM −/+ 5</dd>
+            </div>
+            <div class="ctrl-row">
+              <dt><kbd>T</kbd></dt>
+              <dd>Tap tempo</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+  </footer>
+
+  <!-- Live region for screen-reader announcements -->
+  <div id="announce" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>

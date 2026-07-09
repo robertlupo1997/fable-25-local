@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Reliquary — Exhibition Notes</title>
+  <meta name="description" content="Curatorial record: brief, signature technique, and critique history for The Reliquary build.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&family=Questrial&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────────
+       RELIQUARY GUIDE — Exhibition Notes
+       Same visual language as the collection itself
+    ───────────────────────────────────────────── */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --charcoal:   #17161a;
+      --ivory:      #efe9dd;
+      --brass:      #ad8f52;
+      --violet:     #8a63d2;
+      --dim:        #2d2b33;
+      --dimmer:     #1f1e24;
+      --rule:       #3a3740;
+      --text-muted: #8a8590;
+      --code-bg:    #131217;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--charcoal);
+      color: var(--ivory);
+      font-family: 'Cardo', Georgia, serif;
+      font-size: clamp(16px, 2vw, 18px);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute; top: -100%; left: 1rem;
+      background: var(--brass); color: var(--charcoal);
+      padding: 0.5rem 1rem;
+      font-family: 'Questrial', sans-serif; font-size: 0.875rem;
+      border-radius: 0 0 4px 4px; text-decoration: none;
+      z-index: 9999; transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 5rem 2rem 3.5rem;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+    }
+
+    header::before {
+      content: '';
+      display: block;
+      width: 1px; height: 3rem;
+      background: var(--rule);
+      margin: 0 auto 2rem;
+    }
+
+    .eyebrow {
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-family: 'Cardo', Georgia, serif;
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      line-height: 1.05;
+      margin-bottom: 0.5rem;
+      text-wrap: balance;
+    }
+
+    .header-sub {
+      font-family: 'Cardo', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+      color: var(--brass);
+    }
+
+    /* ── Document body ── */
+    .document {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── Sections ── */
+    .section {
+      padding: 4rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    h2 {
+      font-family: 'Cardo', Georgia, serif;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ivory);
+      margin-bottom: 1.5rem;
+      text-wrap: balance;
+    }
+
+    /* ── Brief blockquote ── */
+    .brief-quote {
+      border-left: 2px solid var(--brass);
+      padding: 1.25rem 1.5rem;
+      background: var(--dimmer);
+      margin: 0 0 1.5rem;
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: rgba(239,233,221,0.85);
+    }
+
+    .brief-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-style: normal;
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .palette-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin: 1.25rem 0;
+    }
+
+    .swatch {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .swatch-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+
+    /* ── Code display case ── */
+    .code-case {
+      position: relative;
+      border: 1px solid var(--rule);
+      background: var(--code-bg);
+      margin: 1.75rem 0;
+      box-shadow: inset 0 1px 0 rgba(239,233,221,0.05), 0 8px 28px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--rule);
+      background: var(--dimmer);
+    }
+
+    .code-label {
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .code-ref {
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: rgba(173,143,82,0.65);
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 1.25rem 1.25rem;
+      font-family: ui-monospace, 'Cascadia Code', 'Fira Mono', 'Consolas', monospace;
+      font-size: clamp(0.72rem, 1.4vw, 0.82rem);
+      line-height: 1.65;
+      color: rgba(239,233,221,0.80);
+      tab-size: 2;
+    }
+
+    .kw  { color: var(--violet); }
+    .fn  { color: #8ab4d2; }
+    .num { color: #b8d4a8; }
+    .cm  { color: var(--text-muted); font-style: italic; }
+    .type{ color: var(--brass); }
+
+    /* ── Body prose ── */
+    p {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(239,233,221,0.82);
+      max-width: 62ch;
+      margin-bottom: 1rem;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    p em { color: var(--ivory); font-style: italic; }
+
+    /* ── Critique register ── */
+    .pass-entry {
+      margin-bottom: 2.5rem;
+    }
+
+    .pass-entry:last-child { margin-bottom: 0; }
+
+    .pass-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--dim);
+    }
+
+    .pass-number {
+      font-family: 'Cardo', Georgia, serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--brass);
+      flex-shrink: 0;
+    }
+
+    .pass-title {
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .finding-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.75rem 0 0;
+    }
+
+    .finding-list li {
+      position: relative;
+      padding-left: 1.25rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: rgba(239,233,221,0.78);
+    }
+
+    .finding-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+    }
+
+    .finding-list li strong {
+      color: var(--ivory);
+      font-weight: normal;
+    }
+
+    .upgrade-tag {
+      display: inline-block;
+      margin-left: 0.4rem;
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      background: var(--brass);
+      padding: 0.1em 0.4em;
+      vertical-align: middle;
+    }
+
+    /* ── Inline code ── */
+    code {
+      font-family: ui-monospace, 'Cascadia Code', monospace;
+      font-size: 0.82em;
+      color: rgba(173,143,82,0.85);
+      background: var(--dimmer);
+      padding: 0.1em 0.35em;
+      border: 1px solid var(--rule);
+    }
+
+    /* ── Back link ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      margin-bottom: 2.5rem;
+    }
+
+    .back-link:hover, .back-link:focus { color: var(--ivory); }
+    .back-link::before { content: '←'; font-style: normal; font-size: 0.9em; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--rule);
+      font-family: 'Questrial', sans-serif;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      letter-spacing: 0.1em;
+    }
+
+    footer::before {
+      content: '✦';
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: var(--brass);
+      letter-spacing: 0;
+    }
+
+    .credit {
+      margin-top: 0.5rem;
+      opacity: 0.5;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header { padding: 3.5rem 1.5rem 2.5rem; }
+      .document { padding: 0 1.25rem; }
+      .section { padding: 3rem 0; }
+      pre { font-size: 0.7rem; }
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<header role="banner">
+  <p class="eyebrow">Exhibition Notes &nbsp;·&nbsp; Wave 3</p>
+  <h1>The Reliquary</h1>
+  <p class="header-sub">Build Guide &amp; Curatorial Record</p>
+</header>
+
+<main id="main-content">
+<div class="document">
+
+  <div class="section">
+    <a href="../" class="back-link">Return to Collection</a>
+
+    <!-- ── Brief ── -->
+    <p class="section-label">Commission Brief</p>
+    <h2>What was asked for</h2>
+
+    <blockquote class="brief-quote">
+      <em>"a museum of impossible objects. Five artifacts that cannot exist,
+      raymarched. Signature: SDF raymarching in fragment shaders — a Klein bottle
+      reliquary, a Penrose triangle in bronze, a shadow that casts an object;
+      museum-label typography treats each absurdity with total scholarly sobriety.
+      Palette: charcoal #17161a, label ivory #efe9dd, brass #ad8f52, violet
+      #8a63d2. Type: Cardo + Questrial. Prove: raymarching as a gallery medium;
+      copywriting with a straight face."</em>
+      <cite>— FABLE 25 Briefs, Wave 3, No. 14</cite>
+    </blockquote>
+
+    <p>Upgrade ideas listed in the brief: acquisition numbers and provenance; a rotating
+    plinth interaction; a "do not touch" easter egg that ripples the SDF. All three
+    were implemented across the build and iteration passes.</p>
+
+    <div class="palette-row" aria-label="Palette">
+      <span class="swatch">
+        <span class="swatch-dot" style="background:#17161a"></span>Charcoal</span>
+      <span class="swatch">
+        <span class="swatch-dot" style="background:#efe9dd"></span>Ivory</span>
+      <span class="swatch">
+        <span class="swatch-dot" style="background:#ad8f52"></span>Brass</span>
+      <span class="swatch">
+        <span class="swatch-dot" style="background:#8a63d2"></span>Violet</span>
+    </div>
+  </div>
+
+  <!-- ── Signature Technique ── -->
+  <div class="section">
+    <p class="section-label">Signature Technique</p>
+    <h2>SDF raymarching in GLSL ES 1.0</h2>
+
+    <p>Every artifact is rendered entirely inside a WebGL fragment shader — no
+    meshes, no geometry buffers. A ray is cast per pixel; the signed distance
+    field (SDF) for each impossible object tells the marcher how far it can step
+    before it must check again. When distance drops below 0.0015 world units, we
+    have a hit. The surface normal is recovered by numerical central differences
+    on the same SDF — four extra evaluations, no explicit normals stored.</p>
+
+    <p>Five independent shaders share a common header (<code>TOP</code>) and a
+    marcher template (<code>MARCHER</code>) injected at compile time. The shared
+    <code>march()</code> loop references whatever <code>map*()</code> function
+    is defined in each shader:</p>
+
+    <div class="code-case">
+      <div class="code-header">
+        <span class="code-label">main.js — shared marcher (GLSL)</span>
+        <span class="code-ref">Ref. technique · MARCHER template</span>
+      </div>
+      <pre><span class="type">float</span> <span class="fn">march</span>(<span class="type">vec3</span> ro, <span class="type">vec3</span> rd) {
+  <span class="type">float</span> t = <span class="num">0.1</span>;
+  <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">88</span>; i++) {
+    <span class="type">float</span> d = mapKlein(ro + rd * t);   <span class="cm">// swap per shader</span>
+    <span class="kw">if</span> (d &lt; <span class="num">0.0015</span>) <span class="kw">return</span> t;
+    <span class="kw">if</span> (t &gt; <span class="num">20.0</span>) <span class="kw">break</span>;
+    t += d * <span class="num">0.85</span>;                      <span class="cm">// underrelax: safer at thin features</span>
+  }
+  <span class="kw">return</span> <span class="num">-1.0</span>;                          <span class="cm">// miss</span>
+}
+
+<span class="type">vec3</span> <span class="fn">getNormal</span>(<span class="type">vec3</span> p) {
+  <span class="type">float</span> e = <span class="num">0.003</span>;
+  <span class="kw">return</span> <span class="fn">normalize</span>(<span class="type">vec3</span>(
+    mapKlein(p + <span class="type">vec3</span>(e,<span class="num">0</span>,<span class="num">0</span>)) - mapKlein(p - <span class="type">vec3</span>(e,<span class="num">0</span>,<span class="num">0</span>)),
+    mapKlein(p + <span class="type">vec3</span>(<span class="num">0</span>,e,<span class="num">0</span>)) - mapKlein(p - <span class="type">vec3</span>(<span class="num">0</span>,e,<span class="num">0</span>)),
+    mapKlein(p + <span class="type">vec3</span>(<span class="num">0</span>,<span class="num">0</span>,e)) - mapKlein(p - <span class="type">vec3</span>(<span class="num">0</span>,<span class="num">0</span>,e))
+  ));
+}</pre>
+    </div>
+
+    <p>The Klein bottle SDF is built from six primitive capsules and two tori,
+    blended with a smooth-minimum (<code>smin</code>) operator. The topology is
+    described rather than rigorously derived — the neck rises through the torus
+    hole, arcs over the rim in two segments, and re-enters the body from the
+    exterior, suggesting the impossible self-intersection:</p>
+
+    <div class="code-case">
+      <div class="code-header">
+        <span class="code-label">main.js — Artifact I SDF (GLSL)</span>
+        <span class="code-ref">Ref. No. 1923-VII-004 · FRAG_1</span>
+      </div>
+      <pre><span class="type">float</span> <span class="fn">mapKlein</span>(<span class="type">vec3</span> p) {
+  <span class="type">float</span> t = uTime * <span class="num">0.18</span>;
+  p.xz *= <span class="fn">rot2</span>(t);
+  p.y -= <span class="num">0.15</span>;
+
+  <span class="cm">// Torus body — the outer "bottle" surface</span>
+  <span class="type">float</span> body  = <span class="fn">sdTorus</span>(p + <span class="type">vec3</span>(<span class="num">0</span>,<span class="num">0.38</span>,<span class="num">0</span>), <span class="type">vec2</span>(<span class="num">1.02</span>, <span class="num">0.40</span>));
+  <span class="type">float</span> rim   = <span class="fn">sdTorus</span>(p - <span class="type">vec3</span>(<span class="num">0</span>,<span class="num">0.06</span>,<span class="num">0</span>), <span class="type">vec2</span>(<span class="num">0.54</span>, <span class="num">0.13</span>));
+
+  <span class="cm">// Neck rises through the torus hole (center axis)</span>
+  <span class="type">float</span> neck  = <span class="fn">sdCapsule</span>(p, <span class="type">vec3</span>(<span class="num">0</span>,<span class="num">-1.45</span>,<span class="num">0</span>), <span class="type">vec3</span>(<span class="num">0</span>, <span class="num">1.0</span>, <span class="num">0</span>), <span class="num">0.11</span>);
+
+  <span class="cm">// Over-top arc — curves right, then back over the rim</span>
+  <span class="type">float</span> arc1  = <span class="fn">sdCapsule</span>(p, <span class="type">vec3</span>(<span class="num">0</span>,   <span class="num">1.00</span>, <span class="num">0</span>), <span class="type">vec3</span>(<span class="num">0.55</span>, <span class="num">0.70</span>, <span class="num">0</span>), <span class="num">0.11</span>);
+  <span class="type">float</span> arc2  = <span class="fn">sdCapsule</span>(p, <span class="type">vec3</span>(<span class="num">0.55</span>,<span class="num">0.70</span>, <span class="num">0</span>), <span class="type">vec3</span>(<span class="num">1.10</span>, <span class="num">0.10</span>, <span class="num">0</span>), <span class="num">0.10</span>);
+
+  <span class="cm">// Entry — tube re-enters the torus body from outside</span>
+  <span class="cm">// This is the impossible crossing: interior becomes exterior</span>
+  <span class="type">float</span> entry = <span class="fn">sdCapsule</span>(p, <span class="type">vec3</span>(<span class="num">1.10</span>, <span class="num">0.10</span>, <span class="num">0</span>), <span class="type">vec3</span>(<span class="num">0.88</span>,<span class="num">-0.38</span>, <span class="num">0</span>), <span class="num">0.10</span>);
+
+  <span class="type">float</span> d = body;
+  d = <span class="fn">smin</span>(d, rim,   <span class="num">0.16</span>);   <span class="cm">// smooth blend — no hard seam</span>
+  d = <span class="fn">smin</span>(d, neck,  <span class="num">0.10</span>);
+  d = <span class="fn">smin</span>(d, arc1,  <span class="num">0.08</span>);
+  d = <span class="fn">smin</span>(d, arc2,  <span class="num">0.08</span>);
+  d = <span class="fn">smin</span>(d, entry, <span class="num">0.08</span>);
+
+  <span class="cm">// Pass 3 upgrade: click ripple (uClick: 0 = just clicked, 1 = gone)</span>
+  d += <span class="fn">sin</span>(<span class="fn">length</span>(p) * <span class="num">12.0</span> - uClick * <span class="num">18.0</span>)
+     * <span class="num">0.018</span> * <span class="fn">clamp</span>(<span class="num">1.0</span> - uClick, <span class="num">0.0</span>, <span class="num">1.0</span>);
+
+  <span class="kw">return</span> d;
+}</pre>
+    </div>
+
+    <p>The <code>uMouse</code> uniform (Pass 2) shifts the camera look-at target
+    by up to ±0.25 units horizontally and ±0.15 vertically as the cursor moves
+    across each canvas, creating a parallax orbit. The <code>uClick</code>
+    uniform (Pass 3) drives a spherically-expanding ripple through the distance
+    field — amplitude 0.018 × frequency 12 keeps the Lipschitz bound below 0.22,
+    safe for 88-step marching without visible banding.</p>
+  </div>
+
+  <!-- ── Critique Register ── -->
+  <div class="section">
+    <p class="section-label">Critique Register</p>
+    <h2>What each pass found, what changed</h2>
+
+    <div class="pass-entry">
+      <div class="pass-header">
+        <span class="pass-number">Pass I</span>
+        <span class="pass-title">Build + first critique</span>
+      </div>
+      <ul class="finding-list">
+        <li><strong>Klein topology unclear:</strong> the neck arced over the torus but the
+        re-entry point was ambiguous. Fixed: two explicit arc capsules (<code>arc1</code>,
+        <code>arc2</code>) added to show the impossible crossing, plus an entry capsule
+        meeting the torus equator from outside.</li>
+        <li><strong>Canvas cramped:</strong> aspect ratio was 57.5% (canvas appeared
+        squeezed). Fixed: raised to 60% (5 : 3).</li>
+        <li><strong>Stairway loop unconvincing:</strong> 12 steps were insufficient for the
+        Penrose staircase illusion at this camera angle. Fixed: 16 steps, giving one full
+        360° rise closing to step 1.</li>
+        <li><strong>Upgrade implemented:</strong> "Do not touch" easter egg — clicking any
+        canvas flashes the sign brass-coloured for 1.2 s. <span class="upgrade-tag">upgrade</span></li>
+      </ul>
+    </div>
+
+    <div class="pass-entry">
+      <div class="pass-header">
+        <span class="pass-number">Pass II</span>
+        <span class="pass-title">Polish + parallax</span>
+      </div>
+      <ul class="finding-list">
+        <li><strong>Artifact numerals invisible:</strong> <code>.artifact-numeral</code>
+        used <code>color: var(--rule)</code> (#3a3740 on #17161a) — essentially black on
+        black. Fixed: changed to <code>rgba(173,143,82,0.38)</code>, a dim brass that reads
+        as decorative but legible.</li>
+        <li><strong>Canvas display case flat:</strong> the wrapper border gave no depth
+        impression. Fixed: added <code>box-shadow: inset 0 1px 0 rgba(239,233,221,0.07),
+        0 8px 32px rgba(0,0,0,0.45)</code> — a faint top-edge glass highlight and a
+        base drop shadow.</li>
+        <li><strong>Canvas cursor gave no affordance:</strong> nothing signalled
+        interactivity. Fixed: <code>cursor: crosshair</code> on all canvases.</li>
+        <li><strong>Upgrade — mouse parallax:</strong> <code>uniform vec2 uMouse</code>
+        added to all five shaders. Hovering any canvas shifts the camera look-at target
+        by the smoothed cursor position (lerp factor 0.07/frame). Mobile scroll left
+        untouched — tracking is hover-only on non-touch devices.
+        <span class="upgrade-tag">upgrade</span></li>
+      </ul>
+    </div>
+
+    <div class="pass-entry">
+      <div class="pass-header">
+        <span class="pass-number">Pass III</span>
+        <span class="pass-title">SDF ripple + guide</span>
+      </div>
+      <ul class="finding-list">
+        <li><strong>Penrose Bronze renders correctly:</strong> bronze material with GGX
+        specular, the three impossible right-angle joints visible. No changes to the
+        shader — the visual reads as intended.</li>
+        <li><strong>"Do not touch" only flashed a sign:</strong> the easter egg was
+        cosmetic, not physical. Fixed: <code>uniform float uClick</code> passes seconds
+        since last click (clamped 0–1) into every map function. A spherical ripple
+        <code>sin(length(p)*12.0 - uClick*18.0) * 0.018 * clamp(1.0-uClick, 0.0, 1.0)</code>
+        deforms the SDF for ~0.8 s after each click — the geometry itself responds to
+        touch. Shadow No. 7 uses a floor-plane variant
+        (<code>length(p.xz)*8.0, amplitude 0.04</code>) so the shadowless ground
+        undulates. <span class="upgrade-tag">upgrade</span></li>
+        <li><strong>Guide page:</strong> this document, written in the collection's
+        visual language — same palette, same typefaces, honest findings only.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── Footnotes ── -->
+  <div class="section">
+    <p class="section-label">Acknowledgements &amp; Limitations</p>
+    <h2>What the museum cannot guarantee</h2>
+    <p>The Klein bottle SDF is a description, not a derivation. A true Klein bottle
+    has no mathematical closed-form SDF in Euclidean 3-space — by definition. The
+    visual language of the impossible crossing is suggested by primitive composition;
+    topology is implied rather than proven.</p>
+    <p>The Penrose triangle holds the depth illusion at a specific camera angle. Rotation
+    reveals the physical seam where the arms disconnect. This is, in the committee's
+    view, not a defect.</p>
+    <p>The Faceted Tesseract performs 32 capsule and 16 sphere SDF evaluations per
+    fragment per marching step. On older mobile GPUs with step count reduced to 56, the
+    surface may show stepping artefacts at high-curvature regions. The museum accepts
+    no liability for conclusions reached about the fourth dimension.</p>
+  </div>
+
+</div>
+</main>
+
+<footer role="contentinfo">
+  <p>Exhibition notes for the permanent collection of impossible objects</p>
+  <p class="credit">Designed &amp; built by Claude Fable 5 &nbsp;·&nbsp; local build &nbsp;·&nbsp; 2026</p>
+</footer>
+
+</body>
+</html>

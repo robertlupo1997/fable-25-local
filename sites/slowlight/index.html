@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slowlight — A Long-Exposure Darkroom</title>
+  <meta name="description" content="Photographs that develop while you watch. Long exposures accumulated frame by frame, in real time.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <main id="main">
+
+    <!-- ── HERO: live long-exposure accumulation ─────────────────────────── -->
+    <section class="hero" aria-label="Live star-trail exposure in progress">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="hero-label">SLOWLIGHT DARKROOM</p>
+        <h1 class="hero-title">Time is<br>the developer.</h1>
+        <p class="hero-body">Long exposures accumulate frame by frame, in real time. The light writes itself across the dark — star trails, headlight rivers, light painting — while you watch.</p>
+        <div class="exposure-ticker" role="status" aria-live="polite" aria-label="Exposure time">
+          <span class="rec-dot" aria-hidden="true"></span>
+          <span class="rec-label">EXPOSING</span>
+          <span id="exposure-time" class="exposure-time">0:00</span>
+        </div>
+        <!-- Contact sheet roll counter — populated by JS if localStorage available -->
+        <div id="roll-id" class="roll-id" aria-label="Film roll and frame number" style="display:none"></div>
+        <!-- Mobile scroll hint -->
+        <div class="scroll-hint" aria-hidden="true">
+          <span class="scroll-hint-label">scroll to develop</span>
+          <svg width="16" height="20" viewBox="0 0 16 20" fill="none" aria-hidden="true">
+            <line x1="8" y1="0" x2="8" y2="14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <polyline points="3,9 8,15 13,9" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="hero-horizon" aria-hidden="true"></div>
+    </section>
+
+    <!-- ── PRINTS: developing in trays on scroll ────────────────────────── -->
+    <section class="prints-section" aria-labelledby="prints-heading">
+      <div class="prints-header">
+        <p class="section-label">FROM THE TRAYS</p>
+        <h2 id="prints-heading" class="prints-heading">Recent exposures</h2>
+        <p class="prints-intro">Stop scrolling to let a print fix. Each image is accumulated the same way — additive light, frame by frame, never erased.</p>
+      </div>
+      <div class="prints-grid">
+
+        <!-- Print 1: Star Trails -->
+        <figure class="print-tray" data-type="star-trails" data-delay="0" data-frame="001">
+          <div class="tray-body">
+            <canvas class="print-canvas" width="600" height="450" aria-label="Star trail photograph: circular arcs of light over four hours"></canvas>
+            <div class="print-overlay"></div>
+          </div>
+          <figcaption class="print-caption">
+            <span class="print-title">Mare Australe</span>
+            <span class="print-meta">4 hr 12 min &middot; f/4 &middot; ISO 800</span>
+          </figcaption>
+        </figure>
+
+        <!-- Print 2: Headlight River -->
+        <figure class="print-tray" data-type="headlights" data-delay="200" data-frame="002">
+          <div class="tray-body">
+            <canvas class="print-canvas" width="600" height="450" aria-label="Headlight river photograph: light streaks from vehicles on a winding night road"></canvas>
+            <div class="print-overlay"></div>
+          </div>
+          <figcaption class="print-caption">
+            <span class="print-title">Route 1, Friday Night</span>
+            <span class="print-meta">31 min &middot; f/8 &middot; ISO 100</span>
+          </figcaption>
+        </figure>
+
+        <!-- Print 3: Light Painting -->
+        <figure class="print-tray" data-type="light-painting" data-delay="400" data-frame="003">
+          <div class="tray-body">
+            <canvas class="print-canvas" width="600" height="450" aria-label="Light painting photograph: a lissajous figure traced with a handheld torch"></canvas>
+            <div class="print-overlay"></div>
+          </div>
+          <figcaption class="print-caption">
+            <span class="print-title">Studio Session, No.&nbsp;7</span>
+            <span class="print-meta">8 sec &middot; f/11 &middot; ISO 50</span>
+          </figcaption>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ── ABOUT: on long exposure ───────────────────────────────────────── -->
+    <section class="about-section" aria-labelledby="about-heading">
+      <div class="about-inner">
+        <div class="about-text">
+          <p class="section-label">ON LONG EXPOSURE</p>
+          <h2 id="about-heading" class="about-heading">The photograph<br>as a clock</h2>
+          <p>A photograph is a record of light that arrived. The shutter opens, and everything that moves becomes a trace — a smear of probability across silver halide crystals, a memory the paper holds long after the shutter closes.</p>
+          <p>Long exposure flips the relationship between time and image. A single second freezes motion. Four hours of open shutter traces the rotation of the Earth itself — each star a bright scratch arcing around the celestial pole. The star knows nothing of being photographed. The film remembers everything.</p>
+          <p>Every exposure on this page is computed the same way: additive accumulation, frame by frame, never erased. Nothing is drawn whole. The trails are real because they were earned, one photon at a time.</p>
+        </div>
+        <aside class="about-specs" aria-label="Technical specifications">
+          <dl class="spec-list">
+            <dt>Process</dt>
+            <dd>Additive canvas accumulation</dd>
+            <dt>Star motion</dt>
+            <dd>Angular rotation, time-accelerated</dd>
+            <dt>Blending</dt>
+            <dd>lighter composite only — never cleared</dd>
+            <dt>Reduced motion</dt>
+            <dd>Full exposure, rendered statically</dd>
+            <dt>Palette</dt>
+            <dd>Near-monochrome &middot; safelight red</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

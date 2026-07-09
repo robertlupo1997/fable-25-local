@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bureau of Speculative Cartography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" role="banner">
+    <div class="header-top-rule" aria-hidden="true"></div>
+    <div class="header-inner">
+      <span class="header-classification">For Distribution · Not For Sale</span>
+      <div class="header-center">
+        <h1 class="bureau-name">Bureau of Speculative Cartography</h1>
+        <span class="bureau-est">Est.&thinsp;MCMXCIX</span>
+      </div>
+      <span class="chart-ref" id="chart-ref" aria-live="polite">Chart No. —</span>
+    </div>
+    <div class="header-bottom-rule" aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+
+    <section class="map-section" aria-labelledby="map-aria-label">
+      <h2 id="map-aria-label" class="sr-only">Speculative Territory Map</h2>
+      <div class="map-container">
+        <canvas id="map-canvas" aria-hidden="true"></canvas>
+      </div>
+    </section>
+
+    <section class="territory-section" aria-labelledby="territory-heading">
+      <div class="territory-inner">
+
+        <header class="territory-header">
+          <h2 class="territory-name" id="territory-heading">—</h2>
+          <p class="territory-coords" id="territory-coords">—</p>
+        </header>
+
+        <div class="territory-grid">
+          <div class="territory-col" aria-labelledby="survey-notes-heading">
+            <h3 id="survey-notes-heading" class="col-heading">Survey Notes</h3>
+            <dl class="stats-list" id="stats-list">
+              <div class="stat-row"><dt>—</dt><dd>—</dd></div>
+            </dl>
+          </div>
+
+          <div class="col-divider" aria-hidden="true"></div>
+
+          <div class="territory-col" aria-labelledby="toponymy-heading">
+            <h3 id="toponymy-heading" class="col-heading">Toponymy</h3>
+            <div class="places-list" id="places-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="bureau-statement" aria-labelledby="charter-heading">
+      <div class="statement-inner">
+        <h2 id="charter-heading" class="sr-only">Bureau Charter</h2>
+        <figure class="charter-figure">
+          <blockquote>
+            <p>The Bureau holds that geography is merely potential awaiting discipline. Each commission produces a unique document; each document, a place that did not exist before the survey and will not be surveyed again. We chart the possible with the rigour owed to the actual.</p>
+          </blockquote>
+          <figcaption>— <cite>Bureau of Speculative Cartography, Founding Charter, Article&thinsp;I (MCMXCIX)</cite></figcaption>
+        </figure>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-rule" aria-hidden="true"></div>
+    <div class="footer-inner">
+      <p class="footer-legal">© MMXXVI Bureau of Speculative Cartography · All territories imaginary · All surveys singular · No returns</p>
+      <p class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

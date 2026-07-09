@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cartome — Field Notes · Bureau of Speculative Cartography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Alegreya+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f2ead8;
+      --ink:   #3a2e22;
+      --red:   #b5432a;
+      --water: #5b7fa6;
+      --ink-mid: rgba(58,46,34,0.45);
+      --ink-faint: rgba(58,46,34,0.16);
+      --font-fell: 'IM Fell English', Georgia, serif;
+      --font-sans: 'Alegreya Sans', Georgia, serif;
+    }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--font-fell);
+      line-height: 1.68;
+      min-height: 100vh;
+    }
+
+    /* ── skip link ── */
+    .skip { position: absolute; top: -4rem; left: 1rem; background: var(--ink);
+            color: var(--cream); padding: .4rem .9rem; font-family: var(--font-sans);
+            font-size: .8125rem; text-decoration: none; z-index: 100; }
+    .skip:focus { top: .5rem; }
+
+    /* ── header ── */
+    .site-header {
+      border-bottom: 1px solid var(--ink-mid);
+      padding: .9rem 2rem;
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 1rem;
+    }
+    .site-header h1 {
+      font-family: var(--font-sans); font-size: .75rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--ink);
+    }
+    .site-header nav a {
+      font-family: var(--font-sans); font-size: .75rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--red); text-decoration: none;
+      opacity: .85;
+    }
+    .site-header nav a:hover { opacity: 1; text-decoration: underline; }
+    .site-header .chart-no {
+      font-family: var(--font-sans); font-size: .75rem; letter-spacing: .1em;
+      color: var(--ink-mid); text-transform: uppercase;
+    }
+
+    /* ── layout ── */
+    main { max-width: 52rem; margin: 0 auto; padding: 3.5rem 2rem 5rem; }
+
+    /* ── section dividers ── */
+    .rule { border: none; border-top: 1px solid var(--ink-faint); margin: 2.8rem 0; }
+    .rule-double { border: none; height: 4px;
+      border-top: 1px solid rgba(58,46,34,.5); border-bottom: 1px solid rgba(58,46,34,.2);
+      margin: 2.8rem 0; }
+
+    /* ── headings ── */
+    .section-label {
+      font-family: var(--font-sans); font-size: .6875rem; font-weight: 700;
+      letter-spacing: .22em; text-transform: uppercase; color: var(--red);
+      margin-bottom: .9rem;
+    }
+    h2 {
+      font-family: var(--font-fell); font-style: italic;
+      font-size: 2rem; line-height: 1.2; margin-bottom: 1.1rem;
+    }
+    h3 {
+      font-family: var(--font-sans); font-size: .8125rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase; margin-bottom: .6rem;
+      color: var(--ink);
+    }
+
+    /* ── body copy ── */
+    p { font-size: 1rem; margin-bottom: 1rem; max-width: 46rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── brief block ── */
+    .brief-block {
+      background: rgba(58,46,34,0.04);
+      border-left: 2px solid var(--red);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0 0;
+    }
+    .brief-block p {
+      font-family: var(--font-fell); font-style: italic;
+      font-size: .9375rem; line-height: 1.72; color: var(--ink);
+    }
+
+    /* ── code excerpt ── */
+    .code-label {
+      font-family: var(--font-sans); font-size: .6875rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--ink-mid);
+      margin-bottom: .4rem;
+    }
+    pre {
+      background: rgba(58,46,34,0.06);
+      border: 1px solid var(--ink-faint);
+      padding: 1.1rem 1.3rem;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: .7rem;
+      line-height: 1.7;
+      color: var(--ink);
+      margin: .5rem 0 1.5rem;
+    }
+    code { font-family: 'Courier New', Courier, monospace; font-size: .8em; }
+
+    /* ── pass log ── */
+    .pass-log { list-style: none; }
+    .pass-entry { margin-bottom: 1.8rem; }
+    .pass-num {
+      display: inline-block;
+      font-family: var(--font-sans); font-size: .6875rem; font-weight: 700;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--cream); background: var(--ink);
+      padding: .15rem .55rem; margin-bottom: .55rem;
+    }
+    .pass-entry h4 {
+      font-family: var(--font-sans); font-size: .8rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--red); margin-bottom: .35rem;
+    }
+    .pass-entry ul { padding-left: 1.2rem; margin-bottom: .5rem; }
+    .pass-entry li { font-size: .9375rem; margin-bottom: .25rem; }
+    .upgrade-badge {
+      display: inline-block;
+      font-family: var(--font-sans); font-size: .625rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--red); border: 1px solid var(--red);
+      padding: .1rem .45rem; margin-left: .5rem;
+      vertical-align: middle;
+    }
+
+    /* ── technique card ── */
+    .technique-card {
+      border: 1px solid var(--ink-faint);
+      padding: 1.4rem 1.6rem;
+      margin: 1.5rem 0;
+    }
+    .technique-card p { font-size: .9375rem; }
+
+    /* ── footer ── */
+    .site-footer {
+      border-top: 1px solid var(--ink-mid);
+      padding: 1.1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: .5rem;
+    }
+    .footer-legal { font-family: var(--font-sans); font-size: .6875rem; color: var(--ink-mid); }
+    .footer-credit { font-family: var(--font-sans); font-size: .6875rem; color: var(--ink-mid); }
+
+    @media (max-width: 600px) {
+      main { padding: 2rem 1.25rem 4rem; }
+      .site-header { flex-direction: column; gap: .4rem; }
+      h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header" role="banner">
+    <h1>Bureau of Speculative Cartography</h1>
+    <nav><a href="../">← Return to Chart</a></nav>
+    <span class="chart-no">Field Notes · MMXXVI</span>
+  </header>
+
+  <main id="main">
+
+    <div class="section-label">Commissioning Record</div>
+    <h2>cartome — Field Notes &amp; Technical Survey</h2>
+    <p>The following document records the design brief received, the methods employed, and the critique history of this commission. It is produced in accordance with Bureau transparency standards and is itself a specimen of the site's visual language.</p>
+
+    <hr class="rule-double">
+
+    <!-- BRIEF -->
+    <div class="section-label">Brief Received (verbatim)</div>
+    <div class="brief-block">
+      <p><strong>cartome — the Bureau of Speculative Cartography.</strong> Maps of places that never were. Signature: procedural inked maps — coastlines from domain-warped noise, rivers that descend gradients, hatched relief, aged-plate paper texture; each reload charts a new territory. Palette: plate cream <code>#f2ead8</code>, sepia ink <code>#3a2e22</code>, survey red <code>#b5432a</code>, water <code>#5b7fa6</code>. Type: IM Fell English + Alegreya Sans. Prove: generative art in a printmaker's discipline. Upgrade ideas: place-name generator with etymologies; a compass rose that tracks the cursor; fold-crease shading.</p>
+    </div>
+
+    <hr class="rule">
+
+    <!-- SIGNATURE TECHNIQUE -->
+    <div class="section-label">Signature Technique</div>
+    <h2 style="font-size:1.4rem;margin-bottom:.7rem;">Domain Warp → Island Mask → Procedural Pipeline</h2>
+
+    <div class="technique-card">
+      <p>The core map is built from a single floating-point heightmap (320 × 320 cells). Elevation is generated by compositing two layers: a six-octave fractional Brownian motion (fBm) field and a smoothstep radial island mask. The fBm is domain-warped twice — each warp displaces the input coordinates by another fBm field — producing the irregular, fjord-like coastlines that make each island feel surveyed rather than simulated.</p>
+      <p>Every structure downstream — contour lines, hachures, rivers, soundings — derives from this single array. Rivers are traced by eight-directional steepest-descent from local maxima above elevation 0.35. Contours are extracted by marching squares at seven levels. Hachures are drawn only where the gradient magnitude exceeds a slope threshold, with opacity and length proportional to steepness.</p>
+    </div>
+
+    <div class="code-label">Excerpt — domain warp (main.js, lines 58–64)</div>
+    <pre><code>function domainWarp(x, y, perm, strength=1.8) {
+  const qx = fbm(x + 0.0, y + 0.0, perm, 5);
+  const qy = fbm(x + 5.2, y + 1.3, perm, 5);
+  const rx = fbm(x + 1.7 * qx, y + 9.2 * qy, perm, 5);
+  const ry = fbm(x + 8.3 * qx, y + 2.8 * qy, perm, 5);
+  return fbm(x + strength * rx, y + strength * ry, perm, 6);
+}</code></pre>
+    <p>Two levels of warping (q then r) are required to break the symmetry that a single warp leaves. The strength parameter was calibrated to 1.8 after critique pass 1 found the coastlines too oval at 1.3.</p>
+
+    <div class="code-label">Excerpt — ocean soundings (main.js, pass 3 upgrade)</div>
+    <pre><code>function drawSoundings(ctx, map, cW, cH, chartNo) {
+  const rng = createRNG(chartNo ^ 0x5eed5);
+  // Only place numbers in clear deep water (h < -0.10)
+  // Depth correlates inversely with elevation
+  const depth = Math.round(18 + (-h) * 80 + rng() * 12);
+  ctx.fillText(String(depth), px, py);
+}</code></pre>
+
+    <hr class="rule">
+
+    <!-- PASS HISTORY -->
+    <div class="section-label">Critique Pass History</div>
+    <h2 style="font-size:1.4rem;margin-bottom:.9rem;">What Each Pass Found and Changed</h2>
+
+    <ol class="pass-log" type="1">
+
+      <li class="pass-entry">
+        <span class="pass-num">Pass 1</span>
+        <h4>Initial Build</h4>
+        <ul>
+          <li>Island shape too oval — domain warp strength raised 1.3 → 1.8.</li>
+          <li>Hachures blanketing the entire island — spacing widened 8 → 12 px, slope threshold raised 0.0025 → 0.007.</li>
+          <li>Compass rose too small — size factor raised 0.068 → 0.090.</li>
+          <li>Sea label colliding with coastline — <code>findSeaCenter()</code> now scores candidates by edge distance, not just elevation.</li>
+          <li>Settlement and peak labels overlapping — settlement offset SW, peak NE of land center.</li>
+        </ul>
+        <span class="upgrade-badge">Upgrade</span>
+        <strong style="font-family:var(--font-sans);font-size:.8rem;">Place-name generator</strong> — fictional morpheme lexicon produces names + etymologies for all five toponymy entries.
+      </li>
+
+      <li class="pass-entry">
+        <span class="pass-num">Pass 2</span>
+        <h4>Depth &amp; Legibility</h4>
+        <ul>
+          <li>Hachure threshold raised 0.007 → 0.009, max length 9 → 8.5 px, opacity cap reduced to 0.40.</li>
+          <li>Label positions refined — relative offsets applied to all three map labels.</li>
+          <li>River segments improved — 3-segment tapering width 0.5–2.3 px with quadratic curves.</li>
+        </ul>
+        <span class="upgrade-badge">Upgrade</span>
+        <strong style="font-family:var(--font-sans);font-size:.8rem;">Cursor-tracking compass rose</strong> — red bearing needle rotates on <code>mousemove</code> toward the pointer using smooth angle interpolation (15% per frame).
+      </li>
+
+      <li class="pass-entry">
+        <span class="pass-num">Pass 3</span>
+        <h4>Cartouche &amp; Overflow</h4>
+        <ul>
+          <li>Cartouche text overflow fixed — place name split into prefix label ("CHART OF THE PROVINCE OF") + short italic place name rendered independently, both clipped to box interior.</li>
+          <li>River width and opacity increased (0.9 + tMid×2.4, opacity 0.62+).</li>
+        </ul>
+        <span class="upgrade-badge">Upgrade</span>
+        <strong style="font-family:var(--font-sans);font-size:.8rem;">Fold-crease shading</strong> — <code>drawFoldCreases()</code> renders 2–3 soft gradient bands (opacity 0.07) simulating paper folded for field use.
+      </li>
+
+      <li class="pass-entry">
+        <span class="pass-num">Pass 4 (Stage 2)</span>
+        <h4>Contours, Rivers, River Labels</h4>
+        <ul>
+          <li>Contour line opacity raised 0.13 → 0.18 (regular) and 0.28 → 0.36 (index), line weights +0.1 px — terrain structure now reads at screenshot scale.</li>
+          <li>River stroke weight raised 0.9–3.3 px, opacity 0.62–0.90 — rivers legible without dominating.</li>
+          <li>Map label font sizes +1 px across settlement, peak, and sea types.</li>
+        </ul>
+        <span class="upgrade-badge">Upgrade</span>
+        <strong style="font-family:var(--font-sans);font-size:.8rem;">River name labels on canvas</strong> — <code>drawRiverLabels()</code> places small italic "R. Rivername" at 40% of each long river's course, rotated to follow the flow direction.
+      </li>
+
+      <li class="pass-entry">
+        <span class="pass-num">Pass 5 (Stage 2)</span>
+        <h4>Hachure Discipline &amp; Ocean Soundings</h4>
+        <ul>
+          <li>Hachure slope threshold raised 0.009 → 0.011, max opacity 0.40 → 0.34, max length 8.5 → 8.0 px — marks now concentrate on genuine slopes, not plateau noise.</li>
+          <li>River label font size increased to 9 px, fill opacity to 0.62.</li>
+        </ul>
+        <span class="upgrade-badge">Upgrade</span>
+        <strong style="font-family:var(--font-sans);font-size:.8rem;">Ocean soundings</strong> — <code>drawSoundings()</code> scatters up to 18 fathom-depth numerals in open water. Depths are seeded from chartNo (stable across repaints); values derive from inverse elevation (~18–100 fathoms). Authentic to 18th-century survey charts.
+      </li>
+
+    </ol>
+
+    <hr class="rule">
+
+    <!-- DESIGN NOTES -->
+    <div class="section-label">Design Notes</div>
+    <p>The discipline imposed by the brief — <em>generative art in a printmaker's discipline</em> — meant resisting the impulse to add more. Every element earns its place by reference to an actual cartographic convention: soundings appear in period survey charts, hachures are the pre-contour standard for slope indication, rivers taper from headwater to mouth, cartouches name and date each commission. The palette of four colours (cream, sepia, red, water-blue) holds throughout HTML and canvas alike.</p>
+    <p>The procedural generation seeds from <code>Date.now()</code> at load time, so each visit produces a unique territory. No territory can be revisited. This is stated in the Bureau Charter blockquote below the map.</p>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <p class="footer-legal">© MMXXVI Bureau of Speculative Cartography · Field Notes document</p>
+    <p class="footer-credit">Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+  </footer>
+
+</body>
+</html>

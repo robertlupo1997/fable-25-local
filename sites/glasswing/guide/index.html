@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glasswing — Build Guide</title>
+<meta name="description" content="How the Glasswing Conservatory was built: the brief, the physics shader, and what each critique pass changed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --mist:      #eef4f0;
+  --ink:       #182420;
+  --ink-60:    rgba(24,36,32,0.60);
+  --ink-40:    rgba(24,36,32,0.40);
+  --leaf:      #4fb597;
+  --leaf-dark: #1a8060;
+  --leaf-10:   rgba(79,181,151,0.10);
+  --leaf-20:   rgba(79,181,151,0.20);
+
+  --fs-2xs: clamp(0.65rem, 1.2vw, 0.75rem);
+  --fs-xs:  clamp(0.75rem, 1.5vw, 0.875rem);
+  --fs-sm:  clamp(0.875rem, 2vw, 1rem);
+  --fs-md:  clamp(1rem, 2.2vw, 1.125rem);
+  --fs-lg:  clamp(1.25rem, 3vw, 1.5rem);
+  --fs-xl:  clamp(1.75rem, 4.5vw, 2.5rem);
+  --fs-2xl: clamp(2.5rem, 7vw, 4.5rem);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  background: var(--mist);
+  color: var(--ink);
+  font-family: 'Figtree', sans-serif;
+  font-size: var(--fs-md);
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -999px; left: 1rem;
+  background: var(--ink); color: var(--mist);
+  padding: 0.5rem 1rem; border-radius: 2px;
+  z-index: 9999; font-size: var(--fs-sm);
+}
+.skip-link:focus { top: 1rem; }
+
+/* ── Nav ── */
+.guide-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem clamp(1.5rem, 5vw, 3.5rem);
+  border-bottom: 1px solid rgba(79,181,151,0.14);
+}
+
+.guide-nav a {
+  font-family: 'Italiana', serif;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+}
+
+.guide-nav-back {
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+  text-decoration: none;
+}
+.guide-nav-back:hover { color: var(--leaf-dark); }
+
+/* ── Hero ── */
+.guide-hero {
+  padding: clamp(4rem, 10vw, 7rem) clamp(1.5rem, 5vw, 3.5rem) clamp(3rem, 6vw, 5rem);
+  max-width: 820px;
+}
+
+.guide-eyebrow {
+  display: block;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--leaf);
+  margin-bottom: 1rem;
+}
+
+.guide-hero h1 {
+  font-family: 'Italiana', serif;
+  font-size: var(--fs-2xl);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+
+.guide-hero h1 em {
+  font-style: italic;
+  color: var(--leaf-dark);
+}
+
+.guide-hero .lede {
+  font-size: var(--fs-sm);
+  font-weight: 300;
+  color: var(--ink-60);
+  max-width: 60ch;
+  line-height: 1.7;
+}
+
+/* ── Content ── */
+.guide-body {
+  max-width: 820px;
+  padding: 0 clamp(1.5rem, 5vw, 3.5rem) clamp(5rem, 10vw, 8rem);
+}
+
+/* Sections */
+.section {
+  margin-bottom: clamp(3.5rem, 7vw, 5.5rem);
+  padding-top: clamp(3rem, 6vw, 4.5rem);
+  border-top: 1px solid rgba(79,181,151,0.14);
+}
+
+.section:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.section-label {
+  display: block;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--leaf);
+  margin-bottom: 1rem;
+}
+
+.section h2 {
+  font-family: 'Italiana', serif;
+  font-size: var(--fs-xl);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.25rem;
+}
+
+.section p {
+  color: var(--ink);
+  max-width: 66ch;
+  margin-bottom: 1.2rem;
+  opacity: 0.85;
+}
+.section p:last-child { margin-bottom: 0; }
+
+/* Brief block */
+.brief-block {
+  background: white;
+  border: 1px solid rgba(24,36,32,0.08);
+  border-radius: 3px;
+  padding: 1.75rem 2rem;
+  margin: 1.75rem 0;
+  font-size: var(--fs-sm);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--ink);
+  opacity: 0.9;
+  position: relative;
+}
+
+.brief-block::before {
+  content: '\201C';
+  font-family: 'Italiana', serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--leaf-20);
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  pointer-events: none;
+}
+
+.brief-block p { opacity: 1; margin-left: 1.5rem; }
+
+/* Code blocks */
+.code-wrap {
+  background: var(--leaf-10);
+  border-left: 3px solid var(--leaf);
+  border-radius: 0 3px 3px 0;
+  padding: 1.5rem 1.75rem;
+  margin: 1.75rem 0;
+  overflow-x: auto;
+}
+
+.code-wrap .code-label {
+  display: block;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--leaf-dark);
+  margin-bottom: 0.75rem;
+}
+
+.code-wrap pre {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(0.7rem, 1.4vw, 0.8rem);
+  line-height: 1.65;
+  color: var(--ink);
+  white-space: pre;
+  margin: 0;
+}
+
+/* Pass history */
+.pass-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.75rem 0;
+}
+
+.pass-item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 0 1rem;
+  align-items: start;
+}
+
+.pass-n {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--leaf-10);
+  border: 1px solid var(--leaf-20);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  color: var(--leaf-dark);
+  flex-shrink: 0;
+}
+
+.pass-text strong {
+  display: block;
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  margin-bottom: 0.2rem;
+}
+
+.pass-text span {
+  font-size: var(--fs-xs);
+  color: var(--ink-60);
+  line-height: 1.6;
+}
+
+/* Upgrade badge */
+.upgrade-badge {
+  display: inline-block;
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--leaf-dark);
+  background: var(--leaf-10);
+  border: 1px solid var(--leaf-20);
+  border-radius: 100px;
+  padding: 0.2rem 0.7rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid rgba(79,181,151,0.12);
+  padding: 2rem clamp(1.5rem, 5vw, 3.5rem);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+footer p {
+  font-size: var(--fs-2xs);
+  opacity: 0.45;
+  letter-spacing: 0.04em;
+}
+
+.leaf-dot { color: var(--leaf); opacity: 1; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<nav class="guide-nav" aria-label="Guide navigation">
+  <a href="../">Glasswing</a>
+  <a href="../" class="guide-nav-back">&#8592; Back to site</a>
+</nav>
+
+<main id="main">
+  <header class="guide-hero">
+    <span class="guide-eyebrow">Build Guide</span>
+    <h1>Glasswing Conservatory<br><em>How it was made</em></h1>
+    <p class="lede">
+      The brief, the physics, the shader code that computes every wing colour from
+      first principles, and an honest account of what three critique passes changed.
+    </p>
+  </header>
+
+  <div class="guide-body">
+
+    <!-- Brief -->
+    <section class="section" id="brief" aria-labelledby="brief-h">
+      <span class="section-label">The brief received</span>
+      <h2 id="brief-h">One paragraph, specific enough to build from</h2>
+      <div class="brief-block" role="blockquote">
+        <p>
+          <em>glasswing</em> — a butterfly conservatory. Iridescence, computed. Signature:
+          thin-film interference shader on procedurally-shaped wings (the actual physics —
+          optical path difference to RGB), flocking flight via boids, one butterfly that
+          lands on the cursor when still. Palette: mist <code>#eef4f0</code>, ink
+          <code>#182420</code>, computed iridescent spectrum, leaf <code>#4fb597</code>.
+          Type: Italiana + Figtree. Prove: physical optics as beauty; a light theme with
+          atmosphere. Upgrade ideas: species plates generated from wing-shape parameters;
+          pinned-specimen mode with pins and labels; wingbeat audio (subtle).
+        </p>
+      </div>
+      <p>
+        Three words carried the brief: "actual physics." That ruled out procedural noise
+        textures and mandated real interference math. The colour of every pixel on every
+        wing is derived from the two-beam interference formula — not approximated, not
+        looked up, not faked.
+      </p>
+    </section>
+
+    <!-- Signature technique -->
+    <section class="section" id="technique" aria-labelledby="technique-h">
+      <span class="section-label">Signature technique</span>
+      <h2 id="technique-h">Thin-film interference shader</h2>
+      <p>
+        Each butterfly is a screen-space quad rendered by a single WebGL1 program.
+        The fragment shader evaluates the two-beam interference equation for three
+        wavelengths (650 nm red, 550 nm green, 435 nm blue), deriving RGB directly
+        from the optical path difference at that pixel's position on the wing.
+      </p>
+      <p>
+        Wing shape is defined by signed distance fields — two rotated ellipses (upper
+        and lower wing) unioned with a body ellipse. The SDFs are mirrored on the
+        x-axis so both wings share one computation.
+      </p>
+
+      <div class="code-wrap">
+        <span class="code-label">Fragment shader — interference formula (sites/glasswing/index.html)</span>
+        <pre>/* Thin-film two-beam interference for three wavelengths.
+   Returns raw channel intensities [0,1]. */
+vec3 thinFilmRaw(float d_nm) {
+  float n   = 1.38;
+  float opd = 2.0 * n * d_nm; /* normal incidence, cosT = 1 */
+  float r   = 0.5 + 0.5 * cos(2.0 * PI * opd / 650.0);
+  float g   = 0.5 + 0.5 * cos(2.0 * PI * opd / 550.0);
+  float b   = 0.5 + 0.5 * cos(2.0 * PI * opd / 435.0);
+  return vec3(r, g, b);
+}
+
+/* Perceptual thinFilm: squash weak channels so only the dominant
+   wavelength(s) read brightly — mimics real wing absorption. */
+vec3 thinFilm(float d_nm, float brightness) {
+  vec3 raw    = thinFilmRaw(d_nm);
+  vec3 shaped = pow(raw, vec3(2.2));        /* γ power curve */
+  vec3 base   = vec3(0.03, 0.055, 0.05);   /* dark chitin base */
+  vec3 col    = mix(base, shaped, 0.88);
+  return col * brightness;
+}</pre>
+      </div>
+
+      <p>
+        Film thickness <code>d_nm</code> varies across the wing — 28 nm per unit of
+        normalised x-position, minus 10 nm per unit of y — giving an OPD range of roughly
+        77 nm across the wing span. This keeps colours within a single hue family rather
+        than cycling through the full spectrum.
+      </p>
+
+      <div class="code-wrap">
+        <span class="code-label">Pass 2 upgrade — scalloped wing margins via SDF perturbation</span>
+        <pre>float upperWing(vec2 wp) {
+  vec2 c = vec2(0.42, -0.15);
+  float cs = 0.9659, sn = 0.2588; /* 15° rotation */
+  vec2 rp  = vec2( cs*(wp.x-c.x) + sn*(wp.y-c.y),
+                  -sn*(wp.x-c.x) + cs*(wp.y-c.y));
+  float d  = length(rp / vec2(0.58, 0.42)) - 1.0;
+  /* Scalloped margin: 6 gentle indentations around the outer edge.
+     Angle computed in the normalised ellipse frame; perturbation
+     fades to zero inside the wing (smoothstep guard). */
+  float angle   = atan(rp.y / 0.42, rp.x / 0.58);
+  float scallop = 0.038 * sin(angle * 6.0 + 0.4);
+  d -= scallop * smoothstep(0.12, -0.04, d);
+  return d;
+}</pre>
+      </div>
+
+      <div class="code-wrap">
+        <span class="code-label">Pass 3 upgrade — angle-dependent iridescence (viewing angle colour shift)</span>
+        <pre>/* As the butterfly banks (u_rot changes), cos(u_rot) modulates
+   apparent film thickness by ±14 nm — mimicking how structural
+   colour shifts hue with viewing angle. */
+float viewShift = 14.0 * cos(u_rot);
+float d_nm = u_film + 28.0 * distX - 10.0 * distY + viewShift;
+d_nm = clamp(d_nm, 100.0, 520.0);</pre>
+      </div>
+
+      <p>
+        The boids system runs entirely on the CPU — separation, alignment, cohesion, and
+        a wander force. One designated boid switches to "approach" mode after the cursor
+        is idle for 2.2 seconds, homing to the cursor position and landing when within
+        18 px. The rAF loop pauses on <code>document.hidden</code>; reduced-motion holds
+        the last frame without animation.
+      </p>
+    </section>
+
+    <!-- Pass history -->
+    <section class="section" id="passes" aria-labelledby="passes-h">
+      <span class="section-label">Critique pass history</span>
+      <h2 id="passes-h">What each pass actually found and changed</h2>
+      <p>
+        Three passes ran. Each produced PNG screenshots in <code>qa/glasswing/</code>
+        before any edits; fixes and one complexity upgrade followed.
+      </p>
+
+      <ul class="pass-list">
+        <li class="pass-item">
+          <div class="pass-n" aria-hidden="true">1</div>
+          <div class="pass-text">
+            <strong>Pass 1 — build + initial critique</strong>
+            <span>
+              Found 5 issues: neon rainbow banding on wings (OPD gradient 180 nm → 28 nm,
+              added γ = 2.2 power curve); butterflies 2× too large (ww 68 → 38 px, wh
+              60 → 34 px); hero em colour #4fb597 failed WCAG AA (darkened to
+              #1a8060, 5.4:1); "pencil-sliver" artefact when wings closed (min openFrac
+              0.08 → 0.28); boid density too high (20 → 16 desktop, 11 → 8 mobile).
+              <br>Complexity upgrade: species plates as Canvas 2D pixel renders,
+              each with a different filmBase (140 / 220 / 310 nm).
+            </span>
+          </div>
+        </li>
+        <li class="pass-item">
+          <div class="pass-n" aria-hidden="true">2</div>
+          <div class="pass-text">
+            <strong>Pass 2 — readability + wing shape</strong>
+            <span>
+              Found 2 issues: hero text drowned in the butterfly canvas (transparent
+              hero section showed animated wings directly behind heading — fixed with
+              a radial-gradient mist haze at 72% opacity centre, fading to transparent
+              at edges); wings were pure ellipses with no naturalistic margin
+              (noted weakness in NOTES).
+              <br>Complexity upgrade: <span class="upgrade-badge">scalloped margins</span>
+              — added atan + sin-wave SDF perturbation on both wings (6 indentations on
+              forewing, 4 on hindwing), fading to zero inside the wing via smoothstep guard.
+            </span>
+          </div>
+        </li>
+        <li class="pass-item">
+          <div class="pass-n" aria-hidden="true">3</div>
+          <div class="pass-text">
+            <strong>Pass 3 — layout + physics depth</strong>
+            <span>
+              Found 2 issues: visit grid showed "Best Season" as a lone orphan in row 2
+              (fixed to 2-column default, 4-column above 680 px); mobile hero had an
+              oversized dead zone above the heading (reduced top padding from 6rem to
+              3.5rem at ≤ 500 px).
+              Footer credit confirmed present: "Designed &amp; built by Claude Fable 5
+              · local build · 2026".
+              <br>Complexity upgrade: <span class="upgrade-badge">viewing-angle iridescence</span>
+              — each butterfly's heading angle (u_rot) feeds a cos() offset into the
+              OPD calculation (±14 nm), so wing colour shifts as the butterfly banks
+              in flight — physically motivated (real structural colour depends on viewing
+              angle via cos θ in the OPD formula).
+            </span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+  </div><!-- .guide-body -->
+</main>
+
+<footer>
+  <p>Glasswing Conservatory <span class="leaf-dot">·</span> Build guide</p>
+  <p>Designed &amp; built by Claude Fable 5 <span class="leaf-dot">·</span> local build <span class="leaf-dot">·</span> 2026</p>
+</footer>
+</body>
+</html>

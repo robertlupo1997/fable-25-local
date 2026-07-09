@@ -1,0 +1,550 @@
+/* slowlight — A Long-Exposure Darkroom
+   Palette: darkroom #16090b · safelight #e0442e · silver #d9d9d9
+   Type: Besley (display) · Hanken Grotesk (body)
+*/
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --darkroom:   #16090b;
+  --darkroom-2: #1e0f12;
+  --safelight:  #e0442e;
+  --silver:     #d9d9d9;
+  --silver-mid: #999;
+  --silver-dim: #8a8a8a;
+  --tray-bg:    #0a0507;
+
+  --fd: 'Besley', Georgia, serif;
+  --fb: 'Hanken Grotesk', system-ui, sans-serif;
+
+  /* Custom easing */
+  --ease-develop:  cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-snap:     cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in:       cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+
+html {
+  background: var(--darkroom);
+  color: var(--silver);
+  font-family: var(--fb);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--darkroom);
+  min-height: 100vh;
+}
+
+.skip-link {
+  position: absolute;
+  top: -10rem;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--safelight);
+  color: var(--darkroom); /* darkroom on safelight = 4.67:1, was #fff = 4.17:1 */
+  font-family: var(--fb);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  transition: top 0.15s;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Section label ────────────────────────────────────────────────────────── */
+
+.section-label {
+  display: block;
+  font-family: var(--fb);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  color: var(--safelight);
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+/* ── HERO ─────────────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 560px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Text scrim — radial gradient centred behind copy */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 65% 60% at 50% 55%,
+      rgba(22, 9, 11, 0.82) 0%,
+      rgba(22, 9, 11, 0.40) 55%,
+      transparent 100%
+    );
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 680px;
+  padding: 2rem 1.5rem;
+}
+
+.hero-label {
+  font-family: var(--fb);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  color: var(--safelight);
+  text-transform: uppercase;
+  margin-bottom: 1.4rem;
+}
+
+.hero-title {
+  font-family: var(--fd);
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.0;
+  color: var(--silver);
+  /* Multi-layered shadow for legibility over bright trails */
+  text-shadow:
+    0 0 120px rgba(22, 9, 11, 1),
+    0 0 60px  rgba(22, 9, 11, 0.95),
+    0 2px 12px rgba(22, 9, 11, 0.9);
+  margin-bottom: 1.5rem;
+}
+
+.hero-body {
+  font-family: var(--fb);
+  font-size: clamp(0.875rem, 1.8vw, 1.05rem);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--silver-mid);
+  max-width: 42ch;
+  margin: 0 auto 2rem;
+  text-shadow: 0 1px 20px rgba(22, 9, 11, 0.95);
+}
+
+/* Exposure ticker */
+.exposure-ticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--fb);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--safelight);
+  opacity: 0.85;
+}
+
+.rec-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--safelight);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rec-dot {
+    animation: blink 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes blink {
+    0%, 45%  { opacity: 1; }
+    50%, 95% { opacity: 0.1; }
+    100%     { opacity: 1; }
+  }
+}
+
+.rec-label {
+  text-transform: uppercase;
+}
+
+.exposure-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Roll / contact sheet ID (localStorage upgrade) */
+.roll-id {
+  display: none;  /* shown by JS when localStorage available */
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.2rem;
+  font-family: var(--fb);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: rgba(224, 68, 46, 0.45);
+  text-transform: uppercase;
+}
+
+/* Mobile scroll hint */
+.scroll-hint {
+  display: none;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 2.5rem;
+  font-family: var(--fb);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(153, 153, 153, 0.45);
+}
+
+@media (max-width: 640px) {
+  .scroll-hint {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-hint {
+    animation: hint-fade 2.8s cubic-bezier(0.4, 0, 0.6, 1) 2.5s both;
+  }
+  @keyframes hint-fade {
+    0%   { opacity: 0; transform: translateY(6px); }
+    30%  { opacity: 1; transform: translateY(0);   }
+    70%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+}
+
+/* Horizon glow — city light pollution at the bottom edge */
+.hero-horizon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 28%;
+  background: linear-gradient(
+    to top,
+    rgba(80, 20, 12, 0.38) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ── PRINTS SECTION ────────────────────────────────────────────────────────── */
+
+.prints-section {
+  padding: 5rem 2rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.prints-header {
+  max-width: 540px;
+  margin-bottom: 3.5rem;
+}
+
+.prints-heading {
+  font-family: var(--fd);
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--silver);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.prints-intro {
+  font-family: var(--fb);
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--silver-dim);
+  line-height: 1.6;
+  max-width: 48ch;
+}
+
+.prints-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  padding-top: 0.5rem; /* room for sprocket strips on first row */
+}
+
+@media (max-width: 900px) {
+  .prints-grid {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+  }
+}
+
+/* Print tray */
+.print-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.tray-body {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--tray-bg);
+  /* Tray border — very subtle to avoid looking like a box */
+  border: 1px solid rgba(217, 217, 217, 0.08);
+  box-shadow:
+    inset 0 0 30px rgba(0,0,0,0.6),
+    0 2px 20px rgba(0,0,0,0.4);
+}
+
+.print-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Start dark; brightness transition reveals the image on develop */
+  filter: brightness(0);
+  transition: filter 2.8s var(--ease-develop);
+}
+
+.print-canvas.is-developed {
+  filter: brightness(1) contrast(1.08);
+}
+
+/* Chemical-bath overlay — fades away as image develops */
+.print-overlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+  /* Will transition opacity: 1 → 0 */
+  transition: opacity 3.2s var(--ease-develop);
+}
+
+.print-overlay.is-developed {
+  opacity: 0;
+}
+
+/* Figcaption */
+.print-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0 0.15rem;
+}
+
+.print-title {
+  font-family: var(--fd);
+  font-size: 0.9375rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--silver);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.print-meta {
+  font-family: var(--fb);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: var(--silver-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── ABOUT ────────────────────────────────────────────────────────────────── */
+
+.about-section {
+  border-top: 1px solid rgba(217, 217, 217, 0.08);
+  padding: 4rem 2rem 5rem;
+}
+
+.about-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 5rem;
+  align-items: start;
+}
+
+.about-specs {
+  align-self: end;
+}
+
+@media (max-width: 860px) {
+  .about-inner {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+.about-heading {
+  font-family: var(--fd);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--silver);
+  line-height: 1.1;
+  margin-bottom: 1.75rem;
+}
+
+.about-text p {
+  font-family: var(--fb);
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--silver-mid);
+  max-width: 58ch;
+  margin-bottom: 1.25rem;
+}
+
+.about-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Spec list */
+.spec-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem 1.25rem;
+  border-top: 1px solid rgba(217, 217, 217, 0.1);
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.spec-list dt {
+  font-family: var(--fb);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--safelight);
+  padding-top: 0.05rem;
+  white-space: nowrap;
+}
+
+.spec-list dd {
+  font-family: var(--fb);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--silver-dim);
+  line-height: 1.5;
+}
+
+/* ── FILM STRIP FRAME NUMBERS ────────────────────────────────────────────── */
+/* Complexity upgrade pass 2: contact-sheet frame numbers on each print tray */
+
+.print-tray[data-frame]::before {
+  content: attr(data-frame);
+  position: absolute;
+  top: -1.35rem;
+  left: 0;
+  font-family: var(--fb);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(224, 68, 46, 0.55);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Sprocket-hole row above each tray */
+.print-tray[data-frame]::after {
+  content: '';
+  position: absolute;
+  top: -1.4rem;
+  left: 0; right: 0;
+  height: 1.15rem;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 8px,
+    rgba(224,68,46,0.18) 8px,
+    rgba(224,68,46,0.18) 14px,
+    transparent 14px,
+    transparent 24px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.print-tray {
+  position: relative;
+  margin-top: 1.6rem;  /* space for the sprocket strip */
+}
+
+/* Print vignette — photographic depth */
+.tray-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 90% 85% at 50% 50%,
+    transparent 45%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── FOOTER ───────────────────────────────────────────────────────────────── */
+
+.site-footer {
+  border-top: 1px solid rgba(217, 217, 217, 0.06);
+  padding: 2rem;
+  text-align: center;
+  font-family: var(--fb);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--silver-dim);
+}
+
+/* ── FOCUS / A11Y ─────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--safelight);
+  outline-offset: 3px;
+}
+
+/* ── REDUCED MOTION ────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .print-canvas,
+  .print-overlay {
+    transition: none;
+  }
+  /* Show developed state immediately */
+  .print-canvas {
+    filter: brightness(1) contrast(1.08);
+  }
+  .print-overlay {
+    opacity: 0;
+  }
+}

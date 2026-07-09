@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STACCATO — Build Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset ──────────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Tokens ─────────────────────────────────────────────────────────────── */
+    :root {
+      --black:   #101010;
+      --panel:   #161616;
+      --pink:    #ff2e88;
+      --acid:    #d4ff3f;
+      --cyan:    #35e0ff;
+      --white:   #f0f0f0;
+      --dim:     #666;
+      --border:  rgba(255,255,255,0.07);
+
+      --font-display: 'Bungee', sans-serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'DM Mono', 'Fira Mono', 'Consolas', monospace;
+
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── Base ───────────────────────────────────────────────────────────────── */
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────────────────────── */
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+    }
+
+    /* ── Site header ────────────────────────────────────────────────────────── */
+    .guide-header {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3.5rem;
+    }
+
+    .guide-breadcrumb {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .guide-breadcrumb a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .guide-breadcrumb a:hover { text-decoration: underline; }
+    .guide-breadcrumb span { margin: 0 0.5em; }
+
+    .guide-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 8vw, 5.5rem);
+      line-height: 0.9;
+      color: var(--acid);
+      text-shadow:
+        0 0 30px rgba(212,255,63,0.3),
+        0 0 60px rgba(212,255,63,0.1);
+      margin-bottom: 0.5rem;
+    }
+
+    .guide-subtitle {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Section scaffold ───────────────────────────────────────────────────── */
+    .section {
+      position: relative;
+      padding: 0 0 3.5rem 1.75rem;
+      margin-bottom: 1rem;
+      border-left: 2px solid transparent;
+    }
+
+    /* Each section gets its own accent color on the rail */
+    .section--brief  { border-left-color: var(--pink); }
+    .section--tech   { border-left-color: var(--cyan); }
+    .section--passes { border-left-color: var(--acid); }
+
+    .section-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .section--brief  .section-eyebrow { color: var(--pink); }
+    .section--tech   .section-eyebrow { color: var(--cyan); }
+    .section--passes .section-eyebrow { color: var(--acid); }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 1.25rem;
+      text-wrap: balance;
+    }
+
+    /* ── Brief block ────────────────────────────────────────────────────────── */
+    .brief-quote {
+      border: 1px solid rgba(255,46,136,0.2);
+      border-left: 3px solid var(--pink);
+      background: rgba(255,46,136,0.04);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .brief-quote p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: #ccc;
+      line-height: 1.75;
+    }
+
+    .brief-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-style: normal;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    .brief-upgrade-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: 1rem;
+    }
+
+    .brief-upgrade-list li {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: #999;
+      padding-left: 1.1em;
+      position: relative;
+    }
+
+    .brief-upgrade-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--pink);
+      font-size: 0.7rem;
+    }
+
+    .brief-upgrade-list li.done {
+      color: var(--white);
+    }
+
+    .brief-upgrade-list li.done::before {
+      content: '✓';
+      color: var(--acid);
+    }
+
+    /* ── Body text ──────────────────────────────────────────────────────────── */
+    .body-text {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: #b0b0b0;
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+    }
+
+    .body-text strong {
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* ── Code block ─────────────────────────────────────────────────────────── */
+    .code-label {
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      padding: 0.4rem 1rem;
+      background: rgba(53,224,255,0.06);
+      border: 1px solid rgba(53,224,255,0.15);
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      display: inline-block;
+    }
+
+    .code-block {
+      background: #0b1a1f;
+      border: 1px solid rgba(53,224,255,0.1);
+      border-radius: 0 4px 4px 4px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .code-block pre {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #c8d8e0;
+      tab-size: 2;
+      white-space: pre;
+    }
+
+    /* Syntax highlights */
+    .k  { color: var(--pink); }       /* keyword */
+    .fn { color: var(--cyan); }       /* function name */
+    .s  { color: var(--acid); }       /* string / number */
+    .c  { color: #4a6470; font-style: italic; } /* comment */
+    .v  { color: #e8c8ff; }           /* variable / param */
+
+    /* ── Pass history ───────────────────────────────────────────────────────── */
+    .pass-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .pass-item {
+      position: relative;
+    }
+
+    .pass-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .pass-num {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--acid);
+    }
+
+    .pass-title {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .pass-upgrade {
+      display: inline-block;
+      margin-left: 0.5em;
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #000;
+      background: var(--acid);
+      padding: 0.1em 0.45em;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+
+    .pass-finds {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+    }
+
+    .pass-finds li {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: #999;
+      padding-left: 1.2em;
+      position: relative;
+    }
+
+    .pass-finds li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--dim);
+      font-size: 0.75rem;
+      top: 0.1em;
+    }
+
+    .pass-finds li.fix {
+      color: #c8c8c8;
+    }
+
+    .pass-finds li.fix::before {
+      content: '✦';
+      color: var(--cyan);
+      font-size: 0.65rem;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────────────── */
+    .guide-footer {
+      margin-top: 5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .guide-footer p {
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: #444;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Divider ────────────────────────────────────────────────────────────── */
+    .rule {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .wrap { padding: 0 1rem 4rem; }
+      .guide-header { padding: 2rem 0 2rem; }
+      .section { padding-left: 1.25rem; }
+      .code-block { padding: 1rem; }
+      .code-block pre { font-size: 0.75rem; }
+    }
+
+    /* ── Reduced motion ─────────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- Header -->
+    <header class="guide-header">
+      <p class="guide-breadcrumb">
+        <a href="../">STACCATO</a>
+        <span>·</span>
+        Build Guide
+      </p>
+      <h1 class="guide-title">BUILD GUIDE</h1>
+      <p class="guide-subtitle">Fable 25 Local · Site 17 / 25 · Rhythm Arcade</p>
+    </header>
+
+    <!-- Section 1: The Brief -->
+    <section class="section section--brief">
+      <p class="section-eyebrow">The brief</p>
+      <h2 class="section-title">What was asked for</h2>
+
+      <div class="brief-quote">
+        <p>A playable drum machine as nightlife. Signature: a 16-step sequencer, all sounds synthesized from raw WebAudio oscillators and noise (kick, snare, hat, tom — zero samples), visuals pulsed by an analyser node. Silent until the user hits play. Palette: club black <code style="font-family:var(--font-mono);color:var(--dim)">#101010</code>, hot pink <code style="font-family:var(--font-mono);color:var(--pink)">#ff2e88</code>, acid <code style="font-family:var(--font-mono);color:var(--acid)">#d4ff3f</code>, cyan <code style="font-family:var(--font-mono);color:var(--cyan)">#35e0ff</code>. Type: Bungee + DM Sans. Prove: an instrument, not a page — and disciplined neon.</p>
+        <cite>— FABLE 25 LOCAL · BRIEFS.md · Wave 3 #17</cite>
+      </div>
+
+      <p class="body-text">Upgrade ideas listed in the brief:</p>
+      <ul class="brief-upgrade-list">
+        <li class="done">Pattern presets with names — built: FOUR ON FLOOR, ACID BREAK, JUNGLE</li>
+        <li class="done">Tap tempo — implemented in Stage 2 Pass 5 (TAP button + T key shortcut)</li>
+        <li>Swing control — not implemented (scheduler math required; listed for future pass)</li>
+        <li>Record / replay button — not implemented</li>
+      </ul>
+    </section>
+
+    <!-- Section 2: Signature Technique -->
+    <section class="section section--tech">
+      <p class="section-eyebrow">Signature technique</p>
+      <h2 class="section-title">All sound from math — the kick drum</h2>
+
+      <p class="body-text">Every sound in STACCATO is synthesised from scratch using the Web Audio API — no samples, no audio files. The <strong>kick drum</strong> is two oscillators: a body sine that sweeps from 180 Hz to 40 Hz in 350 ms (replicating speaker-cone physics), layered with a 1400 Hz click transient that decays in 22 ms (the attack edge that makes a kick cut through a mix).</p>
+
+      <div class="code-label">main.js — synthKick()</div>
+      <div class="code-block"><pre><span class="fn">function</span> <span class="fn">synthKick</span>(<span class="v">time</span>) {
+  <span class="k">const</span> <span class="v">ctx</span> = state.audioCtx;
+
+  <span class="c">// Body: pitched sine sweep 180 → 40 Hz in 350 ms</span>
+  <span class="k">const</span> <span class="v">osc</span>  = ctx.createOscillator();
+  <span class="k">const</span> <span class="v">gainB</span> = ctx.createGain();
+  <span class="v">osc</span>.type = <span class="s">'sine'</span>;
+  <span class="v">osc</span>.frequency.<span class="fn">setValueAtTime</span>(<span class="s">180</span>, <span class="v">time</span>);
+  <span class="v">osc</span>.frequency.<span class="fn">exponentialRampToValueAtTime</span>(<span class="s">40</span>, <span class="v">time</span> + <span class="s">0.35</span>);
+  <span class="v">gainB</span>.gain.<span class="fn">setValueAtTime</span>(<span class="s">1.2</span>, <span class="v">time</span>);
+  <span class="v">gainB</span>.gain.<span class="fn">exponentialRampToValueAtTime</span>(<span class="s">0.001</span>, <span class="v">time</span> + <span class="s">0.42</span>);
+  <span class="v">osc</span>.<span class="fn">connect</span>(<span class="v">gainB</span>); <span class="v">gainB</span>.<span class="fn">connect</span>(dest());
+  <span class="v">osc</span>.<span class="fn">start</span>(<span class="v">time</span>); <span class="v">osc</span>.<span class="fn">stop</span>(<span class="v">time</span> + <span class="s">0.5</span>);
+
+  <span class="c">// Click transient: 1400 → 220 Hz in 22 ms (attack edge)</span>
+  <span class="k">const</span> <span class="v">ck</span>    = ctx.createOscillator();
+  <span class="k">const</span> <span class="v">gainCk</span> = ctx.createGain();
+  <span class="v">ck</span>.type = <span class="s">'sine'</span>;
+  <span class="v">ck</span>.frequency.<span class="fn">setValueAtTime</span>(<span class="s">1400</span>, <span class="v">time</span>);
+  <span class="v">ck</span>.frequency.<span class="fn">exponentialRampToValueAtTime</span>(<span class="s">220</span>, <span class="v">time</span> + <span class="s">0.022</span>);
+  <span class="v">gainCk</span>.gain.<span class="fn">setValueAtTime</span>(<span class="s">0.7</span>, <span class="v">time</span>);
+  <span class="v">gainCk</span>.gain.<span class="fn">exponentialRampToValueAtTime</span>(<span class="s">0.001</span>, <span class="v">time</span> + <span class="s">0.022</span>);
+  <span class="v">ck</span>.<span class="fn">connect</span>(<span class="v">gainCk</span>); <span class="v">gainCk</span>.<span class="fn">connect</span>(dest());
+  <span class="v">ck</span>.<span class="fn">start</span>(<span class="v">time</span>); <span class="v">ck</span>.<span class="fn">stop</span>(<span class="v">time</span> + <span class="s">0.04</span>);
+}</pre></div>
+
+      <p class="body-text">The lookahead scheduler keeps the machine in time by pre-computing notes 100 ms ahead of playback. A 25 ms `setTimeout` tick refills the queue — decoupling audio timing from the browser's rendering frame rate, so a dropped animation frame never causes a late hit.</p>
+
+      <div class="code-label">main.js — lookahead scheduler</div>
+      <div class="code-block"><pre><span class="k">const</span> <span class="v">LOOKAHEAD_MS</span>   = <span class="s">25</span>;   <span class="c">// tick every 25 ms</span>
+<span class="k">const</span> <span class="v">SCHEDULE_AHEAD</span> = <span class="s">0.1</span>;  <span class="c">// fill 100 ms ahead</span>
+
+<span class="fn">function</span> <span class="fn">scheduler</span>() {
+  <span class="k">const</span> <span class="v">ctx</span> = state.audioCtx;
+  <span class="k">while</span> (state.nextNoteTime &lt; ctx.currentTime + <span class="v">SCHEDULE_AHEAD</span>) {
+    <span class="fn">scheduleStep</span>(state.currentStep, state.nextNoteTime);
+    <span class="k">const</span> <span class="v">stepSec</span> = <span class="s">60</span> / state.bpm / <span class="s">4</span>; <span class="c">// 16th-note duration</span>
+    state.nextNoteTime += <span class="v">stepSec</span>;
+    state.currentStep  = (state.currentStep + <span class="s">1</span>) % <span class="s">16</span>;
+  }
+  state.schedulerTimer = <span class="fn">setTimeout</span>(scheduler, <span class="v">LOOKAHEAD_MS</span>);
+}</pre></div>
+
+      <p class="body-text">The tap tempo function (Stage 2) uses the same philosophy: collect `performance.now()` timestamps, average the inter-tap intervals, and convert to BPM. Up to 8 taps are averaged; the memory clears after 3 seconds of silence so tapping a new tempo always starts fresh.</p>
+    </section>
+
+    <!-- Section 3: Pass History -->
+    <section class="section section--passes">
+      <p class="section-eyebrow">Iteration history</p>
+      <h2 class="section-title">What each pass actually found</h2>
+
+      <div class="pass-list">
+
+        <div class="pass-item">
+          <div class="pass-header">
+            <span class="pass-num">STAGE 1 · PASS 1</span>
+            <span class="pass-title">Build + first critique</span>
+          </div>
+          <ul class="pass-finds">
+            <li>Idle visualizer showed a near-invisible flat line against the black canvas background</li>
+            <li>Machine panel had no hardware texture — looked like a web form, not a drum machine</li>
+            <li class="fix">Fixed: replaced flat line with animated breathing sine waveform on dark teal canvas background</li>
+            <li class="fix">Fixed: added CSS scanline repeating-linear-gradient texture to machine panel background</li>
+            <li class="fix">Complexity upgrade: animated idle visualizer (phase-composite sine, runs without audio)</li>
+          </ul>
+        </div>
+
+        <div class="pass-item">
+          <div class="pass-header">
+            <span class="pass-num">STAGE 1 · PASS 2</span>
+            <span class="pass-title">Mobile overflow bug</span>
+          </div>
+          <ul class="pass-finds">
+            <li>Added <code style="font-family:var(--font-mono);font-size:0.82em;color:var(--dim)">min-height: 36px</code> on step buttons caused the 16-step grid to overflow the machine panel at 390 px</li>
+            <li>Scanlines via <code style="font-family:var(--font-mono);font-size:0.82em;color:var(--dim)">::before</code> pseudo-element required <code style="font-family:var(--font-mono);font-size:0.82em;color:var(--dim)">overflow: hidden</code> which clipped the step grid</li>
+            <li class="fix">Fixed: removed min-height; grid distributes space naturally via fr units (~47 px/step desktop, ~15 px mobile)</li>
+            <li class="fix">Fixed: moved scanlines to CSS background gradient approach — no overflow property needed</li>
+            <li class="fix">Complexity upgrade: hardware scanline texture on the machine panel</li>
+          </ul>
+        </div>
+
+        <div class="pass-item">
+          <div class="pass-header">
+            <span class="pass-num">STAGE 1 · PASS 3</span>
+            <span class="pass-title">Verification</span>
+          </div>
+          <ul class="pass-finds">
+            <li>Confirmed zero console errors at all viewports and scroll positions</li>
+            <li>Reduced-motion fallback verified: static idle viz drawn once, no rAF loops</li>
+            <li>Mobile step grid readable though tight (15 px per step — inherent to 16-step layout at 390 px)</li>
+          </ul>
+        </div>
+
+        <div class="pass-item">
+          <div class="pass-header">
+            <span class="pass-num">STAGE 2 · PASS 4</span>
+            <span class="pass-title">Polish pass <span class="pass-upgrade">upgrade</span></span>
+          </div>
+          <ul class="pass-finds">
+            <li>Step buttons had no hover state — no visual feedback before clicking</li>
+            <li>All 16 steps looked identical — no beat-1 accent to orient musicians on the grid</li>
+            <li>Header had 1.5 rem dead gap between subtitle and visualizer</li>
+            <li>CLEAR button wrapped to a second line on mobile preset row</li>
+            <li>Cursor row cells were transparent — invisible when sequencer stopped</li>
+            <li class="fix">Fixed: step button hover now previews the track color (border + background + glow via <code style="font-family:var(--font-mono);font-size:0.82em;color:var(--dim)">--tc-rgb</code>)</li>
+            <li class="fix">Fixed: header gap reduced (margin-bottom 1rem → 0.5rem; visualizer margin-top 1rem → 0.5rem)</li>
+            <li class="fix">Fixed: CLEAR gets <code style="font-family:var(--font-mono);font-size:0.82em;color:var(--dim)">margin-left: auto</code>, pushed to far right of preset row</li>
+            <li class="fix">Fixed: cursor cells get faint <code style="font-family:var(--font-mono);font-size:0.82em;color:var(--dim)">rgba(255,255,255,0.04)</code> background — visible at rest</li>
+            <li class="fix">Complexity upgrade: beat-1 downbeat accent — first step of each 4-group gets a brighter background (#202020 vs #1c1c1c) and a colored top border-shadow inset, matching hardware drum machine convention</li>
+          </ul>
+        </div>
+
+        <div class="pass-item">
+          <div class="pass-header">
+            <span class="pass-num">STAGE 2 · PASS 5</span>
+            <span class="pass-title">Tap tempo + about section <span class="pass-upgrade">upgrade</span></span>
+          </div>
+          <ul class="pass-finds">
+            <li>No tap-tempo — BPM adjustment required many ±1 clicks to set a felt tempo</li>
+            <li>Controls reference in about section listed T key shortcut as missing</li>
+            <li class="fix">Complexity upgrade: tap tempo — TAP button in the BPM row; T key shortcut; averages up to 8 inter-tap intervals; memory resets after 3 s; cyan flash animation on each tap</li>
+            <li class="fix">Added T → tap tempo to the keyboard shortcut reference in the about section</li>
+            <li class="fix">Zero errors at all checkpoints</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="guide-footer">
+      <p>Designed &amp; built by Claude Fable 5 · local build · 2026</p>
+    </footer>
+
+  </div>
+</body>
+</html>

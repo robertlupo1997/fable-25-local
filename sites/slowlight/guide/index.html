@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slowlight — Build Guide</title>
+  <meta name="description" content="Build notes, technique breakdown, and critique log for the Slowlight long-exposure darkroom site.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --darkroom:   #16090b;
+      --darkroom-2: #1e0f12;
+      --safelight:  #e0442e;
+      --silver:     #d9d9d9;
+      --silver-mid: #999;
+      --silver-dim: #8a8a8a;
+      --fd: 'Besley', Georgia, serif;
+      --fb: 'Hanken Grotesk', system-ui, sans-serif;
+    }
+
+    html {
+      background: var(--darkroom);
+      color: var(--silver);
+      font-family: var(--fb);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+
+    .guide-eyebrow {
+      font-family: var(--fb);
+      font-size: 0.6375rem;
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--safelight);
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .guide-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--safelight);
+      opacity: 0.6;
+    }
+
+    .guide-title {
+      font-family: var(--fd);
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--silver);
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+    }
+
+    .guide-subtitle {
+      font-family: var(--fb);
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--silver-mid);
+      line-height: 1.6;
+      margin-bottom: 3.5rem;
+      max-width: 52ch;
+    }
+
+    .guide-rule {
+      border: none;
+      border-top: 1px solid rgba(217,217,217,0.08);
+      margin: 3rem 0;
+    }
+
+    /* ── Section structure ──────────────────────────────────── */
+
+    .section-label {
+      font-family: var(--fb);
+      font-size: 0.6375rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--safelight);
+      margin-bottom: 0.9rem;
+    }
+
+    .section-heading {
+      font-family: var(--fd);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--silver);
+      line-height: 1.1;
+      margin-bottom: 1.4rem;
+    }
+
+    .body-text {
+      font-family: var(--fb);
+      font-size: 0.9375rem;
+      font-weight: 300;
+      color: var(--silver-mid);
+      line-height: 1.75;
+      max-width: 62ch;
+      margin-bottom: 1.1rem;
+    }
+
+    .body-text:last-child { margin-bottom: 0; }
+
+    /* ── Brief blockquote ───────────────────────────────────── */
+
+    .brief-quote {
+      border-left: 2px solid rgba(224,68,46,0.4);
+      margin: 1.75rem 0 1.75rem 0;
+      padding: 0.9rem 0 0.9rem 1.5rem;
+      font-family: var(--fd);
+      font-size: 0.9375rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--silver);
+      line-height: 1.65;
+    }
+
+    /* ── Code block ─────────────────────────────────────────── */
+
+    .code-label {
+      font-family: var(--fb);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(224,68,46,0.6);
+      margin-bottom: 0.5rem;
+    }
+
+    pre {
+      background: #0d060808;
+      border: 1px solid rgba(217,217,217,0.07);
+      border-radius: 3px;
+      padding: 1.4rem 1.5rem;
+      overflow-x: auto;
+      margin: 0.75rem 0 1.75rem;
+    }
+
+    code {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--silver);
+      white-space: pre;
+    }
+
+    .code-comment { color: var(--silver-dim); }
+    .code-kw      { color: var(--safelight); }
+    .code-str     { color: #c4a880; }
+    .code-num     { color: #a8c4a0; }
+
+    /* ── Critique log ───────────────────────────────────────── */
+
+    .pass-block {
+      border-top: 1px solid rgba(217,217,217,0.06);
+      padding-top: 1.75rem;
+      margin-top: 1.75rem;
+    }
+
+    .pass-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--fb);
+      font-size: 0.6375rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--safelight);
+      margin-bottom: 0.8rem;
+    }
+
+    .pass-label .pass-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(224,68,46,0.5);
+      border-radius: 50%;
+      font-size: 0.6rem;
+    }
+
+    .finding-list {
+      list-style: none;
+      margin: 0.5rem 0 1rem;
+      padding: 0;
+    }
+
+    .finding-list li {
+      font-family: var(--fb);
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--silver-mid);
+      line-height: 1.6;
+      padding: 0.45rem 0 0.45rem 1.2rem;
+      border-bottom: 1px solid rgba(217,217,217,0.04);
+      position: relative;
+    }
+
+    .finding-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--safelight);
+      opacity: 0.6;
+    }
+
+    .upgrade-tag {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid rgba(224,68,46,0.3);
+      border-radius: 2px;
+      font-family: var(--fb);
+      font-size: 0.6rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(224,68,46,0.7);
+    }
+
+    .upgrade-tag span {
+      font-style: italic;
+      color: var(--silver-dim);
+      letter-spacing: 0;
+      font-size: 0.73rem;
+      text-transform: none;
+      font-weight: 300;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+
+    .guide-footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(217,217,217,0.06);
+      font-family: var(--fb);
+      font-size: 0.6375rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--silver-dim);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .guide-footer a {
+      color: var(--safelight);
+      text-decoration: none;
+      opacity: 0.7;
+    }
+
+    .guide-footer a:hover { opacity: 1; }
+
+    /* ── Focus ───────────────────────────────────────────────── */
+    :focus-visible {
+      outline: 2px solid var(--safelight);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="guide-eyebrow">Slowlight Darkroom</p>
+    <h1 class="guide-title">Build guide</h1>
+    <p class="guide-subtitle">
+      How the darkroom was built, what the critique passes found,
+      and why the canvas never clears.
+    </p>
+  </header>
+
+  <hr class="guide-rule">
+
+  <!-- ── THE BRIEF ─────────────────────────────────────────────────────── -->
+  <section aria-labelledby="brief-heading">
+    <p class="section-label">The Brief Received</p>
+    <h2 id="brief-heading" class="section-heading">Brief #19 — Slowlight</h2>
+
+    <blockquote class="brief-quote">
+      "A long-exposure darkroom. Photographs that develop while you watch.
+      Signature: canvas 'exposures' — star trails, light-painting, headlight rivers —
+      accumulated frame-by-frame in real time under a safelight UI; prints develop in
+      trays on scroll. Palette: darkroom #16090b, safelight red #e0442e, print silver #d9d9d9.
+      Type: Besley + Hanken Grotesk. Prove: time as a visual medium; near-monochrome restraint.
+      Upgrade ideas: exposure-time dial; contact sheet of past visits (localStorage);
+      a print that fixes only when you stop scrolling."
+    </blockquote>
+
+    <p class="body-text">
+      The core constraint — prove time as a visual medium — determined everything.
+      The canvas cannot show a photograph; it must <em>become</em> one. That means
+      no static images, no pre-baked PNGs, no deferred loading. Every photon arrives
+      in sequence, in the browser, frame by frame. The technique has to do the storytelling.
+    </p>
+  </section>
+
+  <hr class="guide-rule">
+
+  <!-- ── SIGNATURE TECHNIQUE ───────────────────────────────────────────── -->
+  <section aria-labelledby="technique-heading">
+    <p class="section-label">Signature Technique</p>
+    <h2 id="technique-heading" class="section-heading">Additive canvas accumulation</h2>
+
+    <p class="body-text">
+      The canvas is initialised once and <strong>never cleared</strong>. Every
+      <code>requestAnimationFrame</code> tick draws tiny arc-point fragments with
+      <code>ctx.globalCompositeOperation = 'lighter'</code>. Over time, the light
+      adds up — exactly as photons accumulate on film during a long exposure. Stop
+      early and you see a partial exposure. Leave it running and full trails emerge.
+    </p>
+
+    <p class="body-text">
+      The hero canvas accumulates live while the visitor reads. The three print canvases
+      (star trails, headlight rivers, light painting) are pre-rendered synchronously
+      at boot by stepping their systems through thousands of frames before the first
+      paint — the same technique, just at the speed of computation rather than time.
+    </p>
+
+    <p class="code-label">main.js — the rAF loop that never clears</p>
+    <pre><code><span class="code-comment">// The loop runs every frame. No ctx.clearRect() anywhere.</span>
+HeroExposure.prototype._loop = <span class="code-kw">function</span> () {
+  <span class="code-kw">if</span> (document.hidden) <span class="code-kw">return</span>;
+  <span class="code-comment">// Switch to additive blend, draw one frame of star positions,</span>
+  <span class="code-comment">// then return to normal. The prior frames stay on the canvas.</span>
+  this.ctx.globalCompositeOperation = <span class="code-str">'lighter'</span>;
+  this.stars.step(this.ctx, this.frame);
+  this.ctx.globalCompositeOperation = <span class="code-str">'source-over'</span>;
+  this.frame++;
+  <span class="code-kw">var</span> self = <span class="code-kw">this</span>;
+  this.rafId = requestAnimationFrame(<span class="code-kw">function</span> () { self._loop(); });
+};</code></pre>
+
+    <p class="code-label">main.js — one star step (drawn but never erased)</p>
+    <pre><code>StarTrailSystem.prototype.step = <span class="code-kw">function</span> (ctx, frame) {
+  <span class="code-kw">var</span> stars = this.stars;
+  <span class="code-kw">for</span> (<span class="code-kw">var</span> i = <span class="code-num">0</span>; i &lt; stars.length; i++) {
+    <span class="code-kw">var</span> s = stars[i];
+    <span class="code-kw">var</span> ang = s.startAngle + frame * s.speed;
+    <span class="code-kw">var</span> x = this.cx + Math.cos(ang) * s.r;
+    <span class="code-kw">var</span> y = this.cy + Math.sin(ang) * s.r;
+    <span class="code-comment">// Each star has a stellar chromaticity (blue-white or cool orange).</span>
+    <span class="code-comment">// Alpha stays low — the trail is the sum of thousands of visits.</span>
+    ctx.fillStyle = <span class="code-str">'hsla('</span> + s.hue + <span class="code-str">','</span> + s.sat + <span class="code-str">'%,'</span> + lum + <span class="code-str">'%,'</span> + s.alpha + <span class="code-str">')'</span>;
+    ctx.beginPath();
+    ctx.arc(x, y, s.size, <span class="code-num">0</span>, <span class="code-num">6.2832</span>);
+    ctx.fill();
+  }
+};</code></pre>
+
+    <p class="body-text">
+      The scroll-stop print development (brief upgrade idea) uses a 420 ms
+      debounce on the <code>scroll</code> event. While scrolling, prints stay dark.
+      When the visitor holds still, prints begin their 2.8 s
+      <code>filter: brightness()</code> reveal — the chemical-bath transition.
+    </p>
+  </section>
+
+  <hr class="guide-rule">
+
+  <!-- ── CRITIQUE LOG ──────────────────────────────────────────────────── -->
+  <section aria-labelledby="log-heading">
+    <p class="section-label">Critique Log</p>
+    <h2 id="log-heading" class="section-heading">What each pass found</h2>
+
+    <!-- Pass 1 -->
+    <div class="pass-block">
+      <p class="pass-label">
+        <span class="pass-num">1</span>
+        Pass 1 — Initial build review
+      </p>
+      <ul class="finding-list">
+        <li><strong>WCAG fail:</strong> <code>--silver-dim: #5a5a5a</code> on
+          darkroom background ≈ 2.8:1 contrast. Fixed → <code>#8a8a8a</code>
+          (~5.3:1, WCAG AA). </li>
+        <li><strong>Dead zone:</strong> About section right column floated
+          to top of grid cell. Fixed → <code>align-self: end</code> so the
+          spec list anchors to the baseline of the body text.</li>
+        <li><strong>Faint trails:</strong> Star trail alpha too low at 4 s
+          screenshot. Fixed → alpha 0.07 → 0.10; star count formula tightened.</li>
+        <li>Zero console errors confirmed on all viewports.</li>
+      </ul>
+      <div class="upgrade-tag">
+        + upgrade: <span>scroll-stop print development</span>
+      </div>
+      <p class="body-text" style="margin-top:0.75rem">
+        Prints reveal themselves only when scroll velocity reaches zero — a 420 ms
+        debounce. This directly enacts the "fixes only when you stop" idea from the brief.
+      </p>
+    </div>
+
+    <!-- Pass 2 -->
+    <div class="pass-block">
+      <p class="pass-label">
+        <span class="pass-num">2</span>
+        Pass 2 — Texture and density
+      </p>
+      <ul class="finding-list">
+        <li><strong>Headlights too sparse:</strong> Only 3–6 cars per road; trails were
+          barely visible. Fixed → 6–10 cars per road, radius 1.4–2.7 px
+          (was 0.8–1.7 px), alpha 0.20–0.38 (was 0.14–0.28).</li>
+        <li><strong>Prints lacked photographic depth:</strong> Canvas edges had no
+          falloff. Fixed → CSS vignette via <code>::after</code> radial gradient
+          on each tray body.</li>
+      </ul>
+      <div class="upgrade-tag">
+        + upgrade: <span>film-strip frame numbers</span>
+      </div>
+      <p class="body-text" style="margin-top:0.75rem">
+        Each print tray now has a CSS contact-sheet film strip above it — frame numbers
+        (001 / 002 / 003) and a sprocket-hole dash pattern in safelight red, rendered
+        purely via <code>content: attr(data-frame)</code> and
+        <code>repeating-linear-gradient</code>. No extra markup weight.
+      </p>
+    </div>
+
+    <!-- Pass 3 -->
+    <div class="pass-block">
+      <p class="pass-label">
+        <span class="pass-num">3</span>
+        Pass 3 — Saturation, mobile, persistence
+      </p>
+      <ul class="finding-list">
+        <li><strong>Headlights still saturating to white:</strong> 5 000 frames
+          with additive blending overdrove all colour. Fixed → 2 500 frames;
+          warm-white headlights and amber-red taillights now hold their temperature
+          rather than merging to neutral white.</li>
+        <li><strong>Mobile dead zone:</strong> Large dark canvas below hero text
+          offered no scroll affordance. Fixed → "scroll to develop" hint (fade-out
+          CSS animation, hidden on desktop, reduced-motion safe).</li>
+        <li><strong>Section gap:</strong> 10.5 rem of padding between prints and
+          about sections created dead space on desktop. Fixed → trimmed to 8 rem total.</li>
+      </ul>
+      <div class="upgrade-tag">
+        + upgrade: <span>localStorage roll counter</span>
+      </div>
+      <p class="body-text" style="margin-top:0.75rem">
+        <code>localStorage</code> tracks cumulative visit count. On return visits the
+        hero displays a film roll/frame ID — "ROLL 01 · FRAME 02" — in safelight red,
+        treating each page load as a new frame on the same roll of 36. Gracefully absent
+        if storage is unavailable.
+      </p>
+    </div>
+
+  </section>
+
+  <hr class="guide-rule">
+
+  <!-- ── TECHNICAL NOTES ───────────────────────────────────────────────── -->
+  <section aria-labelledby="tech-heading">
+    <p class="section-label">Technical notes</p>
+    <h2 id="tech-heading" class="section-heading">Standards compliance</h2>
+    <ul class="finding-list">
+      <li>All decorative canvases carry <code>aria-hidden="true"</code>; prints carry
+        descriptive <code>aria-label</code> text.</li>
+      <li>Reduced-motion path: hero renders 4 000 frames synchronously at boot
+        (full static exposure); print transitions are suppressed via
+        <code>prefers-reduced-motion: reduce</code>.</li>
+      <li>DPR capped at 2; rAF pauses on <code>document.hidden</code>.</li>
+      <li>WCAG AA contrast verified: all text ≥ 4.5:1 (body), ≥ 3:1 (large/UI).</li>
+      <li>Zero console errors, zero page errors at all screenshotted viewports
+        and scroll positions across all three critique passes.</li>
+    </ul>
+  </section>
+
+  <footer class="guide-footer">
+    <span>Designed &amp; built by Claude Fable 5 &middot; local build &middot; 2026</span>
+    <a href="../">← back to darkroom</a>
+  </footer>
+
+</body>
+</html>
