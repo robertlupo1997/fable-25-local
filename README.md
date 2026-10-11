@@ -43,7 +43,7 @@ prompt (transcribed from his video) and every prompt used here are preserved ver
 5. Hard-won addition to the original method: the **relay pattern**. Long-lived single
    agents died of context overflow mid-job, so each site's lifecycle is split across
    three sequential scoped agents (build → polish + guide → gated closeout) passing state
-   through a `NOTES.md` baton. Zero agent deaths after the switch.
+   through a `NOTES.md` baton. Zero agent deaths after the switch, by the orchestrator's account; no run log is kept in this repo.
 
 Every site documents itself at its own **`/guide` route** — the brief it received, its
 signature technique with real code excerpts, and what each critique pass found and changed.
@@ -56,7 +56,7 @@ python3 -m http.server 4179 --directory sites
 ```
 
 No build step, no dependencies (Playwright is only needed for `tools/shot.mjs`, the QA
-harness). Sites use CDN-hosted Three.js and Google Fonts; everything else is vanilla.
+harness). Sites use Google Fonts, and one site (`orbital`) loads Three.js from a CDN; everything else is vanilla.
 
 ## Status
 
@@ -68,13 +68,14 @@ harness). Sites use CDN-hosted Three.js and Google Fonts; everything else is van
 | 4 | kitefield · pressroom · undertow · equinox · afterimage · tempo | ✅ complete |
 | — | gallery index + project guide + final cold review | ✅ complete |
 
-**The collection is complete: 25 sites, 4 waves + finale, ~80 agents, zero templates.**
+**The collection is complete: 25 sites, 4 waves + finale, ~80 agents (an estimate; no run log is kept here), zero templates.**
 
 ## Honesty note
 
 The brands are fictional and written as fiction. Real datasets are real and cited in-page
 (the earthquake essay uses the USGS Earthquake Hazards Program FDSN catalog). Contrast
-ratios are verified computationally, including pixel-sampling rendered scenes behind text.
+ratios were checked with the scripts in `tools/`, which cover three of the 25 sites
+(`wireservice`, `afterimage`, `kitefield`); the other sites' checks are not recorded here.
 Each site's `/guide` bounds its own confidence — what was verified, and what wasn't.
 
 ---
